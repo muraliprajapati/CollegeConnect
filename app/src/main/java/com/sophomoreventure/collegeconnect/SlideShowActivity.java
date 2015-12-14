@@ -6,8 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,6 +28,10 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
     ViewPager slideShowPager;
     SlideShowAdapter adapter;
     Timer timer;
+    //private Toolbar mToolbar;
+    //a layout grouping the toolbar and the tabs together
+    //private ViewGroup mContainerToolbar;
+    private FragmentDrawer mDrawerFragment;
 
 
     int currentPage = 0;
@@ -34,6 +42,8 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_show);
+
+        setupDrawer();
 
         FragmentManager manager = getSupportFragmentManager();
         adapter = new SlideShowAdapter(manager);
@@ -61,6 +71,22 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
 
     }
 
+
+    private void setupDrawer() {
+
+        //mToolbar = (Toolbar) findViewById(R.id.custom_app_bar);
+        //mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
+        //set the Toolbar as ActionBar
+        //setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        //setup the NavigationDrawer
+        mDrawerFragment = (FragmentDrawer)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));//, mToolbar);
+
+    }
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         // Toast.makeText(getApplicationContext(),position + " page scrolled",Toast.LENGTH_SHORT).show();
@@ -79,6 +105,12 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
 
 
     }
+
+    /*
+    public View getContainerToolbar() {
+        return mContainerToolbar;
+    }
+    */
 
     class SlideShowAdapter extends FragmentStatePagerAdapter {
 
