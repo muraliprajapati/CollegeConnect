@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +19,7 @@ import com.sophomoreventure.collegeconnect.adapters.AdapterDrawer;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class FragmentDrawer extends android.support.v4.app.Fragment {
 
     public static final String KEY_USER_LEARNED_DRAWER = "user_learned_drawer";
@@ -27,10 +29,11 @@ public class FragmentDrawer extends android.support.v4.app.Fragment {
     private AdapterDrawer mAdapter;
     private boolean mUserLearnedDrawer;
     private boolean mFromSavedInstanceState;
-   // private View mContainer;
+    private View mContainer;
     private boolean mDrawerOpened = false;
 
     public FragmentDrawer() {
+
         // Required empty public constructor
     }
 
@@ -82,10 +85,10 @@ public class FragmentDrawer extends android.support.v4.app.Fragment {
 
     }
 
-    public void setUp(int fragmentId, DrawerLayout drawerLayout){ //, final Toolbar toolbar) {
-        //mContainer = getActivity().findViewById(fragmentId);
+    public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar) {
+        mContainer = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
-        mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, R.string.drawer_open, R.string.drawer_close) {
+        mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar,R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -105,7 +108,7 @@ public class FragmentDrawer extends android.support.v4.app.Fragment {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
-                //toolbar.setAlpha(1 - slideOffset / 2);
+                toolbar.setAlpha(1 - slideOffset / 2);
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -114,7 +117,7 @@ public class FragmentDrawer extends android.support.v4.app.Fragment {
             public void run() {
                 mDrawerToggle.syncState();
                 if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
-                    //mDrawerLayout.openDrawer(mContainer);
+                    mDrawerLayout.openDrawer(mContainer);
                 }
             }
         });
@@ -165,9 +168,5 @@ public class FragmentDrawer extends android.support.v4.app.Fragment {
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
         }
 
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-        }
     }
 }

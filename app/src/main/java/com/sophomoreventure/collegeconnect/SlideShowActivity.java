@@ -28,9 +28,10 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
     ViewPager slideShowPager;
     SlideShowAdapter adapter;
     Timer timer;
-    //private Toolbar mToolbar;
+    private Toolbar mToolbar;
     //a layout grouping the toolbar and the tabs together
-    //private ViewGroup mContainerToolbar;
+    private ViewGroup mContainerToolbar;
+
     private FragmentDrawer mDrawerFragment;
 
 
@@ -74,16 +75,16 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
 
     private void setupDrawer() {
 
-        //mToolbar = (Toolbar) findViewById(R.id.custom_app_bar);
-        //mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
+        mToolbar = (Toolbar) findViewById(R.id.app_bar);
+        mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
         //set the Toolbar as ActionBar
-        //setSupportActionBar(mToolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //setup the NavigationDrawer
         mDrawerFragment = (FragmentDrawer)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));//, mToolbar);
+        mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
 
     }
 
