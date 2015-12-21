@@ -1,4 +1,4 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,8 +14,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sophomoreventure.collegeconnect.ModelClass.Information;
+import com.sophomoreventure.collegeconnect.extras.MyApplication;
+import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.adapters.AdapterDrawer;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,10 +170,6 @@ public class FragmentDrawer extends android.support.v4.app.Fragment {
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
         }
 
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-        }
 
     }
 }

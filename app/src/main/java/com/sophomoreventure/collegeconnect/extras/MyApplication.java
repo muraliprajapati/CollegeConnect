@@ -1,4 +1,4 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.extras;
 
 import android.app.Application;
 import android.content.Context;

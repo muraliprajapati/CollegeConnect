@@ -1,4 +1,4 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.ModelClass;
 
 /**
  * Created by Vikas Kumar on 14-12-2015.

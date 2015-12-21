@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.sophomoreventure.collegeconnect.Information;
+import com.sophomoreventure.collegeconnect.ModelClass.Information;
 import com.sophomoreventure.collegeconnect.R;
 import java.util.Collections;
 import java.util.List;
