@@ -156,6 +156,7 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
         }
 
         if(id == R.id.login_activity){
+
             startActivity(new Intent(this,LoginActivity.class));
         }
 

@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
             mPasswordLayout.setError("Password Cannot Be Empty");
             mEmailLayout.setError(null);
         } else {
-            //All Good Here
+
         }
     }
 

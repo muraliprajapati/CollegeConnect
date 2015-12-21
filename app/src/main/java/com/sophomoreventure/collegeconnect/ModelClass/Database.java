@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class Database {
 
     public static final int COLLEGE_CONNECT = 0;
-    public static final int UPCOMING = 1;
     private DatabaseHelper mHelper;
     private SQLiteDatabase mDatabase;
 
@@ -23,7 +22,7 @@ public class Database {
         mDatabase = mHelper.getWritableDatabase();
     }
 
-    public void insertMovies(int table, ArrayList<String> listData, boolean clearPrevious) {
+    public void insertData(int table, ArrayList<String> listData, boolean clearPrevious) {
         if (clearPrevious) {
             deleteDatabase(table);
         }
