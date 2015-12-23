@@ -1,6 +1,7 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.Activities;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -13,6 +14,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import com.sophomoreventure.collegeconnect.Activities.LoginActivity;
+import com.sophomoreventure.collegeconnect.R;
+import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
+import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -129,6 +137,31 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
     public void onPageScrollStateChanged(int state) {
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if(id == R.id.login_activity){
+
+            startActivity(new Intent(this,LoginActivity.class));
+        }
+
+
+        return super.onOptionsItemSelected(item);
     }
 
     /*

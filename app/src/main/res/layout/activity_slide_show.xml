@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/fragment_navigation_drawer"
-        android:name="com.sophomoreventure.collegeconnect.FragmentDrawer"
+        android:name="com.sophomoreventure.collegeconnect.fragments.FragmentDrawer"
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"

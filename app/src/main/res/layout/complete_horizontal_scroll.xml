@@ -29,7 +29,9 @@
             android:layout_alignParentTop="true"
             android:text="More" />
 
+
     </RelativeLayout>
+    
 
     <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/horizontalScrollView"
