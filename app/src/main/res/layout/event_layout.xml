@@ -23,6 +23,14 @@
         android:layout_marginTop="16dp"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:text="Introduction to Android"
+            android:textSize="18sp" />
+
         <include layout="@layout/two_line_layout"></include>
 
         <include layout="@layout/three_line_layout"></include>
