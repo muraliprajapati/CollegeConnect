@@ -16,5 +16,11 @@
         android:title="Login"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/create_event_activity"
+        android:orderInCategory="500"
+        android:title="Create Event"
+        app:showAsAction="never" />
+
 
 </menu>

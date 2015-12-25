@@ -21,6 +21,10 @@
             android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
+
+        <activity
+            android:name=".CreateEventActivity"
+            android:label="Create Event" />
     </application>
 
 </manifest>

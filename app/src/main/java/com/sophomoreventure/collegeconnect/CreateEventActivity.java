@@ -15,7 +15,7 @@ import android.widget.ImageView;
 /**
  * Created by Murali on 24/12/2015.
  */
-public class ImagePicker extends AppCompatActivity implements View.OnClickListener {
+public class CreateEventActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int RESULT_LOAD_IMAGE = 0;
     public static final int PICKER_BUTTON_ID = R.id.pickerButton;
     public static final int NOTIFICATION_BUTTON_ID = R.id.notificationButton;
@@ -37,7 +37,7 @@ public class ImagePicker extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_picker);
+        setContentView(R.layout.activity_create_event);
 
         eventHub = EventHub.getEventHub(this);
         eventId = event.getEventId().toString();

@@ -17,7 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.sophomoreventure.collegeconnect.Activities.LoginActivity;
+import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
 import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
@@ -158,6 +158,11 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
         if(id == R.id.login_activity){
 
             startActivity(new Intent(this,LoginActivity.class));
+        }
+
+        if (id == R.id.create_event_activity) {
+
+            startActivity(new Intent(this, CreateEventActivity.class));
         }
 
 
