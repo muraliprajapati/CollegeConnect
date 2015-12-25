@@ -15,9 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sophomoreventure.collegeconnect.ModelClass.Information;
-import com.sophomoreventure.collegeconnect.extras.MyApplication;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.adapters.AdapterDrawer;
+import com.sophomoreventure.collegeconnect.extras.MyApplication;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,6 +169,11 @@ public class FragmentDrawer extends android.support.v4.app.Fragment {
 
         @Override
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
         }
 
 
