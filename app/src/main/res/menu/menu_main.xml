@@ -22,5 +22,11 @@
         android:title="Create Event"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/event_view_activity"
+        android:orderInCategory="500"
+        android:title="Event"
+        app:showAsAction="never" />
+
 
 </menu>

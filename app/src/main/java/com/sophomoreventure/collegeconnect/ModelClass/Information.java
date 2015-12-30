@@ -6,5 +6,6 @@ package com.sophomoreventure.collegeconnect.ModelClass;
 public class Information {
     public int iconId;
     public String title;
+
 }
 

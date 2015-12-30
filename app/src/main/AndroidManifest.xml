@@ -25,6 +25,9 @@
         <activity
             android:name=".CreateEventActivity"
             android:label="Create Event" />
+        <activity
+            android:name=".EventView"
+            android:label="Event" />
     </application>
 
 </manifest>
