@@ -1,94 +1,104 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.UserInfoTask;
 
-public class LoginActivity extends AppCompatActivity {
+import org.apache.commons.io.IOUtils;
 
-    private RelativeLayout mRoot;
-    private TextInputLayout mEmailLayout;
-    private TextInputLayout mPasswordLayout;
-    private EditText mInputEmail;
-    private EditText mInputPassword;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+/**
+ * Created by Murali on 30/12/2015.
+ */
+public class LoginActivity extends AppCompatActivity {
+    EditText emailEditText;
+    EditText passEditText;
+    Button button;
+    Button regButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
-        mRoot = (RelativeLayout) findViewById(R.id.root_activity_second);
-        mEmailLayout = (TextInputLayout) findViewById(R.id.email_layout);
-        mPasswordLayout = (TextInputLayout) findViewById(R.id.password_layout);
-        mInputEmail = (EditText) findViewById(R.id.input_email);
-        mInputPassword = (EditText) findViewById(R.id.input_password);
+        emailEditText = (EditText) findViewById(R.id.input_email);
+        passEditText = (EditText) findViewById(R.id.input_password);
+        button = (Button) findViewById(R.id.login_button);
+        regButton = (Button) findViewById(R.id.register_button);
+        regButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserInfoTask userInfoTask = new UserInfoTask();
+                userInfoTask.execute();
+            }
+        });
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HttpAsyncTask task = new HttpAsyncTask();
+                task.execute();
+            }
+        });
 
     }
 
+    private class HttpAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... urls) {
+
+            String urlString = "https://sheltered-fjord-8731.herokuapp.com/api/user/reg";
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(urlString);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setUseCaches(false);
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return true;
-    }
+                String userCredentials = "vikas:password";
+                final String basicAuth = "Basic " + Base64.encodeToString(userCredentials.getBytes(), Base64.NO_WRAP);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+                connection.setRequestProperty("Authorization", basicAuth);
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setUseCaches(false);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.connect();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+                int responseCode = connection.getResponseCode();
+                //String responseMsg = connection.getResponseMessage();
+                Log.i("tag", "Authentication: " + basicAuth);
+                Log.i("tag", "RESPONSE CODE: " + responseCode);
+
+                if (responseCode == 200) {
+                    InputStream inputStr = connection.getInputStream();
+                    String encoding = connection.getContentEncoding() == null ? "UTF-8"
+                            : connection.getContentEncoding();
+                    String jsonResponse = IOUtils.toString(inputStr, encoding);
+                    Log.i("tag", jsonResponse);
+                    /************** For getting response from HTTP URL end ***************/
+
+                }
+
+            } catch (Exception e) {
+                Log.d("tag", e.getLocalizedMessage());
+            }
+            return null;
+
         }
 
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void submit(View view) {
-
-        boolean isEmptyEmail = isEmptyEmail();
-        boolean isEmptyPassword = isEmptyPassword();
-        if (isEmptyEmail && isEmptyPassword) {
-
-        } else if (isEmptyEmail && !isEmptyPassword) {
-            mEmailLayout.setError("Email Cannot Be Empty");
-            mPasswordLayout.setError(null);
-        } else if (!isEmptyEmail && isEmptyPassword) {
-            mPasswordLayout.setError("Password Cannot Be Empty");
-            mEmailLayout.setError(null);
-        } else {
-
-        }
-    }
-
-    private boolean isEmptyEmail() {
-        return mInputEmail.getText() == null
-                || mInputEmail.getText().toString() == null
-                || mInputEmail.getText().toString().isEmpty();
-
-    }
-
-    private boolean isEmptyPassword() {
-        return mInputPassword.getText() == null
-                || mInputPassword.getText().toString() == null
-                || mInputPassword.getText().toString().isEmpty();
 
     }
 }
