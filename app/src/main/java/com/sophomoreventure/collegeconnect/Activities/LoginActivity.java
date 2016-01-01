@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.RequestQueue;
+import com.sophomoreventure.collegeconnect.API;
+import com.sophomoreventure.collegeconnect.Network.RequestorPost;
+import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.UserInfoTask;
 
@@ -27,6 +31,10 @@ public class LoginActivity extends AppCompatActivity {
     EditText passEditText;
     Button button;
     Button regButton;
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
+    private String userName = null;
+    private String userPassword = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,9 +45,17 @@ public class LoginActivity extends AppCompatActivity {
         passEditText = (EditText) findViewById(R.id.input_password);
         button = (Button) findViewById(R.id.login_button);
         regButton = (Button) findViewById(R.id.register_button);
+
+
+        requestQueue = volleySingleton.getRequestQueue();
+
         regButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                userName = emailEditText.getText().toString();
+                userPassword = passEditText.getText().toString();
+
                 UserInfoTask userInfoTask = new UserInfoTask();
                 userInfoTask.execute();
             }
@@ -51,12 +67,13 @@ public class LoginActivity extends AppCompatActivity {
                 task.execute();
             }
         });
-
     }
 
     private class HttpAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... urls) {
+
+            RequestorPost.requestDataJSON(requestQueue, API.USER_REG_API,userName,userPassword);
 
             String urlString = "https://sheltered-fjord-8731.herokuapp.com/api/user/reg";
             HttpURLConnection connection = null;
