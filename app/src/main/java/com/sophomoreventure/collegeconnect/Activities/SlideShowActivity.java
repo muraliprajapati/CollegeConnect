@@ -1,8 +1,10 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -16,17 +18,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.EventView;
+import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
 import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
-
 import java.util.Timer;
 import java.util.TimerTask;
-
 import me.relex.circleindicator.CircleIndicator;
+import me.tatarka.support.job.JobInfo;
+import me.tatarka.support.job.JobScheduler;
 
 
 /**
@@ -44,6 +46,9 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
     //a layout grouping the toolbar and the tabs together
     //private ViewGroup mContainerToolbar;
     private FragmentDrawer mDrawerFragment;
+    private static final long POLL_FREQUENCY = 28800000;
+    private JobScheduler mJobScheduler;
+    private static final int JOB_ID = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,7 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
         });
 
         setupDrawer();
+        //setupJob();
 
         FragmentManager manager = getSupportFragmentManager();
         adapter = new SlideShowAdapter(manager);
@@ -119,6 +125,27 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
                 this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+    }
+
+
+    private void setupJob() {
+        mJobScheduler = JobScheduler.getInstance(this);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                buildJob();
+            }
+        }, 30000);
+    }
+
+    private void buildJob() {
+
+        JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, new ComponentName(this, ServiceClass.class));
+        builder.setPeriodic(POLL_FREQUENCY)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+                .setPersisted(true);
+        mJobScheduler.schedule(builder.build());
     }
 
     @Override
