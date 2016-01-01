@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.sophomoreventure.collegeconnect.API;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.UserInfoTask;
 
@@ -55,10 +56,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private class HttpAsyncTask extends AsyncTask<Void, Void, Void> {
+
+
         @Override
         protected Void doInBackground(Void... urls) {
 
-            String urlString = "https://sheltered-fjord-8731.herokuapp.com/api/user/reg";
+
+            String urlString = API.USER_REG_API;
             HttpURLConnection connection = null;
             try {
                 URL url = new URL(urlString);
