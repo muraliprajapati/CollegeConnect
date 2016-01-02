@@ -7,11 +7,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        layout="@layout/main_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_screen">
+
+        <include
+            layout="@layout/main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </LinearLayout>
+
+
+
+    <!-- OLD DRAWER
     <fragment
         android:id="@+id/fragment_navigation_drawer"
         android:name="com.sophomoreventure.collegeconnect.fragments.FragmentDrawer"
@@ -20,5 +32,15 @@
         android:layout_gravity="start"
         app:layout="@layout/fragment_navigation_drawer"
         tools:layout="@layout/fragment_navigation_drawer" />
+
+        -->
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/drawer_header"
+        app:menu="@menu/nav_menu" />
 
 </android.support.v4.widget.DrawerLayout>

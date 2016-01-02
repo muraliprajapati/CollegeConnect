@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -16,8 +17,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.EventView;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
@@ -34,7 +38,8 @@ import me.tatarka.support.job.JobScheduler;
 /**
  * Created by Murali on 08/12/2015.
  */
-public class SlideShowActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+public class SlideShowActivity extends AppCompatActivity implements
+        ViewPager.OnPageChangeListener ,NavigationView.OnNavigationItemSelectedListener {
 
 
     ViewPager slideShowPager;
@@ -49,6 +54,9 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
     private static final long POLL_FREQUENCY = 28800000;
     private JobScheduler mJobScheduler;
     private static final int JOB_ID = 100;
+    private NavigationView mNavView;
+    private DrawerLayout mDrawerLayout;
+    private LinearLayout mainScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +88,7 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
 
         setupDrawer();
         //setupJob();
-
+        mainScreen = (LinearLayout) findViewById(R.id.main_screen);
         FragmentManager manager = getSupportFragmentManager();
         adapter = new SlideShowAdapter(manager);
         slideShowPager = (ViewPager) findViewById(R.id.slideShowPager);
@@ -115,8 +123,17 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
         //set the Toolbar as ActionBar
         //setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         //setup the NavigationDrawer
+        mNavView = (NavigationView) findViewById(R.id.navView);
+        mNavView.setNavigationItemSelectedListener(this);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle dt = new ActionBarDrawerToggle(
+                this, mDrawerLayout, toolbar,
+                0, 0
+        );
+        mDrawerLayout.setDrawerListener(dt);
+        dt.syncState();
+        /*
         mDrawerFragment = (FragmentDrawer)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
@@ -125,7 +142,18 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
                 this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        */
     }
+
+
+    private void translateMainScreen(float slideOffset) {
+        if (mainScreen != null) {
+
+            mainScreen.setTranslationX(slideOffset * 550);
+        }
+    }
+
+
 
 
     private void setupJob() {
@@ -168,6 +196,15 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
     }
 
     @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -202,11 +239,36 @@ public class SlideShowActivity extends AppCompatActivity implements ViewPager.On
         return super.onOptionsItemSelected(item);
     }
 
-    /*
-    public View getContainerToolbar() {
-        return mContainerToolbar;
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        int id = menuItem.getItemId();
+
+            switch (id) {
+                case R.id.nav_events:
+                    menuItem.setChecked(true);
+                    mDrawerLayout.closeDrawers();
+                    break;
+                case R.id.nav_clubs:
+                    menuItem.setChecked(true);
+                    return false;
+                case R.id.nav_myenents:
+                    menuItem.setChecked(true);
+                    break;
+                case R.id.nav_myprofile:
+                    menuItem.setChecked(true);
+                    return false;
+                case R.id.nav_settings:
+                    menuItem.setChecked(true);
+                    return false;
+                case R.id.nav_rate:
+                    menuItem.setChecked(true);
+                    return false;
+
+            }
+
+        return true;
     }
-    */
+
 
     class SlideShowAdapter extends FragmentStatePagerAdapter {
 
