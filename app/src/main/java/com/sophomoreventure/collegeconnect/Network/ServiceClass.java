@@ -8,13 +8,13 @@ import me.tatarka.support.job.JobService;
 /**
  * Created by Vikas Kumar on 30-12-2015.
  */
-public class ServiceClass extends JobService implements DataListener {
+public class ServiceClass extends JobService{
     private JobParameters jobParameters;
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         this.jobParameters = jobParameters;
-        new TaskLoadData(this).execute();
+        //new TaskLoadData(this).execute();
         return true;
     }
 
@@ -22,9 +22,6 @@ public class ServiceClass extends JobService implements DataListener {
     public boolean onStopJob(JobParameters jobParameters) {
         return false;
     }
-
-    @Override
-    public void onDataLoaded(ArrayList<String> list) {
-        jobFinished(jobParameters, false);
-    }
 }
+
+

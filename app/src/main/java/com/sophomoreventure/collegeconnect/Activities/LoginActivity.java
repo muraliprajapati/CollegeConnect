@@ -1,5 +1,6 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,7 +16,6 @@ import com.sophomoreventure.collegeconnect.API;
 import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.R;
-import com.sophomoreventure.collegeconnect.UserInfoTask;
 
 import org.apache.commons.io.IOUtils;
 
@@ -47,17 +47,14 @@ public class LoginActivity extends AppCompatActivity {
         regButton = (Button) findViewById(R.id.register_button);
 
 
-        requestQueue = volleySingleton.getRequestQueue();
 
         regButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                userName = emailEditText.getText().toString();
-                userPassword = passEditText.getText().toString();
-
-                UserInfoTask userInfoTask = new UserInfoTask();
-                userInfoTask.execute();
+                startActivity(new Intent(view.getContext(),RegistrationActivity.class));
+                //UserInfoTask userInfoTask = new UserInfoTask();
+                //userInfoTask.execute();
             }
         });
         button.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... urls) {
 
-            RequestorPost.requestDataJSON(requestQueue, API.USER_REG_API,userName,userPassword);
+            RequestorPost.requestStringData(requestQueue, API.USER_REG_API, userName, userPassword);
 
             String urlString = "https://sheltered-fjord-8731.herokuapp.com/api/user/reg";
             HttpURLConnection connection = null;

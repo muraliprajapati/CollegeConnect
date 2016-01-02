@@ -27,7 +27,7 @@ public class TaskLoadData extends AsyncTask<Void, Void, ArrayList<String>> {
     @Override
     protected ArrayList<String> doInBackground(Void... params) {
 
-        //JSONObject response = RequestorPost.requestDataJSON(requestQueue, "https://sheltered-fjord-8731.herokuapp.com/api/user/reg");
+        //JSONObject response = RequestorPost.requestStringData(requestQueue, "https://sheltered-fjord-8731.herokuapp.com/api/user/reg");
 
         return null;
     }
@@ -35,7 +35,7 @@ public class TaskLoadData extends AsyncTask<Void, Void, ArrayList<String>> {
     @Override
     protected void onPostExecute(ArrayList<String> listMovies) {
         if (listener != null) {
-            listener.onDataLoaded(listMovies);
+            //listener.onDataLoaded(listMovies);
         }
     }
 }
