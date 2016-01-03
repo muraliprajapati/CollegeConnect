@@ -2,9 +2,9 @@ package com.sophomoreventure.collegeconnect.Activities;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,13 +13,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.API;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
-import com.sophomoreventure.collegeconnect.Network.Parserer;
 import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.R;
@@ -28,6 +25,8 @@ import org.json.JSONObject;
 
 public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener,DataListener{
 
+    HttpAsyncTask task = null;
+    Context context;
     private EditText userName,userEmail,password,rePassword;
     private CheckBox nonSvnitian;
     private Button nextButton;
@@ -35,9 +34,13 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private RequestQueue requestQueue;
     private String userNameData = null;
     private String userPasswordData = null;
-    HttpAsyncTask task = null;
     private LinearLayout mRoot;
-    Context context;
+    private View.OnClickListener mSnackBarClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         if(v.getId() == R.id.next_step_button){
 
+
             boolean isEmptyEmail = isEmptyEmail();
             boolean isEmptyPassword = isEmptyPassword();
             boolean isEmptyrePassword = isEmptyrePassword();
@@ -106,6 +110,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             }else {
                 if(password.getText().toString().equals(rePassword.getText().toString())){
                     if(isEmailValid(userEmail.getText().toString())){
+                        userNameData = userName.getText().toString();
+                        userPasswordData = password.getText().toString();
                         task.execute();
                     }else {
                         Snackbar.make(mRoot, "Invalid Email Address", Snackbar.LENGTH_SHORT)
@@ -123,39 +129,22 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-
     private boolean isEmptyEmail() {
-        return userEmail.getText() == null
-                || userEmail.getText().toString() == null
-                || userEmail.getText().toString().isEmpty();
+        return userEmail.getText() == null || userEmail.getText().toString().isEmpty();
 
     }
 
     private boolean isEmptyPassword() {
-        return password.getText() == null
-                || password.getText().toString() == null
-                || password.getText().toString().isEmpty();
+        return password.getText() == null || password.getText().toString().isEmpty();
     }
 
     private boolean isEmptyrePassword() {
-        return rePassword.getText() == null
-                || rePassword.getText().toString() == null
-                || rePassword.getText().toString().isEmpty();
+        return rePassword.getText() == null || rePassword.getText().toString().isEmpty();
     }
 
     private boolean isEmptyUserName() {
-        return userName.getText() == null
-                || userName.getText().toString() == null
-                || userName.getText().toString().isEmpty();
+        return userName.getText() == null || userName.getText().toString().isEmpty();
     }
-
-    private View.OnClickListener mSnackBarClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-        }
-    };
-
 
     private boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();

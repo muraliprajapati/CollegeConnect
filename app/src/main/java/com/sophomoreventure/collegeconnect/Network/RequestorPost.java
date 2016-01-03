@@ -70,7 +70,7 @@ public class RequestorPost {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i("vikas", response+"");
+                        Log.i("vikas", response.toString());
                         jsonObject = response;
                         Parserer.parseResponse(response,context);
                     }
@@ -87,7 +87,7 @@ public class RequestorPost {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
                 String creds = String.format("%s:%s", userName, userPassword);
-                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
                 params.put("Authorization", auth);
                 params.put("Content-Type", "application/x-www-form-urlencoded");
                 return params;
