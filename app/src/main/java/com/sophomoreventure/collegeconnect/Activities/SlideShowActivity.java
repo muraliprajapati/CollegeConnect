@@ -24,12 +24,15 @@ import android.widget.LinearLayout;
 
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.EventView;
+import com.sophomoreventure.collegeconnect.MyEventsActivity;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
 import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
+
 import java.util.Timer;
 import java.util.TimerTask;
+
 import me.relex.circleindicator.CircleIndicator;
 import me.tatarka.support.job.JobInfo;
 import me.tatarka.support.job.JobScheduler;
@@ -42,6 +45,8 @@ public class SlideShowActivity extends AppCompatActivity implements
         ViewPager.OnPageChangeListener ,NavigationView.OnNavigationItemSelectedListener {
 
 
+    private static final long POLL_FREQUENCY = 28800000;
+    private static final int JOB_ID = 100;
     ViewPager slideShowPager;
     SlideShowAdapter adapter;
     Timer timer;
@@ -51,9 +56,7 @@ public class SlideShowActivity extends AppCompatActivity implements
     //a layout grouping the toolbar and the tabs together
     //private ViewGroup mContainerToolbar;
     private FragmentDrawer mDrawerFragment;
-    private static final long POLL_FREQUENCY = 28800000;
     private JobScheduler mJobScheduler;
-    private static final int JOB_ID = 100;
     private NavigationView mNavView;
     private DrawerLayout mDrawerLayout;
     private LinearLayout mainScreen;
@@ -233,6 +236,11 @@ public class SlideShowActivity extends AppCompatActivity implements
         if (id == R.id.event_view_activity) {
 
             startActivity(new Intent(this, EventView.class));
+        }
+
+        if (id == R.id.my_event_activity) {
+
+            startActivity(new Intent(this, MyEventsActivity.class));
         }
 
 

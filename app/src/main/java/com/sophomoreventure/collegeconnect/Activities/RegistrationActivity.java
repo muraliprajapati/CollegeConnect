@@ -97,31 +97,19 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 Snackbar.make(mRoot, "One Or More Fields Are Blank", Snackbar.LENGTH_SHORT)
                         .setAction("Dismiss", mSnackBarClickListener)
                         .show();
-            } else if (isEmptyEmail && !isEmptyPassword) {
-                userEmail.setError("Email Cannot Be Empty");
-                password.setError(null);
-            } else if (!isEmptyEmail && isEmptyPassword) {
-                password.setError("Password Cannot Be Empty");
-                userEmail.setError(null);
-            } else if(isEmptyrePassword) {
-                rePassword.setError("Password Cannot Be Empty");
-            }else if(isEmptyUserName){
-                userName.setError("User Name Cannot Be Empty");
-            }else {
+            } else {
                 if(password.getText().toString().equals(rePassword.getText().toString())){
                     if(isEmailValid(userEmail.getText().toString())){
                         userNameData = userName.getText().toString();
                         userPasswordData = password.getText().toString();
                         task.execute();
                     }else {
-                        Snackbar.make(mRoot, "Invalid Email Address", Snackbar.LENGTH_SHORT)
-                                .setAction("Dismiss", mSnackBarClickListener)
+                        Snackbar.make(mRoot, "Invalid Email Address", Snackbar.LENGTH_LONG)
                                 .show();
                     }
 
                 }else {
-                    Snackbar.make(mRoot, "Password Does Not Match", Snackbar.LENGTH_SHORT)
-                            .setAction("Dismiss", mSnackBarClickListener)
+                    Snackbar.make(mRoot, "Password Does Not Match", Snackbar.LENGTH_LONG)
                             .show();
                 }
 

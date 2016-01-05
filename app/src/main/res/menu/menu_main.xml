@@ -24,8 +24,13 @@
 
     <item
         android:id="@+id/event_view_activity"
-        android:orderInCategory="500"
+        android:orderInCategory="600"
         android:title="Event"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/my_event_activity"
+        android:orderInCategory="700"
+        android:title="My Events"
         app:showAsAction="never" />
 
 
