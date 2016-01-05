@@ -68,6 +68,8 @@ public class DateTimePickerFragment extends DialogFragment implements View.OnCli
         timePicker = (TimePicker) view.findViewById(R.id.time_picker);
         timePicker.setIs24HourView(true);
 
+        datePicker.setMinDate(System.currentTimeMillis() - 1000);
+
         positiveButton = (Button) view.findViewById(R.id.positive_button);
         negativeButton = (Button) view.findViewById(R.id.negative_button);
 
