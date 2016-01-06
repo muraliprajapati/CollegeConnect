@@ -21,6 +21,7 @@ import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.R;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener,DataListener{
@@ -158,8 +159,12 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         @Override
         protected Void doInBackground(Void... urls) {
             Log.i("vikas","AsyncTask");
-            JSONObject jsonObject =
-                    RequestorPost.requestJsonData(requestQueue, API.USER_REG_API, userNameData, userPasswordData,context);
+            try {
+                JSONObject jsonObject =
+                        RequestorPost.requestJsonData(requestQueue, API.USER_REG_API, userNameData, userPasswordData, context);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 

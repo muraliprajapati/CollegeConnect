@@ -1,5 +1,8 @@
 package com.sophomoreventure.collegeconnect;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -24,6 +27,16 @@ public class EventUtility {
             empty = anArray == null;
         }
         return empty;
+    }
+
+    public static JSONObject getJsonForRegistration() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("rollno", "u13ec035");
+        jsonObject.put("name", "adasd");
+        jsonObject.put("email", "murali.prajapati555@gmail.com");
+        jsonObject.put("mobno", 7777);
+        return jsonObject;
+
     }
 }
 
