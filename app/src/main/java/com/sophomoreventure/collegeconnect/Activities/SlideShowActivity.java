@@ -20,7 +20,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.EventView;
@@ -41,9 +43,9 @@ import me.tatarka.support.job.JobScheduler;
 /**
  * Created by Murali on 08/12/2015.
  */
-public class SlideShowActivity extends AppCompatActivity implements
-        ViewPager.OnPageChangeListener ,NavigationView.OnNavigationItemSelectedListener {
 
+public class SlideShowActivity extends AppCompatActivity implements
+        ViewPager.OnPageChangeListener ,NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private static final long POLL_FREQUENCY = 28800000;
     private static final int JOB_ID = 100;
@@ -60,12 +62,24 @@ public class SlideShowActivity extends AppCompatActivity implements
     private NavigationView mNavView;
     private DrawerLayout mDrawerLayout;
     private LinearLayout mainScreen;
+    private TextView mIEEEtextview,mDristiTextView,mSAETextView,mACMTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_show);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mIEEEtextview = (TextView) findViewById(R.id.ieee_textview);
+        mDristiTextView = (TextView) findViewById(R.id.dristi_textview);
+        mSAETextView = (TextView) findViewById(R.id.sae_textview);
+        mACMTextView = (TextView) findViewById(R.id.acm_textview);
+
+        mIEEEtextview.setOnClickListener(this);
+        mACMTextView.setOnClickListener(this);
+        mDristiTextView.setOnClickListener(this);
+        mSAETextView.setOnClickListener(this);
+
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
@@ -275,6 +289,35 @@ public class SlideShowActivity extends AppCompatActivity implements
             }
 
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        if(id == mIEEEtextview.getId()){
+            Intent i = new Intent(v.getContext(),EventView.class);
+            i.putExtra("clubName","IEEE");
+            startActivity(i);
+        }
+
+        if(id == mACMTextView.getId()){
+            Intent i = new Intent(v.getContext(),EventView.class);
+            i.putExtra("clubName","ACM");
+            startActivity(i);
+        }
+
+        if(id == mSAETextView.getId()){
+            Intent i = new Intent(v.getContext(),EventView.class);
+            i.putExtra("clubName","SAE");
+            startActivity(i);
+        }
+
+        if(id == mDristiTextView.getId()){
+            Intent i = new Intent(v.getContext(),EventView.class);
+            i.putExtra("clubName","DRISTI");
+            startActivity(i);
+        }
     }
 
 

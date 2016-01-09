@@ -2,7 +2,6 @@ package com.sophomoreventure.collegeconnect.ModelClass;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,14 +13,14 @@ import java.util.List;
 /**
  * Created by Vikas Kumar on 21-12-2015.
  */
-public class Database {
+public class UserDatabase {
 
-    DataBaseHelper helper;
+    UserDataBaseHelper helper;
     private SQLiteDatabase mDatabase;
     private Context context;
 
-    public Database(Context context) {
-        helper = new DataBaseHelper(context);
+    public UserDatabase(Context context) {
+        helper = new UserDataBaseHelper(context);
         this.context = context;
     }
 
@@ -242,12 +241,12 @@ public class Database {
     }
 
     public void deleteDatabase(){
-        //mDatabase.delete(DataBaseHelper.Tablename,null,null);
+        //mDatabase.delete(UserDataBaseHelper.Tablename,null,null);
         context.deleteDatabase(helper.DataBaseName);
 
     }
 
-    public class DataBaseHelper extends SQLiteOpenHelper {
+    public class UserDataBaseHelper extends SQLiteOpenHelper {
 
         private static final int DataBaseVersion = 1;
         private static final String DataBaseName = "userDatabase";
@@ -263,7 +262,7 @@ public class Database {
 
         private static final String DROPTABLE = "DROP TABLE IF EXISTS" + Tablename;
 
-        public DataBaseHelper(Context context) {
+        public UserDataBaseHelper(Context context) {
             super(context, DataBaseName, null, DataBaseVersion);
         }
 

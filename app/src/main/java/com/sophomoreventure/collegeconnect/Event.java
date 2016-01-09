@@ -1,5 +1,14 @@
 package com.sophomoreventure.collegeconnect;
 
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.android.volley.RequestQueue;
+import com.sophomoreventure.collegeconnect.Network.RequestorPost;
+import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+
+import org.json.JSONObject;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.UUID;
@@ -21,6 +30,7 @@ public class Event {
     private String eventOrganizerTwo;
     private String eventOrganizerTwoPhoneNo;
     private boolean isAdmin;
+
 
     public Event() {
         eventId = UUID.randomUUID();
@@ -139,4 +149,7 @@ public class Event {
         }
 
     }
+
+
+
 }

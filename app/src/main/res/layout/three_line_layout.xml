@@ -31,25 +31,25 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/tv1"
+                android:id="@+id/event_vanue_line_one"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="At Production Seminar Hall"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv2"
+                android:id="@+id/event_vanue_line_two"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv1"
+                android:layout_below="@id/event_vanue_line_one"
                 android:text="Behind Applied Mech Dept"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/tv3"
+                android:id="@+id/event_vanue_line_three"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv2"
+                android:layout_below="@id/event_vanue_line_two"
                 android:text="SVNIT"
                 android:textSize="14sp" />
         </RelativeLayout>
