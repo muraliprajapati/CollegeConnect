@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/single_column_linear_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:background="@drawable/rectangular_back"
+    android:gravity="center_horizontal|center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/club_name_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:text="IEEE"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:typeface="normal" />
+</LinearLayout>
