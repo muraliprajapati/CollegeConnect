@@ -15,16 +15,21 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.EventView;
+import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.MyEventsActivity;
+import com.sophomoreventure.collegeconnect.Network.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
@@ -41,9 +46,9 @@ import me.tatarka.support.job.JobScheduler;
 /**
  * Created by Murali on 08/12/2015.
  */
-public class SlideShowActivity extends AppCompatActivity implements
-        ViewPager.OnPageChangeListener ,NavigationView.OnNavigationItemSelectedListener {
 
+public class SlideShowActivity extends AppCompatActivity implements
+        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private static final long POLL_FREQUENCY = 28800000;
     private static final int JOB_ID = 100;
@@ -52,7 +57,7 @@ public class SlideShowActivity extends AppCompatActivity implements
     Timer timer;
     Toolbar toolbar;
     int currentPage = 0;
-    int[] imageResArray = new int[]{R.drawable.pixeldropr, R.drawable.bird, R.drawable.pixel};
+    int[] imageResArray = new int[]{R.drawable.poster_five, R.drawable.poster_four, R.drawable.poster_three, R.drawable.poster_two, R.drawable.poster_three};
     //a layout grouping the toolbar and the tabs together
     //private ViewGroup mContainerToolbar;
     private FragmentDrawer mDrawerFragment;
@@ -61,11 +66,17 @@ public class SlideShowActivity extends AppCompatActivity implements
     private DrawerLayout mDrawerLayout;
     private LinearLayout mainScreen;
 
+    private RecyclerView horizonatalRV;
+    private RecyclerView aRV;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_show);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
@@ -116,6 +127,15 @@ public class SlideShowActivity extends AppCompatActivity implements
             }
         }, 500, 1500);
 
+        horizonatalRV = (RecyclerView) findViewById(R.id.byClubRecyclerView);
+        horizonatalRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        horizonatalRV.setAdapter(new HorizontalRecyclerAdapter(this));
+        horizonatalRV.setNestedScrollingEnabled(false);
+
+        aRV = (RecyclerView) findViewById(R.id.browseEventsRecyclerView);
+        aRV.setLayoutManager(new LinearLayoutManager(this));
+        aRV.setAdapter(new MyEventsAdapter(this));
+        aRV.setNestedScrollingEnabled(false);
     }
 
 
@@ -251,30 +271,36 @@ public class SlideShowActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         int id = menuItem.getItemId();
 
-            switch (id) {
-                case R.id.nav_events:
-                    menuItem.setChecked(true);
-                    mDrawerLayout.closeDrawers();
-                    break;
-                case R.id.nav_clubs:
-                    menuItem.setChecked(true);
-                    return false;
-                case R.id.nav_myenents:
-                    menuItem.setChecked(true);
-                    break;
-                case R.id.nav_myprofile:
-                    menuItem.setChecked(true);
-                    return false;
-                case R.id.nav_settings:
-                    menuItem.setChecked(true);
-                    return false;
-                case R.id.nav_rate:
-                    menuItem.setChecked(true);
-                    return false;
+        switch (id) {
+            case R.id.nav_events:
+                menuItem.setChecked(true);
+                mDrawerLayout.closeDrawers();
+                break;
+            case R.id.nav_clubs:
+                menuItem.setChecked(true);
+                return false;
+            case R.id.nav_myenents:
+                menuItem.setChecked(true);
+                break;
+            case R.id.nav_myprofile:
+                menuItem.setChecked(true);
+                return false;
+            case R.id.nav_settings:
+                menuItem.setChecked(true);
+                return false;
+            case R.id.nav_rate:
+                menuItem.setChecked(true);
+                return false;
 
-            }
+        }
 
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
     }
 
 

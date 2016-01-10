@@ -1,4 +1,4 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.Network;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,10 +9,12 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sophomoreventure.collegeconnect.R;
+
 /**
  * Created by Murali on 10/01/2016.
  */
-class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHolder> {
+public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHolder> {
 
     Context context;
 
@@ -22,7 +24,7 @@ class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHolder> {
     }
 
     @Override
-    public MyEventsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (parent instanceof RecyclerView) {
             int layoutId = R.layout.event_card_view;
             View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
@@ -34,7 +36,7 @@ class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MyEventsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
 
 
     }

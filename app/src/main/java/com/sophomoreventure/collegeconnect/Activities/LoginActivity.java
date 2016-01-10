@@ -1,6 +1,5 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
-import android.animation.Animator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,23 +10,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.android.volley.RequestQueue;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
-import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
-import com.sophomoreventure.collegeconnect.API;
-import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.R;
+
 import org.apache.commons.io.IOUtils;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import dmax.dialog.SpotsDialog;
 
 /**
@@ -43,7 +39,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String userName = null;
     private String userPassword = null;
     private Context context;
-    private FloatingActionButton mFAB;
     private TextView circular;
 
     @Override
@@ -57,7 +52,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         regButton = (Button) findViewById(R.id.register_button);
         circular = (TextView) findViewById(R.id.textView);
         context = this;
-        setupFAB();
         //final AlertDialog dialog = new SpotsDialog(this,R.style.Custom_loding_dialogbox);
         final AlertDialog dialog = new SpotsDialog(this);
 
@@ -78,38 +72,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    private void setupFAB() {
-        //define the icon for the main floating action button
-        ImageView iconFAB = new ImageView(this);
-        iconFAB.setImageResource(R.drawable.ic_action_new);
-
-        //set the appropriate background for the main floating action button along with its icon
-        mFAB = new FloatingActionButton.Builder(this)
-                .setContentView(iconFAB)
-                .setBackgroundDrawable(R.drawable.button_action_red)
-                .build();
-
-        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
-        itemBuilder.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_floating_action_sub_button));
-        mFAB.setTag("New User");
-        mFAB.setOnClickListener(this);
-
-    }
 
     @Override
     public void onClick(View v) {
         if(v.getTag() == "New User"){
-            int cx = (circular.getLeft() + circular.getRight()) / 2;
-            int cy = (circular.getTop() + circular.getBottom()) / 2;
 
-            // get the final radius for the clipping circle
-            int dx = Math.max(cx, circular.getWidth() - cx);
-            int dy = Math.max(cy, circular.getHeight() - cy);
-            float finalRadius = (float) Math.hypot(dx, dy);
-            Animator animator = ViewAnimationUtils.createCircularReveal(circular, cx, cy, 0, finalRadius);
-            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.setDuration(1500);
-            animator.start();
+
             //startActivity(new Intent(v.getContext(),RegistrationActivity.class));
         }
     }

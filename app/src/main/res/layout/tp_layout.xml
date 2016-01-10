@@ -13,7 +13,7 @@
 
         <include layout="@layout/complete_rv_by_club" />
 
-        <include layout="@layout/complete_rv_by_date" />
+        <include layout="@layout/complete_rv_browse_events" />
     </LinearLayout>
 
 

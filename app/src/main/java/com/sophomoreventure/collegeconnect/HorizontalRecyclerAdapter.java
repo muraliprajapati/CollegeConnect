@@ -1,13 +1,13 @@
 package com.sophomoreventure.collegeconnect;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by Murali on 10/01/2016.
@@ -66,7 +66,10 @@ public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRe
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(context, "Item clicked", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(v.getContext(), EventView.class);
+            i.putExtra("clubName", "IEEE");
+            context.startActivity(i);
+
         }
     }
 }

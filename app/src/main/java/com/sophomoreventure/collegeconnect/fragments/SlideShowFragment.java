@@ -33,7 +33,7 @@ public class SlideShowFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_slideshow,container,false);
         ImageView slideShowImage = (ImageView) view.findViewById(R.id.slideShowImageView);
-        slideShowImage.setImageResource(getArguments().getInt(IMAGE_RES_KEY,R.drawable.pixeldropr));
+        slideShowImage.setImageResource(getArguments().getInt(IMAGE_RES_KEY, R.drawable.poster_four));
         return view;
     }
 }
