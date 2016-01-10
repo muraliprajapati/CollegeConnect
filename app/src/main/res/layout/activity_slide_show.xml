@@ -32,7 +32,6 @@
         android:layout_gravity="start"
         app:layout="@layout/fragment_navigation_drawer"
         tools:layout="@layout/fragment_navigation_drawer" />
-
         -->
 
     <android.support.design.widget.NavigationView
