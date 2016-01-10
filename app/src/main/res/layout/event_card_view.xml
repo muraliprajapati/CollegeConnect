@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:elevation="6dp"
     card_view:background="@color/colorPrimary">
 
     <LinearLayout
@@ -18,6 +17,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/eventImageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/pixeldropr" />
@@ -36,20 +36,23 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/eventNameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="3dp"
                     android:text="IEEE Meet-up"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/eventClubTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="3dp"
                     android:text="IEEE" />
 
                 <TextView
+                    android:id="@+id/eventDateTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Today,5:30 PM"
@@ -59,7 +62,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.01"
+                android:layout_weight="0.02"
                 android:background="@color/divider" />
 
             <LinearLayout
@@ -71,9 +74,11 @@
 
 
                 <CheckBox
+                    android:id="@+id/attendingCheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:button="@drawable/checkbox_background" />
+                    android:button="@drawable/checkbox_background"
+                    android:checked="true" />
             </LinearLayout>
 
         </LinearLayout>
