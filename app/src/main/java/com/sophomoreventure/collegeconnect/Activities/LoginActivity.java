@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
@@ -32,8 +33,9 @@ import dmax.dialog.SpotsDialog;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     EditText emailEditText;
     EditText passEditText;
-    Button button;
+    Button loginButton;
     Button regButton;
+    Button guestLoginButton;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
     private String userName = null;
@@ -48,37 +50,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         emailEditText = (EditText) findViewById(R.id.input_email);
         passEditText = (EditText) findViewById(R.id.input_password);
-        button = (Button) findViewById(R.id.login_button);
+        loginButton = (Button) findViewById(R.id.login_button);
         regButton = (Button) findViewById(R.id.register_button);
-        circular = (TextView) findViewById(R.id.textView);
+        guestLoginButton = (Button) findViewById(R.id.guest_login_button);
+
         context = this;
-        //final AlertDialog dialog = new SpotsDialog(this,R.style.Custom_loding_dialogbox);
-        final AlertDialog dialog = new SpotsDialog(this);
 
-        regButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                startActivity(new Intent(view.getContext(),RegistrationActivity.class));
-                //UserInfoTask userInfoTask = new UserInfoTask();
-                //userInfoTask.execute();
-            }
-        });
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.show();
-            }
-        });
+        regButton.setOnClickListener(this);
+        loginButton.setOnClickListener(this);
+        guestLoginButton.setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View v) {
-        if(v.getTag() == "New User"){
+        int id = v.getId();
+        switch (id) {
+            case R.id.login_button:
+                final AlertDialog dialog = new SpotsDialog(this);
+                dialog.show();
+                break;
+            case R.id.register_button:
+                startActivity(new Intent(v.getContext(), RegistrationActivity.class));
+                break;
 
-
-            //startActivity(new Intent(v.getContext(),RegistrationActivity.class));
+            case R.id.guest_login_button:
+                Toast.makeText(LoginActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
         }
     }
 
