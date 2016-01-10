@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
+import com.sophomoreventure.collegeconnect.CustomLayoutManager;
 import com.sophomoreventure.collegeconnect.EventView;
 import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.MyEventsActivity;
@@ -133,7 +134,9 @@ public class SlideShowActivity extends AppCompatActivity implements
         horizonatalRV.setNestedScrollingEnabled(false);
 
         aRV = (RecyclerView) findViewById(R.id.browseEventsRecyclerView);
-        aRV.setLayoutManager(new LinearLayoutManager(this));
+        CustomLayoutManager layoutManager = new CustomLayoutManager(this);
+
+        aRV.setLayoutManager(layoutManager);
         aRV.setAdapter(new MyEventsAdapter(this));
         aRV.setNestedScrollingEnabled(false);
     }
