@@ -15,8 +15,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,7 +24,6 @@ import android.widget.LinearLayout;
 
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.EventView;
-import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.MyEventsActivity;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.R;
@@ -45,7 +42,7 @@ import me.tatarka.support.job.JobScheduler;
  * Created by Murali on 08/12/2015.
  */
 public class SlideShowActivity extends AppCompatActivity implements
-        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener {
+        ViewPager.OnPageChangeListener ,NavigationView.OnNavigationItemSelectedListener {
 
 
     private static final long POLL_FREQUENCY = 28800000;
@@ -63,9 +60,6 @@ public class SlideShowActivity extends AppCompatActivity implements
     private NavigationView mNavView;
     private DrawerLayout mDrawerLayout;
     private LinearLayout mainScreen;
-    private RecyclerView horizonatalRV;
-    private RecyclerView aRV;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,19 +116,6 @@ public class SlideShowActivity extends AppCompatActivity implements
             }
         }, 500, 1500);
 
-        horizonatalRV = (RecyclerView) findViewById(R.id.byClubRecyclerView);
-        horizonatalRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        horizonatalRV.setAdapter(new HorizontalRecyclerAdapter(this));
-        horizonatalRV.setNestedScrollingEnabled(false);
-
-        aRV = (RecyclerView) findViewById(R.id.browseEventsRecyclerView);
-        aRV.setLayoutManager(new LinearLayoutManager(this));
-        aRV.setAdapter(null);
-        aRV.setNestedScrollingEnabled(false);
-
-
-
     }
 
 
@@ -174,6 +155,8 @@ public class SlideShowActivity extends AppCompatActivity implements
             mainScreen.setTranslationX(slideOffset * 550);
         }
     }
+
+
 
 
     private void setupJob() {
@@ -240,9 +223,9 @@ public class SlideShowActivity extends AppCompatActivity implements
             return true;
         }
 
-        if (id == R.id.login_activity) {
+        if(id == R.id.login_activity){
 
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this,LoginActivity.class));
         }
 
         if (id == R.id.create_event_activity) {
@@ -268,28 +251,28 @@ public class SlideShowActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         int id = menuItem.getItemId();
 
-        switch (id) {
-            case R.id.nav_events:
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                break;
-            case R.id.nav_clubs:
-                menuItem.setChecked(true);
-                return false;
-            case R.id.nav_myenents:
-                menuItem.setChecked(true);
-                break;
-            case R.id.nav_myprofile:
-                menuItem.setChecked(true);
-                return false;
-            case R.id.nav_settings:
-                menuItem.setChecked(true);
-                return false;
-            case R.id.nav_rate:
-                menuItem.setChecked(true);
-                return false;
+            switch (id) {
+                case R.id.nav_events:
+                    menuItem.setChecked(true);
+                    mDrawerLayout.closeDrawers();
+                    break;
+                case R.id.nav_clubs:
+                    menuItem.setChecked(true);
+                    return false;
+                case R.id.nav_myenents:
+                    menuItem.setChecked(true);
+                    break;
+                case R.id.nav_myprofile:
+                    menuItem.setChecked(true);
+                    return false;
+                case R.id.nav_settings:
+                    menuItem.setChecked(true);
+                    return false;
+                case R.id.nav_rate:
+                    menuItem.setChecked(true);
+                    return false;
 
-        }
+            }
 
         return true;
     }

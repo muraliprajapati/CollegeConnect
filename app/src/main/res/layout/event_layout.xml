@@ -14,7 +14,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/event_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/pixel" />
@@ -28,10 +28,11 @@
 
             <TextView
                 android:layout_width="match_parent"
+                android:id="@+id/event_name"
                 android:layout_height="64dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
-                android:text="Introduction to Android"
+                android:text="Event Name"
                 android:textSize="18sp" />
 
             <include layout="@layout/two_line_layout" />

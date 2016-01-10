@@ -11,9 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.sophomoreventure.collegeconnect.EventUtility;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -26,10 +24,6 @@ public class RequestorPost {
 
     static boolean dataResponse = false;
     static JSONObject jsonObject = null;
-
-    public RequestorPost() {
-
-    }
 
     public static boolean requestStringData(final RequestQueue requestQueue, String url, final String userName, final String userPassword) {
 
@@ -67,14 +61,12 @@ public class RequestorPost {
         return dataResponse;
     }
 
-
     public static JSONObject requestJsonData(
             final RequestQueue requestQueue, String url, final String userName,
-            final String userPassword, final Context context) throws JSONException {
+            final String userPassword, final Context context) {
 
-        JSONObject jsonObjectForReg = EventUtility.getJsonForRegistration();
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObjectForReg,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

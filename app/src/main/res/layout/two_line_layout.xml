@@ -31,17 +31,17 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/tv1"
+                android:id="@+id/event_daytime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Wed,Dec 16 at 5:30PM"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv2"
+                android:id="@+id/event_dayleft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv1"
+                android:layout_below="@id/event_daytime"
                 android:text="Two days from today"
                 android:textSize="14sp" />
         </RelativeLayout>

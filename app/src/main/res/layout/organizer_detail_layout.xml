@@ -34,17 +34,17 @@
             android:layout_marginBottom="16dp">
 
             <TextView
-                android:id="@+id/tv1"
+                android:id="@+id/event_organizer_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Mr. India"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv2"
+                android:id="@+id/event_organizer_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv1"
+                android:layout_below="@id/event_organizer_name"
                 android:text="+91-9876543210"
                 android:textSize="14sp" />
         </RelativeLayout>
