@@ -88,17 +88,18 @@ public class DateTimePickerFragment extends DialogFragment implements View.OnCli
     @Override
     public void onClick(View view) {
         int id = view.getId();
+        Calendar calendar = setupCalendar();
         switch (id) {
             case R.id.positive_button:
-                dayOfMonth = datePicker.getDayOfMonth();
-                monthOfYear = datePicker.getMonth();
-                year = datePicker.getYear();
-                hour = timePicker.getCurrentHour();
-                minute = timePicker.getCurrentMinute();
+                if (index == -1) {
+                    event.setEventTime(calendar.getTimeInMillis());
+                    sendResult(Activity.RESULT_OK, event.getEventId());
+                } else {
+                    event.addNotificationDateTime(index, calendar);
+                    sendResult(Activity.RESULT_OK, event.getEventId());
+                }
 
-                Calendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth, hour, minute);
-                event.addNotificationDateTime(index, calendar);
-                sendResult(Activity.RESULT_OK, event.getEventId());
+
 
                 Log.i("tag", "" + datePicker.getDayOfMonth());
                 Log.i("tag", "" + datePicker.getMonth());
@@ -139,6 +140,15 @@ public class DateTimePickerFragment extends DialogFragment implements View.OnCli
             Toast.makeText(getActivity(), "Time doesn't go backward", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private Calendar setupCalendar() {
+        dayOfMonth = datePicker.getDayOfMonth();
+        monthOfYear = datePicker.getMonth();
+        year = datePicker.getYear();
+        hour = timePicker.getCurrentHour();
+        minute = timePicker.getCurrentMinute();
+        return new GregorianCalendar(year, monthOfYear, dayOfMonth, hour, minute);
     }
 
     @Override

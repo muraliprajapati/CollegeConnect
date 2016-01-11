@@ -30,7 +30,7 @@ import dmax.dialog.SpotsDialog;
 /**
  * Created by Murali on 30/12/2015.
  */
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     EditText emailEditText;
     EditText passEditText;
     Button loginButton;
@@ -77,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.guest_login_button:
                 Toast.makeText(LoginActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 

@@ -10,4 +10,12 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_registration">RegistrationActivity</string>
+
+    <string-array name="club_list">
+        <item>ACM</item>
+        <item>IETE</item>
+        <item>DRISHTI</item>
+        <item>CHRD</item>
+        <item>L&amp;D</item>
+    </string-array>
 </resources>

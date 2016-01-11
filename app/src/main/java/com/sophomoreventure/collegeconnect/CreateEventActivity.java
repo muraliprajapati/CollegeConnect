@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 /**
  * Created by Murali on 24/12/2015.
@@ -21,18 +22,21 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
     public static final int NOTIFICATION_BUTTON_ID = R.id.notificationButton;
     public static final int DESCRIPTION_BUTTON_ID = R.id.descriptionButton;
     public static final int ORGANIZER_BUTTON_ID = R.id.organizerButton;
+    public static final int CREATE_EVENT_BUTTON_ID = R.id.createEventButton;
 
     ImageView imageView;
     Button pickerButton;
     Button notificationButton;
     Button descriptionButton;
     Button organizerButton;
+    Button createEventButton;
 
     FragmentManager manager;
 
     EventHub eventHub;
     Event event = new Event();
     String eventId;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,17 +47,20 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
         eventId = event.getEventId().toString();
         eventHub.addEventToEventList(event);
 
+
         manager = getFragmentManager();
         imageView = (ImageView) findViewById(R.id.imageView);
         pickerButton = (Button) findViewById(R.id.pickerButton);
         notificationButton = (Button) findViewById(R.id.notificationButton);
         descriptionButton = (Button) findViewById(R.id.descriptionButton);
         organizerButton = (Button) findViewById(R.id.organizerButton);
+        createEventButton = (Button) findViewById(R.id.createEventButton);
 
         pickerButton.setOnClickListener(this);
         notificationButton.setOnClickListener(this);
         descriptionButton.setOnClickListener(this);
         organizerButton.setOnClickListener(this);
+        createEventButton.setOnClickListener(this);
 
     }
 
@@ -102,6 +109,10 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
             case ORGANIZER_BUTTON_ID:
                 OrganizerDialogFragment organizerDialogFragment = OrganizerDialogFragment.newInstance(eventId);
                 organizerDialogFragment.show(manager, "ORGANIZER_FRAGMENT");
+                break;
+            case CREATE_EVENT_BUTTON_ID:
+                Toast.makeText(CreateEventActivity.this, "Event Added", Toast.LENGTH_SHORT).show();
+                finish();
                 break;
         }
     }
