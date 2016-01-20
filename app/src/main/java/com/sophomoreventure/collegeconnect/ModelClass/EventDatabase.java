@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class EventDatabase {
         this.context = context;
     }
 
-    public void insertData(List<EventModel> listData,PackageManager pm,boolean clearPrevious) {
+    public void insertData(List<EventModel> listData, PackageManager pm, boolean clearPrevious) {
 
         if (clearPrevious) {
             deleteDatabase();
@@ -32,90 +33,95 @@ public class EventDatabase {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        for(int i = 0; i < listData.size(); i++) {
+        for (int i = 0; i < listData.size(); i++) {
 
             EventModel event = new EventModel();
-            contentValues.put(helper.EventName, event.getEventName());
-            contentValues.put(helper.EventDate, event.getEventDate());
-            contentValues.put(helper.EventStarttime,event.getEventStarttime());
-            contentValues.put(helper.EventEndTime, event.getEventEndTime());
-            contentValues.put(helper.EventAttend,event.getEventAttend());
-            contentValues.put(helper.EventClub,event.getEventClub());
-            contentValues.put(helper.EventDescription,event.getEventDescription());
-            contentValues.put(helper.EventLiked,event.getEventLiked());
-            contentValues.put(helper.Eventoganizername,event.getEventoganizername());
-            contentValues.put(helper.EventVanue,event.getEventVanue());
-            contentValues.put(helper.OrganizerMob,event.getOrganizerMob());
-            contentValues.put(helper.OrganizerEmail,event.getOrganizerEmail());
-            contentValues.put(helper.EventVarified,event.getEventvarified());
-            db.insert(helper.Tablename, null, contentValues);
+            contentValues.put(EventDataBaseHelper.EventName, event.getEventName());
+            contentValues.put(EventDataBaseHelper.EventDate, event.getEventDate());
+            contentValues.put(EventDataBaseHelper.EventStarttime, event.getEventStarttime());
+            contentValues.put(EventDataBaseHelper.EventEndTime, event.getEventEndTime());
+            contentValues.put(EventDataBaseHelper.EventAttend, event.getEventAttend());
+            contentValues.put(EventDataBaseHelper.EventClub, event.getEventClub());
+            contentValues.put(EventDataBaseHelper.EventDescription, event.getEventDescription());
+            contentValues.put(EventDataBaseHelper.EventLiked, event.getEventLiked());
+            contentValues.put(EventDataBaseHelper.Eventoganizername, event.getEventoganizername());
+            contentValues.put(EventDataBaseHelper.EventVanue, event.getEventVanue());
+            contentValues.put(EventDataBaseHelper.OrganizerMob, event.getOrganizerMob());
+            contentValues.put(EventDataBaseHelper.OrganizerEmail, event.getOrganizerEmail());
+            contentValues.put(EventDataBaseHelper.EventVarified, event.getEventvarified());
+            db.insert(EventDataBaseHelper.Tablename, null, contentValues);
         }
 
     }
 
-    public void insertRow(String eventname,String eventdate,String eventstartdate,String eventenddate,
-                          String eventattend,String eventclub,String eventdescription,String eventLiked
-                            ,String eventorganizer,String eventVanue,String organiizermob,String organizeremail
-                            ,String eventvarified){
+    public void insertRow(String eventname, String eventdate, String eventstartdate,
+                          String eventenddate, String eventattend, String eventclub,
+                          String eventdescription, String eventLiked, String eventorganizer,
+                          String eventVanue, String organiizermob, String organizeremail,
+                          String eventvarified) {
 
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(helper.EventName, eventname);
-        contentValues.put(helper.EventDate, eventdate);
-        contentValues.put(helper.EventStarttime,eventstartdate);
-        contentValues.put(helper.EventEndTime, eventenddate);
-        contentValues.put(helper.EventAttend,eventattend);
-        contentValues.put(helper.EventClub,eventclub);
-        contentValues.put(helper.EventDescription,eventdescription);
-        contentValues.put(helper.EventLiked,eventLiked);
-        contentValues.put(helper.Eventoganizername,eventorganizer);
-        contentValues.put(helper.EventVanue,eventVanue);
-        contentValues.put(helper.OrganizerMob,organiizermob);
-        contentValues.put(helper.OrganizerEmail,organizeremail);
-        contentValues.put(helper.EventVarified,eventvarified);
-        db.insert(helper.Tablename, null, contentValues);
+        contentValues.put(EventDataBaseHelper.EventName, eventname);
+        contentValues.put(EventDataBaseHelper.EventDate, eventdate);
+        contentValues.put(EventDataBaseHelper.EventStarttime, eventstartdate);
+        contentValues.put(EventDataBaseHelper.EventEndTime, eventenddate);
+        contentValues.put(EventDataBaseHelper.EventAttend, eventattend);
+        contentValues.put(EventDataBaseHelper.EventClub, eventclub);
+        contentValues.put(EventDataBaseHelper.EventDescription, eventdescription);
+        contentValues.put(EventDataBaseHelper.EventLiked, eventLiked);
+        contentValues.put(EventDataBaseHelper.Eventoganizername, eventorganizer);
+        contentValues.put(EventDataBaseHelper.EventVanue, eventVanue);
+        contentValues.put(EventDataBaseHelper.OrganizerMob, organiizermob);
+        contentValues.put(EventDataBaseHelper.OrganizerEmail, organizeremail);
+        contentValues.put(EventDataBaseHelper.EventVarified, eventvarified);
+        db.insert(EventDataBaseHelper.Tablename, null, contentValues);
 
     }
 
-    public  void setAttendEvent(){
+    public void setAttendEvent() {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(helper.EventAttend, "true");
+        contentValues.put(EventDataBaseHelper.EventAttend, "true");
         String[] selecArgs = {"false"};
-        db.update(helper.Tablename, contentValues, helper.EventAttend + " =?", selecArgs);
+        db.update(EventDataBaseHelper.Tablename, contentValues,
+                EventDataBaseHelper.EventAttend + " =?", selecArgs);
     }
 
-    public ArrayList<EventModel> selectByClub(String club){
+    public ArrayList<EventModel> selectByClub(String club) {
         ArrayList<EventModel> eventList = new ArrayList<>();
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         //String[] columns = {helper.UserEmail};
-        String query = "SELECT * FROM "+ helper.Tablename +" WHERE "+
-                helper.EventClub +"='"+ club +"';";
-        String whereClause = helper.EventClub +"='"+ club +"';";
-        String whereClause1 = helper.EventClub + " = ?";
+        String query = "SELECT * FROM " + EventDataBaseHelper.Tablename + " WHERE " +
+                EventDataBaseHelper.EventClub + "='" + club + "';";
+        String whereClause = EventDataBaseHelper.EventClub + "='" + club + "';";
+        String whereClause1 = EventDataBaseHelper.EventClub + " = ?";
         String[] whereArgs = {club};
-        Cursor cursor = db.query(helper.Tablename, null, whereClause1, whereArgs, null, null, null);
+        Cursor cursor = db.query(EventDataBaseHelper.Tablename, null, whereClause1, whereArgs,
+                null, null, null);
+
 
         while (cursor.moveToNext()) {
             EventModel event = new EventModel();
-            int index1 = cursor.getColumnIndex(helper.UID);
+            int index1 = cursor.getColumnIndex(EventDataBaseHelper.UID);
             int id = cursor.getInt(index1);
-            event.setEventName(cursor.getString(cursor.getColumnIndex(helper.EventName)));
-            event.setEventDescription(cursor.getString(cursor.getColumnIndex(helper.EventDescription)));
-            event.setEventLiked(cursor.getString(cursor.getColumnIndex(helper.EventLiked)));
-            event.setEventAttend(cursor.getString(cursor.getColumnIndex(helper.EventAttend)));
-            event.setEventClub(cursor.getString(cursor.getColumnIndex(helper.EventClub)));
-            event.setEventEndTime(cursor.getString(cursor.getColumnIndex(helper.EventEndTime)));
-            event.setEventStarttime(cursor.getString(cursor.getColumnIndex(helper.EventStarttime)));
-            event.setEventDate(cursor.getString(cursor.getColumnIndex(helper.EventDate)));
-            event.setEventVanue(cursor.getString(cursor.getColumnIndex(helper.EventVanue)));
-            event.setEventoganizername(cursor.getString(cursor.getColumnIndex(helper.Eventoganizername)));
-            event.setOrganizerEmail(cursor.getString(cursor.getColumnIndex(helper.OrganizerEmail)));
-            event.setOrganizerMob(cursor.getString(cursor.getColumnIndex(helper.OrganizerMob)));
-            event.setEventvarified(cursor.getString(cursor.getColumnIndex(helper.EventVarified)));
+            event.setEventName(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventName)));
+            event.setEventDescription(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventDescription)));
+            event.setEventLiked(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventLiked)));
+            event.setEventAttend(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventAttend)));
+            event.setEventClub(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventClub)));
+            event.setEventEndTime(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventEndTime)));
+            event.setEventStarttime(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventStarttime)));
+            event.setEventDate(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventDate)));
+            event.setEventVanue(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVanue)));
+            event.setEventoganizername(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.Eventoganizername)));
+            event.setOrganizerEmail(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerEmail)));
+            event.setOrganizerMob(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerMob)));
+            event.setEventvarified(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVarified)));
             eventList.add(event);
         }
+        cursor.close();
         return eventList;
 
     }
@@ -123,30 +129,35 @@ public class EventDatabase {
     public ArrayList<EventModel> viewAllData() {
 
         ArrayList<EventModel> eventList = new ArrayList<>();
-        String[] columns = {helper.UID, helper.EventName, helper.EventDate,helper.EventStarttime,helper.EventEndTime,
-        helper.EventAttend,helper.EventClub,helper.EventLiked,helper.EventDescription,helper.Eventoganizername,
-        helper.EventVanue,helper.OrganizerMob,helper.OrganizerEmail,helper.EventVarified};
+        String[] columns = {EventDataBaseHelper.UID, EventDataBaseHelper.EventName,
+                EventDataBaseHelper.EventDate, EventDataBaseHelper.EventStarttime,
+                EventDataBaseHelper.EventEndTime, EventDataBaseHelper.EventAttend,
+                EventDataBaseHelper.EventClub, EventDataBaseHelper.EventLiked,
+                EventDataBaseHelper.EventDescription, EventDataBaseHelper.Eventoganizername,
+                EventDataBaseHelper.EventVanue, EventDataBaseHelper.OrganizerMob,
+                EventDataBaseHelper.OrganizerEmail, EventDataBaseHelper.EventVarified};
         SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = db.query(helper.Tablename, columns, null, null, null, null, null);
+        Cursor cursor = db.query(EventDataBaseHelper.Tablename, columns, null, null, null, null, null);
         while (cursor.moveToNext()) {
             EventModel event = new EventModel();
-            int index1 = cursor.getColumnIndex(helper.UID);
+            int index1 = cursor.getColumnIndex(EventDataBaseHelper.UID);
             int id = cursor.getInt(index1);
-            event.setEventName(cursor.getString(cursor.getColumnIndex(helper.EventName)));
-            event.setEventDescription(cursor.getString(cursor.getColumnIndex(helper.EventDescription)));
-            event.setEventLiked(cursor.getString(cursor.getColumnIndex(helper.EventLiked)));
-            event.setEventAttend(cursor.getString(cursor.getColumnIndex(helper.EventAttend)));
-            event.setEventClub(cursor.getString(cursor.getColumnIndex(helper.EventClub)));
-            event.setEventEndTime(cursor.getString(cursor.getColumnIndex(helper.EventEndTime)));
-            event.setEventStarttime(cursor.getString(cursor.getColumnIndex(helper.EventStarttime)));
-            event.setEventDate(cursor.getString(cursor.getColumnIndex(helper.EventDate)));
-            event.setEventVanue(cursor.getString(cursor.getColumnIndex(helper.EventVanue)));
-            event.setEventoganizername(cursor.getString(cursor.getColumnIndex(helper.Eventoganizername)));
-            event.setOrganizerEmail(cursor.getString(cursor.getColumnIndex(helper.OrganizerEmail)));
-            event.setOrganizerMob(cursor.getString(cursor.getColumnIndex(helper.OrganizerMob)));
-            event.setEventvarified(cursor.getString(cursor.getColumnIndex(helper.EventVarified)));
+            event.setEventName(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventName)));
+            event.setEventDescription(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventDescription)));
+            event.setEventLiked(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventLiked)));
+            event.setEventAttend(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventAttend)));
+            event.setEventClub(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventClub)));
+            event.setEventEndTime(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventEndTime)));
+            event.setEventStarttime(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventStarttime)));
+            event.setEventDate(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventDate)));
+            event.setEventVanue(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVanue)));
+            event.setEventoganizername(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.Eventoganizername)));
+            event.setOrganizerEmail(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerEmail)));
+            event.setOrganizerMob(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerMob)));
+            event.setEventvarified(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVarified)));
             eventList.add(event);
         }
+        cursor.close();
 
         return eventList;
     }
@@ -154,13 +165,13 @@ public class EventDatabase {
     public int deleteRow(String name) {
         SQLiteDatabase db = helper.getWritableDatabase();
         String[] whereArgs = {name};
-        int count = db.delete(helper.Tablename, helper.EventName + " =?", whereArgs);
+        int count = db.delete(EventDataBaseHelper.Tablename, EventDataBaseHelper.EventName + " =?", whereArgs);
         return count;
     }
 
-    public void deleteDatabase(){
+    public void deleteDatabase() {
         //mDatabase.delete(UserDataBaseHelper.Tablename,null,null);
-        context.deleteDatabase(helper.DataBaseName);
+        context.deleteDatabase(EventDataBaseHelper.DataBaseName);
 
     }
 

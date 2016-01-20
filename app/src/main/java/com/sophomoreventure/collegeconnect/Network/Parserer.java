@@ -3,8 +3,6 @@ package com.sophomoreventure.collegeconnect.Network;
 import android.content.Context;
 import android.util.Log;
 
-import com.sophomoreventure.collegeconnect.Activities.RegistrationActivity;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,9 +16,9 @@ public class Parserer {
         DataListener dataListener;
         try {
             dataListener = (DataListener) context;
-            response = jsonObject.getString("Status");
+            response = jsonObject.getString("message");
             Log.i("vikas",response);
-            if(response.equalsIgnoreCase("Username not unique")){
+            if (response.equalsIgnoreCase("ERR14")) {
                 dataListener.onDataLoaded(true);
                 return true;
             }else {
