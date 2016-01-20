@@ -1,6 +1,8 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -17,17 +19,21 @@ import android.widget.LinearLayout;
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.API;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
-import com.sophomoreventure.collegeconnect.Network.RequestorPost;
+import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+import com.sophomoreventure.collegeconnect.NonSvnitRegActivity;
 import com.sophomoreventure.collegeconnect.R;
+import com.sophomoreventure.collegeconnect.SvnitRegActivity;
 
 import org.json.JSONObject;
 
-public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener,DataListener{
+import dmax.dialog.SpotsDialog;
+
+public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener, DataListener {
 
     HttpAsyncTask task = null;
     Context context;
-    private EditText userName,userEmail,password,rePassword;
+    private EditText userName, userEmail, password, rePassword;
     private CheckBox nonSvnitian;
     private Button nextButton;
     private VolleySingleton volleySingleton;
@@ -86,40 +92,28 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.next_step_button){
+        if (v.getId() == R.id.next_step_button) {
 
 
             boolean isEmptyEmail = isEmptyEmail();
             boolean isEmptyPassword = isEmptyPassword();
             boolean isEmptyrePassword = isEmptyrePassword();
             boolean isEmptyUserName = isEmptyUserName();
-            if (isEmptyEmail || isEmptyPassword || isEmptyrePassword ||isEmptyUserName) {
+            if (isEmptyPassword || isEmptyrePassword || isEmptyUserName) {
                 Snackbar.make(mRoot, "One Or More Fields Are Blank", Snackbar.LENGTH_SHORT)
                         .setAction("Dismiss", mSnackBarClickListener)
                         .show();
-            } else if (isEmptyEmail && !isEmptyPassword) {
-                userEmail.setError("Email Cannot Be Empty");
-                password.setError(null);
-            } else if (!isEmptyEmail && isEmptyPassword) {
-                password.setError("Password Cannot Be Empty");
-                userEmail.setError(null);
-            } else if(isEmptyrePassword) {
-                rePassword.setError("Password Cannot Be Empty");
-            }else if(isEmptyUserName){
-                userName.setError("User Name Cannot Be Empty");
-            }else {
-                if(password.getText().toString().equals(rePassword.getText().toString())){
-                    if(isEmailValid(userEmail.getText().toString())){
-                        userNameData = userName.getText().toString();
-                        userPasswordData = password.getText().toString();
-                        task.execute();
-                    }else {
-                        Snackbar.make(mRoot, "Invalid Email Address", Snackbar.LENGTH_SHORT)
-                                .setAction("Dismiss", mSnackBarClickListener)
-                                .show();
-                    }
+            } else {
+                if (password.getText().toString().equals(rePassword.getText().toString())) {
 
-                }else {
+                    userNameData = userName.getText().toString();
+                    userPasswordData = password.getText().toString();
+                    JSONObject jsonObject =
+                            RequestorGet.requestJsonData(requestQueue, API.USER_NAME_CHECK_API, userNameData, userPasswordData, context);
+//                    task.execute(userNameData,userPasswordData);
+
+
+                } else {
                     Snackbar.make(mRoot, "Password Does Not Match", Snackbar.LENGTH_SHORT)
                             .setAction("Dismiss", mSnackBarClickListener)
                             .show();
@@ -153,32 +147,41 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onDataLoaded(boolean response) {
 
-        if(response) {
+        if (response) {
             Snackbar.make(mRoot, "User Already registered", Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", mSnackBarClickListener)
                     .show();
-        }else{
-            if(nonSvnitian.isChecked()){
-                setContentView(R.layout.second_svnit_reg_layout);
-            }else {
-                setContentView(R.layout.second_non_svnit_reg_layout);
+        } else {
+            if (nonSvnitian.isChecked()) {
+                startActivity(new Intent(this, NonSvnitRegActivity.class));
+            } else {
+                startActivity(new Intent(this, SvnitRegActivity.class));
             }
         }
     }
 
-    private class HttpAsyncTask extends AsyncTask<Void, Void, Void> {
+    private class HttpAsyncTask extends AsyncTask<String, Void, Void> {
+        Dialog dialog;
         @Override
-        protected Void doInBackground(Void... urls) {
-            Log.i("vikas","AsyncTask");
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = new SpotsDialog(RegistrationActivity.this);
+            dialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            Log.i("vikas", "AsyncTask");
             JSONObject jsonObject =
-                    RequestorPost.requestJsonData(requestQueue, API.USER_REG_API, userNameData, userPasswordData,context);
+                    RequestorGet.requestJsonData(requestQueue, API.USER_NAME_CHECK_API, params[0], params[1], context);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            //task.cancel(true);
+            task.cancel(true);
+            dialog.dismiss();
         }
     }
 }
