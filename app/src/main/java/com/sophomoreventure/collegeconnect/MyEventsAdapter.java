@@ -1,4 +1,4 @@
-package com.sophomoreventure.collegeconnect.Network;
+package com.sophomoreventure.collegeconnect;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.sophomoreventure.collegeconnect.R;
 
 /**
  * Created by Murali on 10/01/2016.
@@ -63,7 +61,7 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
             eventNameTextView = (TextView) itemView.findViewById(R.id.eventNameTextView);
             eventClubTextView = (TextView) itemView.findViewById(R.id.eventClubTextView);
             dateTextView = (TextView) itemView.findViewById(R.id.eventDateTextView);
-            attendingCheckBox = (CheckBox) itemView.findViewById(R.id.attendingCheckBox);
+//            attendingCheckBox = (CheckBox) itemView.findViewById(R.id.attendingCheckBox);
 
 
             itemView.setOnClickListener(this);
@@ -71,8 +69,8 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-
-
+//            Intent intent = new Intent(context, EventView.class);
+//            context.startActivity(intent);
         }
     }
 }

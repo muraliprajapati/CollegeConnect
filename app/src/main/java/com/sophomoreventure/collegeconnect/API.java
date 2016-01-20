@@ -5,5 +5,7 @@ package com.sophomoreventure.collegeconnect;
  */
 public class API {
     public static final String USER_REG_API = "https://sheltered-fjord-8731.herokuapp.com/api/user/reg";
+    public static final String USER_NAME_CHECK_API = "https://sheltered-fjord-8731.herokuapp.com/api/unique/username";
     public static final String USER_PROFILE_API = "https://sheltered-fjord-8731.herokuapp.com/api/user/info";
+    public static final String EVENT_API = "http://sheltered-fjord-8731.herokuapp.com/api/events/";
 }

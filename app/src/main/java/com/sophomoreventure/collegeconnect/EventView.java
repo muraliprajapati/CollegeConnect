@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,10 +13,7 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.ModelClass.EventModel;
-import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -24,30 +22,33 @@ import java.util.ArrayList;
  */
 public class EventView extends AppCompatActivity {
 
-    private VolleySingleton volleySingleton;
-    private RequestQueue requestQueue;
     HttpAsyncTask task = null;
     Context context;
     EventModel eventData = null;
     EventDatabase eventDatabase;
     ArrayList<EventModel> listData;
     String clubName;
-
     ImageView mEventImage;
     TextView mEventName,mEventDayTime,mEventDayLeft,mEventAddressLineOne,mEventAddressLineTwo,
             mEventAddressLineThree,mEventOrganizerName,mEventorganizerMob;
+    Toolbar toolbar;
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_layout);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+
         mEventImage = (ImageView) findViewById(R.id.event_image);
         mEventName = (TextView) findViewById(R.id.event_name);
         mEventDayTime = (TextView) findViewById(R.id.event_daytime);
         mEventDayLeft = (TextView) findViewById(R.id.event_dayleft);
         mEventAddressLineOne = (TextView) findViewById(R.id.event_vanue_line_one);
         mEventAddressLineTwo = (TextView) findViewById(R.id.event_vanue_line_two);
-        mEventAddressLineThree = (TextView) findViewById(R.id.event_vanue_line_three);
         mEventOrganizerName = (TextView) findViewById(R.id.event_organizer_name);
         mEventorganizerMob = (TextView) findViewById(R.id.event_organizer_phone);
         eventDatabase = new EventDatabase(this);
@@ -85,14 +86,11 @@ public class EventView extends AppCompatActivity {
     }
 
     private void setEventData() {
-
         mEventName.setText(eventData.getEventName());
         mEventDayTime.setText(eventData.getEventDate());
         mEventAddressLineOne.setText(eventData.getEventVanue());
         mEventOrganizerName.setText(eventData.getEventoganizername());
         mEventorganizerMob.setText(eventData.getOrganizerMob());
-
-
     }
 
     private class HttpAsyncTask extends AsyncTask<Void, Void, Void> {

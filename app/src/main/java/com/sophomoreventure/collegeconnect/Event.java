@@ -1,32 +1,39 @@
 package com.sophomoreventure.collegeconnect;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.UUID;
 
 /**
  * Created by Murali on 24/12/2015.
  */
 public class Event {
-    Calendar[] notificationDateTimeCalendar = new Calendar[5];
-    Calendar calendar;
-    long eventTime;
+
+
     private UUID eventId;
     private String eventTitle;
     private String clubOfEvent;
     private String eventDescription;
-    private Calendar eventDateAndTime;
+    private long eventTime;
     private String eventVenue;
     private String eventOrganizerOne;
     private String eventOrganizerOnePhoneNo;
     private String eventOrganizerTwo;
     private String eventOrganizerTwoPhoneNo;
+    private long[] notificationDateTime = new long[5];
     private boolean isAdmin;
 
 
     public Event() {
         eventId = UUID.randomUUID();
-        initNotificationDateTime(notificationDateTimeCalendar);
+        eventTitle = "";
+        clubOfEvent = "";
+        eventDescription = "";
+        eventTime = 0;
+        eventVenue = "";
+        eventOrganizerOne = "";
+        eventOrganizerOnePhoneNo = "";
+        eventOrganizerTwo = "";
+        eventOrganizerTwoPhoneNo = "";
+        initNotificationDateTime(notificationDateTime);
     }
 
     public UUID getEventId() {
@@ -66,13 +73,6 @@ public class Event {
         this.eventDescription = eventDescription;
     }
 
-    public Calendar getEventDateAndTime() {
-        return eventDateAndTime;
-    }
-
-    public void setEventDateAndTime(Calendar eventDateAndTime) {
-        this.eventDateAndTime = eventDateAndTime;
-    }
 
     public String getEventVenue() {
         return eventVenue;
@@ -122,34 +122,29 @@ public class Event {
         isAdmin = admin;
     }
 
-    public Calendar[] getNotificationDateTimeArray() {
-        return notificationDateTimeCalendar;
+    public long[] getNotificationDateTimeArray() {
+        return notificationDateTime;
     }
 
-    void addNotificationDateTime(int index, Calendar dateAndTime) {
-        calendar = dateAndTime;
-        notificationDateTimeCalendar[index] = dateAndTime;
+    void addNotificationDateTime(int index, long dateAndTime) {
+
+        notificationDateTime[index] = dateAndTime;
     }
 
     String getNotificationDateTime(int index) {
 
-        long timeInMillis = notificationDateTimeCalendar[index].getTimeInMillis();
+        long timeInMillis = notificationDateTime[index];
         return EventUtility.getFriendlyDayString(timeInMillis);
 
 
     }
 
-    void initNotificationDateTime(Calendar[] array) {
-        int year = 1970;
-        int month = 0;
-        int day = 1;
-        Calendar calendar = new GregorianCalendar(year, month, day);
+    void initNotificationDateTime(long[] array) {
         for (int i = 0; i < array.length; i++) {
-            array[i] = calendar;
+            array[i] = 0;
         }
 
     }
-
 
 
 }

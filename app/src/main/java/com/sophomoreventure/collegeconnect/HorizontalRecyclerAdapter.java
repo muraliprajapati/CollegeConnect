@@ -66,8 +66,7 @@ public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRe
 
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(v.getContext(), EventView.class);
-            i.putExtra("clubName", "IEEE");
+            Intent i = new Intent(v.getContext(), EventsByClubActivity.class);
             context.startActivity(i);
 
         }

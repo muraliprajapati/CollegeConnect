@@ -95,17 +95,17 @@ public class DateTimePickerFragment extends DialogFragment implements View.OnCli
                     event.setEventTime(calendar.getTimeInMillis());
                     sendResult(Activity.RESULT_OK, event.getEventId());
                 } else {
-                    event.addNotificationDateTime(index, calendar);
+                    event.addNotificationDateTime(index, calendar.getTimeInMillis());
                     sendResult(Activity.RESULT_OK, event.getEventId());
                 }
 
 
-
-                Log.i("tag", "" + datePicker.getDayOfMonth());
-                Log.i("tag", "" + datePicker.getMonth());
-                Log.i("tag", "" + datePicker.getYear());
-                Log.i("tag", "" + timePicker.getCurrentHour());
-                Log.i("tag", "" + timePicker.getCurrentMinute());
+//
+//                Log.i("tag", "" + datePicker.getDayOfMonth());
+//                Log.i("tag", "" + datePicker.getMonth());
+//                Log.i("tag", "" + datePicker.getYear());
+//                Log.i("tag", "" + timePicker.getCurrentHour());
+//                Log.i("tag", "" + timePicker.getCurrentMinute());
 
                 alertDialog.dismiss();
                 break;
@@ -151,33 +151,5 @@ public class DateTimePickerFragment extends DialogFragment implements View.OnCli
         return new GregorianCalendar(year, monthOfYear, dayOfMonth, hour, minute);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i("tag", "date-onPause");
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i("tag", "date-onResume");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.i("tag", "date-onDetach");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.i("tag", "date-onDestroy");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.i("tag", "date-onDestroy");
-    }
 }

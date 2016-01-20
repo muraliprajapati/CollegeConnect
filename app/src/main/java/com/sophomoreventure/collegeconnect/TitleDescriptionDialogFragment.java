@@ -25,6 +25,7 @@ public class TitleDescriptionDialogFragment extends DialogFragment implements Al
     AlertDialog alertDialog;
     EditText titleEditText;
     EditText descriptionEditText;
+    EditText venueEditText;
     AutoCompleteTextView clubNameTextView;
     TextView eventDateAndTimeTextView;
     Button datePickButton;
@@ -55,6 +56,7 @@ public class TitleDescriptionDialogFragment extends DialogFragment implements Al
 
         titleEditText = (EditText) view.findViewById(R.id.titleEditText);
         descriptionEditText = (EditText) view.findViewById(R.id.descriptionEditText);
+        venueEditText = (EditText) view.findViewById(R.id.venueEditText);
         clubNameTextView = (AutoCompleteTextView) view.findViewById(R.id.clubNameAutoCompleteTextView);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, clubNames);
         clubNameTextView.setAdapter(adapter);
@@ -63,7 +65,7 @@ public class TitleDescriptionDialogFragment extends DialogFragment implements Al
         datePickButton = (Button) view.findViewById(R.id.eventPickDateButton);
         datePickButton.setOnClickListener(this);
 
-        if (event.getEventTitle() != null || event.getEventDescription() != null) {
+        if (event.getEventTitle() != null || event.getEventDescription() != null || event.getEventVenue() != null || event.getClubOfEvent() != null) {
             titleEditText.setText(event.getEventTitle());
             descriptionEditText.setText(event.getEventDescription());
         }
@@ -88,6 +90,8 @@ public class TitleDescriptionDialogFragment extends DialogFragment implements Al
             case DialogInterface.BUTTON_POSITIVE:
                 event.setEventTitle(titleEditText.getText().toString());
                 event.setEventDescription(descriptionEditText.getText().toString());
+                event.setClubOfEvent(clubNameTextView.getText().toString());
+                event.setEventVenue(venueEditText.getText().toString());
                 alertDialog.dismiss();
                 break;
 

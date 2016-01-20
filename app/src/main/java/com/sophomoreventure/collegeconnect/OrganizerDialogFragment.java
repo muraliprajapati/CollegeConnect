@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -76,9 +77,15 @@ public class OrganizerDialogFragment extends DialogFragment implements AlertDial
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
                 event.setEventOrganizerOne(orgOneEditText.getText().toString());
+
                 event.setEventOrganizerOnePhoneNo(orgOnePhoneEditText.getText().toString());
                 event.setEventOrganizerTwo(orgTwoEditText.getText().toString());
                 event.setEventOrganizerTwoPhoneNo(orgTwoPhoneEditText.getText().toString());
+                Log.i("tag", orgOneEditText.getText().toString());
+                Log.i("tag", orgOnePhoneEditText.getText().toString());
+                Log.i("tag", orgTwoEditText.getText().toString());
+                Log.i("tag", orgTwoPhoneEditText.getText().toString());
+
                 alertDialog.dismiss();
                 break;
 
