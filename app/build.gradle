@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '22.0.1'
+    buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId "com.sophomoreventure.collegeconnect"
         minSdkVersion 15
@@ -24,7 +24,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.mcxiaoke.volley:library:1.0.+'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'me.tatarka.support:jobscheduler:0.1.1'
     compile 'me.relex:circleindicator:1.1.6@aar'
     compile 'com.android.support:recyclerview-v7:23.1.1'

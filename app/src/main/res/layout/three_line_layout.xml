@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="88dp"
+    android:layout_height="72dp"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -23,7 +23,6 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="22dp"
         android:layout_marginTop="16dp">
 
         <RelativeLayout
@@ -43,14 +42,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/event_vanue_line_one"
                 android:text="Behind Applied Mech Dept"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/event_vanue_line_three"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/event_vanue_line_two"
-                android:text="SVNIT"
                 android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>

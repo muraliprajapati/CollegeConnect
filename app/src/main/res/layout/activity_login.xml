@@ -18,7 +18,8 @@
             android:id="@+id/input_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
             android:hint="Email Address or Svnit Roll No." />
     </android.support.design.widget.TextInputLayout>
 
@@ -32,7 +33,8 @@
             android:id="@+id/input_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
             android:hint="Password"
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
@@ -48,10 +50,11 @@
         android:textColor="@android:color/white" />
 
     <LinearLayout
+        android:id="@+id/reg_guest_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/login_button"
-        android:layout_marginTop="128dp"
+        android:layout_marginTop="32dp"
         android:orientation="horizontal">
 
         <Button
@@ -61,7 +64,6 @@
             android:layout_marginRight="4dp"
             android:layout_weight="1"
             android:background="@color/colorAccent"
-            android:onClick="register"
             android:text="New Registration"
             android:textColor="@android:color/white" />
 
@@ -71,10 +73,52 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/colorAccent"
-            android:onClick="register"
             android:text="Guest Login"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/guestCradLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/reg_guest_layout"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/background_horizontal_scroll_view"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/guest_name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:hint="Your name here" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/guest_college_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Your college name here" />
+
+            <Button
+                android:id="@+id/guest_final_login_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorAccent"
+                android:text="login"
+                android:textColor="@android:color/white" />
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

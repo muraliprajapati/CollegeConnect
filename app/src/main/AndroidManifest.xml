@@ -25,20 +25,28 @@
             android:label="Create Event" />
         <activity
             android:name=".EventView"
-            android:label="Event" />
+            android:label="Event"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.RegistrationActivity"
-            android:label="@string/title_activity_registration" >
-        </activity>
+            android:label="@string/title_activity_registration" />
 
         <activity
             android:name=".Activities.LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
 
         <activity
             android:name=".MyEventsActivity"
             android:label="@string/title_activity_login" >
         </activity>
+
+        <activity android:name=".EventsByClubActivity"></activity>
+        <activity
+            android:name=".OtherEventView"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".SvnitRegActivity" />
+        <activity android:name=".NonSvnitRegActivity" />
+
     </application>
 
 </manifest>
