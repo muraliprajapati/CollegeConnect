@@ -18,20 +18,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
-import com.sophomoreventure.collegeconnect.EventView;
+import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.MyEventsActivity;
-import com.sophomoreventure.collegeconnect.Network.MyEventsAdapter;
+import com.sophomoreventure.collegeconnect.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
+import com.sophomoreventure.collegeconnect.OtherEventView;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
 import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
@@ -73,11 +74,16 @@ public class SlideShowActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (EventUtility.isFirstRun(this) || !EventUtility.isLoggedIn(this)) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_show);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
@@ -159,6 +165,14 @@ public class SlideShowActivity extends AppCompatActivity implements
         );
         mDrawerLayout.setDrawerListener(dt);
         dt.syncState();
+
+        View header = mNavView.getHeaderView(0);
+
+        TextView userNameTextView = (TextView) header.findViewById(R.id.drawer_user_name);
+        userNameTextView.setText(EventUtility.getUserNameFromPref(this));
+
+
+
         /*
         mDrawerFragment = (FragmentDrawer)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
@@ -205,7 +219,6 @@ public class SlideShowActivity extends AppCompatActivity implements
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         // Toast.makeText(getApplicationContext(),position + " page scrolled",Toast.LENGTH_SHORT).show();
-        Log.i("TAG", "in OnPageScrolled");
     }
 
     @Override
@@ -227,6 +240,7 @@ public class SlideShowActivity extends AppCompatActivity implements
             mDrawerLayout.closeDrawer(Gravity.LEFT);
         } else {
             super.onBackPressed();
+            finish();
         }
     }
 
@@ -258,7 +272,7 @@ public class SlideShowActivity extends AppCompatActivity implements
 
         if (id == R.id.event_view_activity) {
 
-            startActivity(new Intent(this, EventView.class));
+            startActivity(new Intent(this, OtherEventView.class));
         }
 
         if (id == R.id.my_event_activity) {

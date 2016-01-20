@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.sophomoreventure.collegeconnect.ModelClass.Information;
 import com.sophomoreventure.collegeconnect.R;
@@ -26,6 +27,7 @@ import java.util.List;
 public class FragmentDrawer extends android.support.v4.app.Fragment {
 
     public static final String KEY_USER_LEARNED_DRAWER = "user_learned_drawer";
+    TextView userNameTextView;
     private RecyclerView mRecyclerDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
@@ -65,11 +67,14 @@ public class FragmentDrawer extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+
+
         mRecyclerDrawer = (RecyclerView) view.findViewById(R.id.drawerList);
         mAdapter = new AdapterDrawer(getActivity(), getData());
         mRecyclerDrawer.setAdapter(mAdapter);
@@ -91,7 +96,7 @@ public class FragmentDrawer extends android.support.v4.app.Fragment {
     public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar) {
         mContainer = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
-        mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar,R.string.drawer_open, R.string.drawer_close) {
+        mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -128,10 +133,10 @@ public class FragmentDrawer extends android.support.v4.app.Fragment {
 
     }
 
-    public static interface ClickListener {
-        public void onClick(View view, int position);
+    public interface ClickListener {
+        void onClick(View view, int position);
 
-        public void onLongClick(View view, int position);
+        void onLongClick(View view, int position);
     }
 
     static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
