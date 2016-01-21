@@ -3,6 +3,7 @@ package com.sophomoreventure.collegeconnect.Activities;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
 import com.sophomoreventure.collegeconnect.EventUtility;
@@ -260,11 +262,6 @@ public class SlideShowActivity extends AppCompatActivity implements
             return true;
         }
 
-        if(id == R.id.login_activity){
-
-            startActivity(new Intent(this,LoginActivity.class));
-        }
-
         if (id == R.id.create_event_activity) {
 
             startActivity(new Intent(this, CreateEventActivity.class));
@@ -278,6 +275,19 @@ public class SlideShowActivity extends AppCompatActivity implements
         if (id == R.id.my_event_activity) {
 
             startActivity(new Intent(this, MyEventsActivity.class));
+        }
+        if (id == R.id.logout) {
+            SharedPreferences pref = getSharedPreferences(Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.clear();
+            editor.apply();
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+
+
         }
 
 

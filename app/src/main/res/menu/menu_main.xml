@@ -11,12 +11,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/login_activity"
-        android:orderInCategory="400"
-        android:title="Login"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/create_event_activity"
         android:orderInCategory="500"
         android:title="Create Event"
@@ -31,6 +25,12 @@
         android:id="@+id/my_event_activity"
         android:orderInCategory="700"
         android:title="My Events"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/logout"
+        android:orderInCategory="800"
+        android:title="Logout"
         app:showAsAction="never" />
 
 
