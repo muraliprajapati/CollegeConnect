@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 /**
  * Created by Murali on 24/12/2015.
@@ -124,5 +125,40 @@ public class EventUtility {
         return user_pref.getString(SharedPrefConstants.USER_SHARED_PREF_USER_PASSWORD_KEY, null);
 
     }
+
+    private static HashMap<String, String> getErrorHashMap() {
+        HashMap<String, String> errorMap = new HashMap<>();
+        //HTTP CODE 401 (UNAUTHORIZED ACCESS)
+        errorMap.put("ERR01", "Login required");
+        errorMap.put("ERR02", "Username empty");
+        errorMap.put("ERR03", "Password empty");
+        errorMap.put("ERR04", "Incorrect username");
+        errorMap.put("ERR05", "Incorrect password");
+        errorMap.put("ERR06", "Token Invalid");
+        errorMap.put("ERR07", "Token expired");
+
+        //HTTP CODE 405 (METHOD NOT ALLOWED)
+        errorMap.put("ERR13", "Method not allowed");
+
+        //HTTP CODE 409 (CONFLICT)
+        errorMap.put("ERR14", "Username already taken");
+        errorMap.put("ERR13", "Method not allowed");
+        errorMap.put("ERR15", "Mobile number exists");
+        errorMap.put("ERR16", "Email id already registered");
+        errorMap.put("ERR17", "Email id and mobile number already registered");
+        errorMap.put("ERR18", "Roll number already registered");
+        errorMap.put("ERR19", "Roll number and mobile number already registered");
+        errorMap.put("ERR20", "Roll number and email id already registered");
+        errorMap.put("ERR21", "User with same info already registered");
+        errorMap.put("ERR22", "Event with same already registered");
+        return errorMap;
+    }
+
+    public static String getErrorString(String errorCode) {
+
+        return getErrorHashMap().get(errorCode);
+    }
+
+
 }
 

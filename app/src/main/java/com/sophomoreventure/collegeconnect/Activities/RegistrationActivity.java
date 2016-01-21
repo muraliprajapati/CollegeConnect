@@ -53,15 +53,14 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.first_reg_layout);
         userName = (EditText) findViewById(R.id.user_name_edit_text);
-        userEmail = (EditText) findViewById(R.id.email_edit_text);
         password = (EditText) findViewById(R.id.password_edit_text);
         rePassword = (EditText) findViewById(R.id.retype_password_edit_text);
         nonSvnitian = (CheckBox) findViewById(R.id.non_svnitian_check_box);
         nextButton = (Button) findViewById(R.id.next_step_button);
         mRoot = (LinearLayout) findViewById(R.id.root_layout);
         nextButton.setOnClickListener(this);
-
         context = this;
+
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
         task = new HttpAsyncTask();
@@ -94,8 +93,6 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         if (v.getId() == R.id.next_step_button) {
 
-
-            boolean isEmptyEmail = isEmptyEmail();
             boolean isEmptyPassword = isEmptyPassword();
             boolean isEmptyrePassword = isEmptyrePassword();
             boolean isEmptyUserName = isEmptyUserName();
@@ -123,10 +120,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private boolean isEmptyEmail() {
-        return userEmail.getText() == null || userEmail.getText().toString().isEmpty();
 
-    }
 
     private boolean isEmptyPassword() {
         return password.getText() == null || password.getText().toString().isEmpty();
@@ -154,10 +148,22 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         } else {
             if (nonSvnitian.isChecked()) {
                 startActivity(new Intent(this, NonSvnitRegActivity.class));
+                Intent intent = new Intent(this, NonSvnitRegActivity.class);
+                intent.putExtra("user_name", userNameData);
+                intent.putExtra("password", userPasswordData);
+                startActivity(intent);
             } else {
-                startActivity(new Intent(this, SvnitRegActivity.class));
+                Intent intent = new Intent(this, SvnitRegActivity.class);
+                intent.putExtra("user_name", userNameData);
+                intent.putExtra("password", userPasswordData);
+                startActivity(intent);
             }
         }
+    }
+
+    @Override
+    public void setError(String errorCode) {
+
     }
 
     private class HttpAsyncTask extends AsyncTask<String, Void, Void> {
