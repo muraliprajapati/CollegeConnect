@@ -15,23 +15,16 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Full Name" />
+            android:hint="Full Name"
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/college_name_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="College name" />
+            android:hint="College name" />
 
-        <AutoCompleteTextView
-            android:id="@+id/branch_auto_complete_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="16dp"
-            android:text="Branch" />
 
         <EditText
             android:id="@+id/mobile_number_edit_text"
@@ -40,8 +33,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
             android:ems="10"
-            android:inputType="phone"
-            android:text="Mobile number" />
+            android:hint="Mobile number (optional)"
+            android:inputType="phone" />
 
         <Button
             android:id="@+id/reg_button"

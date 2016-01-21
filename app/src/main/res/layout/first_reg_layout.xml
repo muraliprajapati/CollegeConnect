@@ -11,17 +11,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="16dp"
-        android:hint="Enter user name" />
+        android:hint="Enter user name"
+        android:text="murali" />
 
-    <EditText
-        android:id="@+id/email_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="16dp"
-        android:ems="10"
-        android:hint="Enter email address"
-        android:inputType="textEmailAddress" />
+
 
     <EditText
         android:id="@+id/password_edit_text"
@@ -31,7 +24,8 @@
         android:layout_margin="16dp"
         android:ems="10"
         android:hint="Enter password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:text="123" />
 
     <EditText
         android:id="@+id/retype_password_edit_text"
@@ -41,7 +35,8 @@
         android:layout_margin="16dp"
         android:ems="10"
         android:hint="Re-type password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:text="123" />
 
     <CheckBox
         android:id="@+id/non_svnitian_check_box"
