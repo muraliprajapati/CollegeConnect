@@ -126,12 +126,14 @@ public class RequestorPost {
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
                 new Response.Listener<JSONObject>() {
+                    DataListener listener = (DataListener) context;
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("vikas", response.toString());
                         jsonObject = response;
                         try {
                             parseAndSaveUserInfoToPref(context, userName, userPassword, Parserer.parseToken(response), jsonBody.toString(), svnitian);
+                            listener.onDataLoaded(true);
                             Intent intent = new Intent(context, SlideShowActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

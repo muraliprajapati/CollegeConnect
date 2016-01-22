@@ -124,12 +124,14 @@ public class RequestorGet {
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
                 new Response.Listener<JSONObject>() {
+                    DataListener listener = (DataListener) context;
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("vikas", response.toString());
                         String token = Parserer.parseToken(response);
                         try {
                             parseAndSaveToPref(context, userName, userPassword, token);
+                            listener.onDataLoaded(true);
                             Intent intent = new Intent(context, SlideShowActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -142,6 +144,7 @@ public class RequestorGet {
                     }
                 },
                 new Response.ErrorListener() {
+                    DataListener listener = (DataListener) context;
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i("vikas", error + "");
@@ -152,7 +155,7 @@ public class RequestorGet {
                             JSONObject jsonObject = new JSONObject(string);
                             Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
 
-                            DataListener listener = (DataListener) context;
+
                             listener.setError(Parserer.parseErrorResponse(jsonObject));
 
                         } catch (JSONException e) {

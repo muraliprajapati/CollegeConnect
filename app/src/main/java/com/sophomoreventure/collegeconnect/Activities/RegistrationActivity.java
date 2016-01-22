@@ -33,6 +33,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
     HttpAsyncTask task = null;
     Context context;
+    Dialog dialog;
     private EditText userName, userEmail, password, rePassword;
     private CheckBox nonSvnitian;
     private Button nextButton;
@@ -60,10 +61,10 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         mRoot = (LinearLayout) findViewById(R.id.root_layout);
         nextButton.setOnClickListener(this);
         context = this;
-
+        dialog = new SpotsDialog(this);
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
-        task = new HttpAsyncTask();
+
 
     }
 
@@ -105,6 +106,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
                     userNameData = userName.getText().toString();
                     userPasswordData = password.getText().toString();
+                    dialog.show();
                     JSONObject jsonObject =
                             RequestorGet.requestJsonData(requestQueue, API.USER_NAME_CHECK_API, userNameData, userPasswordData, context);
 //                    task.execute(userNameData,userPasswordData);
@@ -140,9 +142,12 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onDataLoaded(boolean response) {
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
 
         if (response) {
-            Snackbar.make(mRoot, "User Already registered", Snackbar.LENGTH_SHORT)
+            Snackbar.make(mRoot, "Username is already registered", Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", mSnackBarClickListener)
                     .show();
         } else {

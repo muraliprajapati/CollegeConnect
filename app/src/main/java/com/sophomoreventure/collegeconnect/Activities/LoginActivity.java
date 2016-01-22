@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     passEditText.setError("Password cannot be empty");
                     passEditText.requestFocus();
                 } else {
-
+                    dialog.show();
                     RequestorGet.requestLogin(requestQueue, API.USER_LOGIN_API, userName, password, this);
 
                 }
@@ -165,11 +165,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onDataLoaded(boolean response) {
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
 
     }
 
     @Override
     public void setError(String errorCode) {
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
         emailEditText.setError(null);
         passEditText.setError(null);
         Log.i("vikas", "in setError");

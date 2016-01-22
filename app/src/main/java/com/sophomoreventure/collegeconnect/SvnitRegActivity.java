@@ -1,5 +1,6 @@
 package com.sophomoreventure.collegeconnect;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,8 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
+import dmax.dialog.SpotsDialog;
+
 /**
  * Created by Murali on 19/01/2016.
  */
@@ -28,6 +31,7 @@ public class SvnitRegActivity extends AppCompatActivity implements View.OnClickL
     CheckBox hosteliteCheckBox, localiteCheckBox;
     Button registerButton;
     boolean[] missingFields = new boolean[3];
+    Dialog dialog;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
 
@@ -46,6 +50,7 @@ public class SvnitRegActivity extends AppCompatActivity implements View.OnClickL
         hostelName = (EditText) findViewById(R.id.hostel_name_edit_text);
         registerButton = (Button) findViewById(R.id.reg_button);
         registerButton.setOnClickListener(this);
+        dialog = new SpotsDialog(this);
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
     }
@@ -59,6 +64,7 @@ public class SvnitRegActivity extends AppCompatActivity implements View.OnClickL
             if (isValidUserInfo()) {
                 if (isEmailValid(email.getText())) {
                     try {
+                        dialog.show();
                         RequestorPost.requestRegistration(requestQueue, API.USER_REG_API, userName, password, getJsonBody(fullName.getText().toString(),
                                 email.getText().toString(), rollNo.getText().toString(), Integer.parseInt(mobileNo.getText().toString())), true, this);
                     } catch (JSONException e) {
@@ -117,11 +123,16 @@ public class SvnitRegActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onDataLoaded(boolean response) {
-
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
     }
 
     @Override
     public void setError(String errorCode) {
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
         email.setError(null);
         rollNo.setError(null);
         mobileNo.setError(null);
