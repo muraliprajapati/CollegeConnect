@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.API;
 import com.sophomoreventure.collegeconnect.EventUtility;
+import com.sophomoreventure.collegeconnect.ForgotPasswordActivity;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
@@ -32,6 +33,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText passEditText;
     EditText guestNameEditText;
     EditText guestCollegeEditText;
+    TextView forgotPasswordTextView;
     Button loginButton;
     Button regButton;
     Button guestLoginButton;
@@ -60,7 +62,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         regButton = (Button) findViewById(R.id.register_button);
         guestLoginButton = (Button) findViewById(R.id.guest_login_button);
         guestFinalLoginButton = (Button) findViewById(R.id.guest_final_login_button);
-        dialog = new SpotsDialog(this);
+        forgotPasswordTextView = (TextView) findViewById(R.id.forgot_password_text_view);
+        dialog = new SpotsDialog(this, R.style.Login_dialog);
         dialog.setCanceledOnTouchOutside(false);
         context = this;
 
@@ -71,6 +74,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginButton.setOnClickListener(this);
         guestLoginButton.setOnClickListener(this);
         guestFinalLoginButton.setOnClickListener(this);
+        forgotPasswordTextView.setOnClickListener(this);
     }
 
 
@@ -114,6 +118,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     isLayoutVisibile = true;
                 }
 
+                break;
+            case R.id.forgot_password_text_view:
+                startActivity(new Intent(this, ForgotPasswordActivity.class));
                 break;
             case R.id.guest_final_login_button:
                 if (isEmptyGuestName(guestName) || isEmptyGuestCollege(guestCollege)) {

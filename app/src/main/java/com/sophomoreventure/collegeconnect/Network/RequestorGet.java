@@ -156,7 +156,7 @@ public class RequestorGet {
                             Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
 
 
-                            listener.setError(Parserer.parseErrorResponse(jsonObject));
+                            listener.setError(Parserer.parseResponse(jsonObject));
 
                         } catch (JSONException e) {
                             e.printStackTrace();

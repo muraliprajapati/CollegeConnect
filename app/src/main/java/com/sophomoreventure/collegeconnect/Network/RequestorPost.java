@@ -42,7 +42,7 @@ public class RequestorPost {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("vikas", error+"");
+                Log.i("vikas", error + "");
             }
         }) {
             @Override
@@ -95,7 +95,7 @@ public class RequestorPost {
 //                            Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
 //                            ;
 //                            DataListener listener = (DataListener) context;
-//                            listener.setError(Parserer.parseErrorResponse(jsonObject));
+//                            listener.setError(Parserer.parseResponse(jsonObject));
 //
 //                        } catch (JSONException e) {
 //                            e.printStackTrace();
@@ -127,6 +127,7 @@ public class RequestorPost {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
                 new Response.Listener<JSONObject>() {
                     DataListener listener = (DataListener) context;
+
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("vikas", response.toString());
@@ -141,7 +142,7 @@ public class RequestorPost {
                             context.startActivity(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();
-                    }
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -156,11 +157,11 @@ public class RequestorPost {
                             Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
 
                             DataListener listener = (DataListener) context;
-                            listener.setError(Parserer.parseErrorResponse(jsonObject));
+                            listener.setError(Parserer.parseResponse(jsonObject));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                    }
+                        }
                     }
                 }) {
 
@@ -177,6 +178,42 @@ public class RequestorPost {
         };
         requestQueue.add(request);
         return jsonObject;
+
+    }
+
+    public static void requestForgotPassword(
+            final RequestQueue requestQueue, String url, final JSONObject jsonBody, final Context context) {
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+                new Response.Listener<JSONObject>() {
+                    DataListener listener = (DataListener) context;
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("vikas", response.toString());
+                        listener.onDataLoaded(true);
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("vikas", error + "");
+                        NetworkResponse response = error.networkResponse;
+                        Log.i("vikas", response.statusCode + "");
+
+                        if (response.statusCode == 404) {
+                            DataListener listener = (DataListener) context;
+                            listener.setError("Email is not registered");
+
+                        }
+                    }
+                }) {
+
+
+        };
+        requestQueue.add(request);
 
     }
 

@@ -31,7 +31,7 @@ public class Parserer {
         return false;
     }
 
-    public static String parseErrorResponse(JSONObject jsonObject) {
+    public static String parseResponse(JSONObject jsonObject) {
         String response = null;
         try {
 
