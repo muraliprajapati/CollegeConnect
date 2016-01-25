@@ -2,6 +2,7 @@ package com.sophomoreventure.collegeconnect.Activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -99,6 +100,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     passEditText.setError("Password cannot be empty");
                     passEditText.requestFocus();
                 } else {
+
+                    emailEditText.clearFocus();
+                    passEditText.clearFocus();
                     dialog.show();
                     RequestorGet.requestLogin(requestQueue, API.USER_LOGIN_API, userName, password, this);
 
@@ -188,10 +192,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Log.i("vikas", "in setError");
         if (errorCode.equals("ERR04")) {
             emailEditText.setError(EventUtility.getErrorString(errorCode));
+            emailEditText.requestFocus();
         }
         if (errorCode.equals("ERR05")) {
             passEditText.setError(EventUtility.getErrorString(errorCode));
+            passEditText.requestFocus();
         }
+
+        if (errorCode.equals("NOCON")) {
+            new android.support.v7.app.AlertDialog.Builder(this)
+                    .setMessage("Make sure your internet is working")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }
+
 
     }
 

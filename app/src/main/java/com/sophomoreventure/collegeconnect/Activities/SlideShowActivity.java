@@ -26,13 +26,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sophomoreventure.collegeconnect.ClubListAtivity;
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
 import com.sophomoreventure.collegeconnect.EventUtility;
+import com.sophomoreventure.collegeconnect.EventsAdapter;
 import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.MyEventsActivity;
-import com.sophomoreventure.collegeconnect.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.OtherEventView;
 import com.sophomoreventure.collegeconnect.R;
@@ -145,7 +146,7 @@ public class SlideShowActivity extends AppCompatActivity implements
         CustomLayoutManager layoutManager = new CustomLayoutManager(this);
 
         aRV.setLayoutManager(layoutManager);
-        aRV.setAdapter(new MyEventsAdapter(this));
+        aRV.setAdapter(new EventsAdapter(this));
         aRV.setNestedScrollingEnabled(false);
     }
 
@@ -194,8 +195,6 @@ public class SlideShowActivity extends AppCompatActivity implements
             mainScreen.setTranslationX(slideOffset * 550);
         }
     }
-
-
 
 
     private void setupJob() {
@@ -276,6 +275,11 @@ public class SlideShowActivity extends AppCompatActivity implements
 
             startActivity(new Intent(this, MyEventsActivity.class));
         }
+
+        if (id == R.id.club_list_activity) {
+
+            startActivity(new Intent(this, ClubListAtivity.class));
+        }
         if (id == R.id.logout) {
             SharedPreferences pref = getSharedPreferences(Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, MODE_PRIVATE);
             SharedPreferences.Editor editor = pref.edit();
@@ -297,6 +301,7 @@ public class SlideShowActivity extends AppCompatActivity implements
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         int id = menuItem.getItemId();
+        menuItem.setChecked(false);
 
         switch (id) {
             case R.id.nav_events:
@@ -304,20 +309,24 @@ public class SlideShowActivity extends AppCompatActivity implements
                 mDrawerLayout.closeDrawers();
                 break;
             case R.id.nav_clubs:
+                mDrawerLayout.closeDrawers();
+                startActivity(new Intent(SlideShowActivity.this, ClubListAtivity.class));
                 menuItem.setChecked(true);
-                return false;
+                break;
             case R.id.nav_myenents:
+                mDrawerLayout.closeDrawers();
+                startActivity(new Intent(this, MyEventsActivity.class));
                 menuItem.setChecked(true);
                 break;
             case R.id.nav_myprofile:
                 menuItem.setChecked(true);
-                return false;
+                break;
             case R.id.nav_settings:
                 menuItem.setChecked(true);
-                return false;
+                break;
             case R.id.nav_rate:
                 menuItem.setChecked(true);
-                return false;
+                break;
 
         }
 
