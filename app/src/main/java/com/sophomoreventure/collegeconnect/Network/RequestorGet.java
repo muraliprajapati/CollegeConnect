@@ -8,9 +8,11 @@ import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
@@ -151,15 +153,17 @@ public class RequestorGet {
                         NetworkResponse response = error.networkResponse;
                         Log.i("vikas", response.statusCode + "");
                         String string = new String(response.data);
-                        try {
-                            JSONObject jsonObject = new JSONObject(string);
-                            Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
+                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                            listener.setError("NOCON");
+                        } else {
+                            try {
+                                JSONObject jsonObject = new JSONObject(string);
+                                Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
+                                listener.setError(Parserer.parseResponse(jsonObject));
 
-
-                            listener.setError(Parserer.parseResponse(jsonObject));
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
 
 
