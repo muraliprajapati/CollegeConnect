@@ -24,9 +24,9 @@ public class EventView extends AppCompatActivity {
 
     HttpAsyncTask task = null;
     Context context;
-    EventModel eventData = null;
+    Event eventData = null;
     EventDatabase eventDatabase;
-    ArrayList<EventModel> listData;
+    ArrayList<Event> listData;
     String clubName;
     ImageView mEventImage;
     TextView mEventName,mEventDayTime,mEventDayLeft,mEventAddressLineOne,mEventAddressLineTwo,
@@ -81,20 +81,20 @@ public class EventView extends AppCompatActivity {
     }
 
 
-    public EventModel getData(){
+    public Event getData(){
 
-        EventModel event;
-        //listData = eventDatabase.selectByClub(clubName);
+        Event event;
+        listData = eventDatabase.selectByClub(clubName);
         event = listData.get(0);
         return event;
     }
 
     private void setEventData() {
-        mEventName.setText(eventData.getEventName());
-        mEventDayTime.setText(eventData.getEventDate());
-        mEventAddressLineOne.setText(eventData.getEventVanue());
-        mEventOrganizerName.setText(eventData.getEventoganizername());
-        mEventorganizerMob.setText(eventData.getOrganizerMob());
+        mEventName.setText(eventData.getEventTitle());
+        mEventDayTime.setText(eventData.getEventStarttime());
+        mEventAddressLineOne.setText(eventData.getEventVenue());
+        mEventOrganizerName.setText(eventData.getEventOrganizerOne());
+        mEventorganizerMob.setText(eventData.getEventOrganizerOnePhoneNo());
     }
 
     private class HttpAsyncTask extends AsyncTask<Void, Void, Void> {
