@@ -31,7 +31,6 @@ import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
 import com.sophomoreventure.collegeconnect.EventUtility;
-import com.sophomoreventure.collegeconnect.EventsAdapter;
 import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.MyEventsActivity;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
@@ -146,7 +145,7 @@ public class SlideShowActivity extends AppCompatActivity implements
         CustomLayoutManager layoutManager = new CustomLayoutManager(this);
 
         aRV.setLayoutManager(layoutManager);
-        aRV.setAdapter(new EventsAdapter(this));
+        aRV.setAdapter(new MyEventsAdapter(this));
         aRV.setNestedScrollingEnabled(false);
     }
 

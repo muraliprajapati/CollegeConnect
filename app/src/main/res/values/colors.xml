@@ -11,4 +11,5 @@
     <color name="divider">#B6B6B6</color>
     <color name="colorHighlight">#B6B6B6</color>
     <color name="colorAccentTransparent">#66607D8B</color>
+    <color name="grey_300">#E0E0E0</color>
 </resources>

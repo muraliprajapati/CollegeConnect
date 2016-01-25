@@ -3,7 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_horizontal_scroll_view"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="16dp"
+    android:background="@drawable/custom_background"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -14,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="By Club"
+            android:text="Events By Club"
             android:textColor="@color/primaryText"
             android:textSize="18sp"
             android:textStyle="normal"
