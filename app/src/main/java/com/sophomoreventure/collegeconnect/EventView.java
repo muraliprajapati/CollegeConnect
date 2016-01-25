@@ -52,6 +52,8 @@ public class EventView extends AppCompatActivity {
         mEventOrganizerName = (TextView) findViewById(R.id.event_organizer_name);
         mEventorganizerMob = (TextView) findViewById(R.id.event_organizer_phone);
         eventDatabase = new EventDatabase(this);
+
+        /*
         eventDatabase.insertRow("sparsh","Tue,Jan 16 at 5:00PM","14:00","15:00","yes","IEEE","for all","yes","Murali Parjapati"
                         ,"SVNIT","87565464","vrnvikas1009@gmail.com","yes");
 
@@ -63,6 +65,8 @@ public class EventView extends AppCompatActivity {
 
         eventDatabase.insertRow("Code Bomber","Fri,Jan 19 at 7:30PM","14:00","15:00","yes","ACM","for all","yes","vikas chaudhary"
                 ,"SVNIT","87565464","vrnvikas1009@gmail.com","yes");
+        */
+
         clubName = getIntent().getStringExtra("clubName");
         eventData = getData();
 
@@ -80,7 +84,7 @@ public class EventView extends AppCompatActivity {
     public EventModel getData(){
 
         EventModel event;
-        listData = eventDatabase.selectByClub(clubName);
+        //listData = eventDatabase.selectByClub(clubName);
         event = listData.get(0);
         return event;
     }

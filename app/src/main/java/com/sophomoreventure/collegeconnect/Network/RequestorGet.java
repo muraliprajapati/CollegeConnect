@@ -179,17 +179,18 @@ public class RequestorGet {
         };
 
         requestQueue.add(request);
-
-
     }
 
-    private static void parseAndSaveToPref(Context context, String userName, String userPassword, String token) throws JSONException {
+    private static void parseAndSaveToPref(Context context, String userName, String userPassword,
+                                           String token) throws JSONException {
 
-        SharedPreferences prefs = context.getSharedPreferences(Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(
+                Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(Constants.SharedPrefConstants.USER_SHARED_PREF_LOGGED_IN_KEY, true);
         editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_NAME_KEY, userName);
-        editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_PASSWORD_KEY, EventUtility.getHashString(userPassword, "SHA-1"));
+        editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_PASSWORD_KEY,
+                EventUtility.getHashString(userPassword, "SHA-1"));
         editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_TOKEN_KEY, token);
         editor.apply();
         Log.i("tag", token);

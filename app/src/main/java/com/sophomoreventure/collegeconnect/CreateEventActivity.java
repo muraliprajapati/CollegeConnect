@@ -175,7 +175,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
             missingFields[EVENT_NAME] = true;
             toastString.append("Event Name").append("\n");
         }
-        if (event.getClubOfEvent().isEmpty() || event.getClubOfEvent() == null) {
+        if (event.getEventClub().isEmpty() || event.getEventClub() == null) {
             missingFields[EVENT_CLUB] = true;
             toastString.append("Event club").append("\n");
         }

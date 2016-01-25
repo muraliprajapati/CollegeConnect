@@ -13,7 +13,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import java.util.UUID;
 
 /**
@@ -58,14 +57,14 @@ public class TitleDescriptionDialogFragment extends DialogFragment implements Al
         descriptionEditText = (EditText) view.findViewById(R.id.descriptionEditText);
         venueEditText = (EditText) view.findViewById(R.id.venueEditText);
         clubNameTextView = (AutoCompleteTextView) view.findViewById(R.id.clubNameAutoCompleteTextView);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, clubNames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, clubNames);
         clubNameTextView.setAdapter(adapter);
 
         eventDateAndTimeTextView = (TextView) view.findViewById(R.id.eventDateAndTime);
         datePickButton = (Button) view.findViewById(R.id.eventPickDateButton);
         datePickButton.setOnClickListener(this);
 
-        if (event.getEventTitle() != null || event.getEventDescription() != null || event.getEventVenue() != null || event.getClubOfEvent() != null) {
+        if (event.getEventTitle() != null || event.getEventDescription() != null || event.getEventVenue() != null || event.getEventClub() != null) {
             titleEditText.setText(event.getEventTitle());
             descriptionEditText.setText(event.getEventDescription());
         }
@@ -90,7 +89,7 @@ public class TitleDescriptionDialogFragment extends DialogFragment implements Al
             case DialogInterface.BUTTON_POSITIVE:
                 event.setEventTitle(titleEditText.getText().toString());
                 event.setEventDescription(descriptionEditText.getText().toString());
-                event.setClubOfEvent(clubNameTextView.getText().toString());
+                event.setEventClub(clubNameTextView.getText().toString());
                 event.setEventVenue(venueEditText.getText().toString());
                 alertDialog.dismiss();
                 break;
