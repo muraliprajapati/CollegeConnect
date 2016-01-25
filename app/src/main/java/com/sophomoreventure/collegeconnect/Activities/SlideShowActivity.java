@@ -1,5 +1,6 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
@@ -44,6 +46,7 @@ import me.relex.circleindicator.CircleIndicator;
 import me.tatarka.support.job.JobInfo;
 import me.tatarka.support.job.JobScheduler;
 
+
 /**
  * Created by Murali on 08/12/2015.
  */
@@ -51,9 +54,8 @@ import me.tatarka.support.job.JobScheduler;
 public class SlideShowActivity extends AppCompatActivity implements
         ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private static final long DOWNLOAD_WAIT_TIME = 28800000;
+    private static final long POLL_FREQUENCY = 28800000;
     private static final int JOB_ID = 100;
-    private static final int JOB_TIME = 30000;
     ViewPager slideShowPager;
     SlideShowAdapter adapter;
     Timer timer;
@@ -67,14 +69,13 @@ public class SlideShowActivity extends AppCompatActivity implements
     private NavigationView mNavView;
     private DrawerLayout mDrawerLayout;
     private LinearLayout mainScreen;
+
     private RecyclerView horizonatalRV;
     private RecyclerView aRV;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         if (EventUtility.isFirstRun(this) || !EventUtility.isLoggedIn(this)) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -82,8 +83,6 @@ public class SlideShowActivity extends AppCompatActivity implements
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_show);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -111,7 +110,7 @@ public class SlideShowActivity extends AppCompatActivity implements
         });
 
         setupDrawer();
-        setupJob();
+        //setupJob();
         mainScreen = (LinearLayout) findViewById(R.id.main_screen);
         FragmentManager manager = getSupportFragmentManager();
         adapter = new SlideShowAdapter(manager);
@@ -204,14 +203,16 @@ public class SlideShowActivity extends AppCompatActivity implements
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 buildJob();
             }
-        }, JOB_TIME);
+        }, 30000);
     }
 
     private void buildJob() {
+
         JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, new ComponentName(this, ServiceClass.class));
-        builder.setPeriodic(DOWNLOAD_WAIT_TIME)
+        builder.setPeriodic(POLL_FREQUENCY)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                 .setPersisted(true);
         mJobScheduler.schedule(builder.build());

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res/android"
+    app:id="@+id/clubListRecyclerView"
+    app:layout_width="match_parent"
+    app:layout_height="wrap_content"
+    app:scrollbars="vertical">
+
+</android.support.v7.widget.RecyclerView>

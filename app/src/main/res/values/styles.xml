@@ -23,12 +23,13 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Login_dialog" parent="android:Theme.DeviceDefault.Dialog">
+    <style name="Login_dialog" parent="Theme.AppCompat.Dialog.Alert">
             <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
         <item name="DialogTitleText">Logging in…</item>
             <item name="DialogSpotColor">@android:color/holo_orange_dark</item>
             <item name="DialogSpotCount">4</item>
-        </style>
+
+    </style>
 
 
     <style name="CustomShowcaseTheme" parent="ShowcaseView.Light">

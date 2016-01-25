@@ -37,11 +37,11 @@
 
         <activity
             android:name=".Activities.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".MyEventsActivity"
-            android:label="@string/title_activity_login" >
+            android:label="My Events">
         </activity>
 
         <service
@@ -58,6 +58,14 @@
         <activity
             android:name=".ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".ClubListAtivity"
+            android:label="Clubs" />
+        <activity
+            android:name=".ClubDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
 
     </application>
 
