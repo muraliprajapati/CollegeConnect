@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
@@ -148,7 +149,7 @@ public class SlideShowActivity extends AppCompatActivity implements
         CustomLayoutManager layoutManager = new CustomLayoutManager(this);
 
         aRV.setLayoutManager(layoutManager);
-        aRV.setAdapter(new MyEventsAdapter(this,""));
+        aRV.setAdapter(new MyEventsAdapter(this, ""));
         aRV.setNestedScrollingEnabled(false);
     }
 
@@ -197,8 +198,6 @@ public class SlideShowActivity extends AppCompatActivity implements
             mainScreen.setTranslationX(slideOffset * 550);
         }
     }
-
-
 
 
     private void setupJob() {
