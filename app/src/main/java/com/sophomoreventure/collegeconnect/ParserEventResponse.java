@@ -1,5 +1,7 @@
 package com.sophomoreventure.collegeconnect;
 
+import android.util.Log;
+
 import com.sophomoreventure.collegeconnect.ModelClass.EventModel;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,8 +15,8 @@ public class ParserEventResponse {
     public static ArrayList<Event> parseEventsJSON(JSONObject response) {
 
         ArrayList<Event> listEvents = new ArrayList<>();
-        String names[] = {};
-        int mobNumbers[] = {};
+        String names[] = new String[2];
+        int mobNumbers[] = new int[2];
 
         if(response == null || response.length() == 0){
             return null;
@@ -51,9 +53,12 @@ public class ParserEventResponse {
                 event.setEventOrganizerTwoPhoneNo(String.valueOf(mobNumbers[1]));
                 listEvents.add(event);
             }
+
+            Log.i("vikas", "parsing done");
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.i("vikas", listEvents.size() + "");
         return listEvents;
     }
 }

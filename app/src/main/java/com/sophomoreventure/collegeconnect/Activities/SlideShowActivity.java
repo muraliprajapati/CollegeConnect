@@ -25,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
@@ -76,6 +75,8 @@ public class SlideShowActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         if (EventUtility.isFirstRun(this) || !EventUtility.isLoggedIn(this)) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -83,6 +84,8 @@ public class SlideShowActivity extends AppCompatActivity implements
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_show);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -110,7 +113,7 @@ public class SlideShowActivity extends AppCompatActivity implements
         });
 
         setupDrawer();
-        //setupJob();
+        setupJob();
         mainScreen = (LinearLayout) findViewById(R.id.main_screen);
         FragmentManager manager = getSupportFragmentManager();
         adapter = new SlideShowAdapter(manager);
@@ -145,7 +148,7 @@ public class SlideShowActivity extends AppCompatActivity implements
         CustomLayoutManager layoutManager = new CustomLayoutManager(this);
 
         aRV.setLayoutManager(layoutManager);
-        aRV.setAdapter(new MyEventsAdapter(this));
+        aRV.setAdapter(new MyEventsAdapter(this,""));
         aRV.setNestedScrollingEnabled(false);
     }
 

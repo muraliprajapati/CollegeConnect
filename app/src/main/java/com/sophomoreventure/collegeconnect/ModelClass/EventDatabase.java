@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.sophomoreventure.collegeconnect.Event;
 
@@ -37,7 +38,7 @@ public class EventDatabase {
 
         for (int i = 0; i < listData.size(); i++) {
 
-            Event event = new Event();
+            Event event = listData.get(i);
             contentValues.put(EventDataBaseHelper.EventName, event.getEventTitle());
             contentValues.put(EventDataBaseHelper.EventDate, event.getEventTime());
             contentValues.put(EventDataBaseHelper.EventStarttime, event.getEventStarttime());
@@ -189,7 +190,7 @@ public class EventDatabase {
 
     public class EventDataBaseHelper extends SQLiteOpenHelper {
 
-        private static final int DataBaseVersion = 1;
+        private static final int DataBaseVersion = 2;
         private static final String DataBaseName = "eventDatabase";
         private static final String Tablename = "eventTable";
         private static final String UID = "id";
@@ -208,7 +209,7 @@ public class EventDatabase {
         private static final String IsAdmin = "isadmin";
         private static final String EventoganizernameSecond = "eventoeganizernamesecon";
         private static final String OrganizerMobSecond = "eventmobnamesecond";
-        private static final String EventServerID = "srverId";
+        private static final String EventServerID = "serverId";
         private static final String LastRegistrationTime = "registrationTime";
 
         private static final String CREATETABLE = "CREATE TABLE " +
@@ -223,7 +224,7 @@ public class EventDatabase {
                 + LastRegistrationTime + " VARCHAR(250), " + EventStarttime + " VARCHAR(250), "
                 + EventEndTime + " VARCHAR(250), " + EventDate + " INTEGER);";
 
-        private static final String DROPTABLE = "DROP TABLE IF EXISTS" + Tablename;
+        private static final String DROPTABLE = "DROP TABLE IF EXISTS " + Tablename;
 
         public EventDataBaseHelper(Context context) {
             super(context, DataBaseName, null, DataBaseVersion);

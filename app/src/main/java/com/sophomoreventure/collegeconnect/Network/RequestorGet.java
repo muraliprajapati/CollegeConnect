@@ -18,11 +18,15 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.Constants;
+import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventUtility;
+import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
+import com.sophomoreventure.collegeconnect.ParserEventResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -103,21 +107,36 @@ public class RequestorGet {
 
     }
 
-//    public static JSONObject requestDataJSON(RequestQueue requestQueue, String url) {
-//        JSONObject response = null;
-//        RequestFuture<JSONObject> requestFuture = RequestFuture.newFuture();
-//
-//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-//                url, (String) null, requestFuture, requestFuture);
-//
-//        requestQueue.add(request);
-//        try {
-//            response = requestFuture.get(30000, TimeUnit.MILLISECONDS);
-//        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-//            e.printStackTrace();
-//        }
-//        return response;
-//    }
+    public static void requestEventData(
+            final RequestQueue requestQueue, String url, final Context context) {
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+
+                        Log.i("vikas", response.toString());
+                        ArrayList<Event> listEvents = ParserEventResponse.parseEventsJSON(response);
+                        EventDatabase eventDatabase = new EventDatabase(context);
+                        eventDatabase.insertData(listEvents,false);
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("vikas", error + "");
+                    }
+                }) {
+
+
+        };
+        requestQueue.add(request);
+
+    }
 
     public static void requestLogin(
             final RequestQueue requestQueue, String url, final String userName,

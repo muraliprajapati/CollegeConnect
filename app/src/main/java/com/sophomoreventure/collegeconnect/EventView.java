@@ -34,6 +34,7 @@ public class EventView extends AppCompatActivity {
     Toolbar toolbar;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
+    int position;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,25 +69,28 @@ public class EventView extends AppCompatActivity {
         */
 
         clubName = getIntent().getStringExtra("clubName");
-        eventData = getData();
-
+        position = getIntent().getIntExtra("position",0);
         context = this;
+        eventData = getData(position);
+
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
 
         task = new HttpAsyncTask();
         task.execute();
-        setEventData();
+        if(eventData != null){
+            setEventData();
+        }
 
     }
 
 
-    public Event getData(){
-
-        Event event;
+    public Event getData(int position){
         listData = eventDatabase.selectByClub(clubName);
-        event = listData.get(0);
-        return event;
+        if(listData.size() == 0){
+            return null;
+        }
+        return listData.get(position);
     }
 
     private void setEventData() {
@@ -112,6 +116,4 @@ public class EventView extends AppCompatActivity {
             //task.cancel(true);
         }
     }
-
-
 }

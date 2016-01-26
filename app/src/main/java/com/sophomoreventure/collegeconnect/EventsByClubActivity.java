@@ -18,7 +18,10 @@ public class EventsByClubActivity extends AppCompatActivity {
         eventsByClubRV = (RecyclerView) findViewById(R.id.eventsByClubRecyclerView);
         CustomLayoutManager layoutManager = new CustomLayoutManager(this);
         eventsByClubRV.setLayoutManager(layoutManager);
-        eventsByClubRV.setAdapter(new MyEventsAdapter(this));
+        String clubName = getIntent().getStringExtra("clubName");
+
+        eventsByClubRV.setAdapter(new MyEventsAdapter(this,clubName));
         eventsByClubRV.setNestedScrollingEnabled(false);
+
     }
 }
