@@ -24,7 +24,7 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
     EventDatabase eventDatabase;
     ArrayList<Event> listData;
 
-    public MyEventsAdapter(Context context,String clubName) {
+    public MyEventsAdapter(Context context, String clubName) {
         this.context = context;
         this.clubName = clubName;
         eventDatabase = new EventDatabase(context);
@@ -46,7 +46,7 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         listData = eventDatabase.selectByClub(clubName);
-        if(listData.size() != 0) {
+        if (listData.size() != 0) {
             holder.eventNameTextView.setText(listData.get(position).getEventTitle());
             holder.eventClubTextView.setText(listData.get(position).getEventClub());
             holder.dateTextView.setText(listData.get(position).getEventStarttime());
@@ -83,9 +83,9 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-           Intent intent = new Intent(context, EventView.class);
-            intent.putExtra("clubName",clubName);
-            intent.putExtra("position",getPosition());
+            Intent intent = new Intent(context, EventView.class);
+            intent.putExtra("clubName", clubName);
+            intent.putExtra("position", getPosition());
             context.startActivity(intent);
         }
     }
