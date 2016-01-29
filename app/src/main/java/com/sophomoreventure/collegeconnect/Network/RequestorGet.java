@@ -107,9 +107,8 @@ public class RequestorGet {
 
     }
 
-    public static void requestEventData(
+    public static  void requestEventData(
             final RequestQueue requestQueue, String url, final Context context) {
-
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
                 new Response.Listener<JSONObject>() {
@@ -119,9 +118,7 @@ public class RequestorGet {
 
 
                         Log.i("vikas", response.toString());
-                        ArrayList<Event> listEvents = ParserEventResponse.parseEventsJSON(response);
-                        EventDatabase eventDatabase = new EventDatabase(context);
-                        eventDatabase.insertData(listEvents,false);
+                        ArrayList<Event> listEvents = ParserEventResponse.parseEventsJSON(response,context);
 
                     }
                 },

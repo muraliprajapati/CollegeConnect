@@ -20,12 +20,12 @@ public class Event {
     private String eventOrganizerTwoPhoneNo;
     private long[] notificationDateTime = new long[5];
     private boolean isAdmin;
-    private String EventAttend;
-    private String EventStarttime;
-    private String EventEndTime;
+    private int EventAttend;
+    private long EventStarttime;
+    private long EventEndTime;
     private boolean Eventvarified;
     private int eventServerId;
-    private int lastRegistrationTime;
+    private String lastRegistrationTime;
     private String organizerEmail;
 
     public String getOrganizerEmail() {
@@ -44,11 +44,11 @@ public class Event {
         this.eventServerId = eventServerId;
     }
 
-    public int getLastRegistrationTime() {
+    public String getLastRegistrationTime() {
         return lastRegistrationTime;
     }
 
-    public void setLastRegistrationTime(int lastRegistrationTime) {
+    public void setLastRegistrationTime(String lastRegistrationTime) {
         this.lastRegistrationTime = lastRegistrationTime;
     }
 
@@ -64,9 +64,9 @@ public class Event {
         eventOrganizerTwo = "null";
         eventOrganizerTwoPhoneNo = "null";
         initNotificationDateTime(notificationDateTime);
-        EventAttend = "null";
-        EventStarttime = "null";
-        EventEndTime = "null";
+        EventAttend = 0;
+        EventStarttime = 0;
+        EventEndTime = 0;
         Eventvarified = false;
         organizerEmail = "null";
     }
@@ -86,27 +86,27 @@ public class Event {
         this.isAdmin = isAdmin;
     }
 
-    public String getEventAttend() {
+    public int getEventAttend() {
         return EventAttend;
     }
 
-    public void setEventAttend(String eventAttend) {
+    public void setEventAttend(int eventAttend) {
         EventAttend = eventAttend;
     }
 
-    public String getEventStarttime() {
+    public long getEventStarttime() {
         return EventStarttime;
     }
 
-    public void setEventStarttime(String eventStarttime) {
+    public void setEventStarttime(long eventStarttime) {
         EventStarttime = eventStarttime;
     }
 
-    public String getEventEndTime() {
+    public long getEventEndTime() {
         return EventEndTime;
     }
 
-    public void setEventEndTime(String eventEndTime) {
+    public void setEventEndTime(long eventEndTime) {
         EventEndTime = eventEndTime;
     }
 

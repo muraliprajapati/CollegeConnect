@@ -54,19 +54,11 @@ public class EventView extends AppCompatActivity {
         mEventorganizerMob = (TextView) findViewById(R.id.event_organizer_phone);
         eventDatabase = new EventDatabase(this);
 
-        /*
-        eventDatabase.insertRow("sparsh","Tue,Jan 16 at 5:00PM","14:00","15:00","yes","IEEE","for all","yes","Murali Parjapati"
-                        ,"SVNIT","87565464","vrnvikas1009@gmail.com","yes");
+        eventDatabase.insertRow("sparsh",121212,1212,1212,12,"IETE","for all","Murali Parjapati","Vikas"
+                        ,"SVNIT","87565464","87565464","vrnvikas1009@gmail.com","yes",true,1,"lasttimeNone");
 
-        eventDatabase.insertRow("Light Follower","Wed,Jan 17 at 5:30PM","14:00","15:00","yes","DRISTI","for all","yes","Siddhant loya"
-                ,"SVNIT","87565464","vrnvikas1009@gmail.com","yes");
-
-        eventDatabase.insertRow("SonicRace","Thur,Jan 18 at 6:30PM","14:00","15:00","yes","SAE","for all","yes","Rahul Mehra"
-                ,"SVNIT","87565464","vrnvikas1009@gmail.com","yes");
-
-        eventDatabase.insertRow("Code Bomber","Fri,Jan 19 at 7:30PM","14:00","15:00","yes","ACM","for all","yes","vikas chaudhary"
-                ,"SVNIT","87565464","vrnvikas1009@gmail.com","yes");
-        */
+        eventDatabase.insertRow("Light Follower",121212,1212,1212,12,"DRISTI","for all","vikas","Siddhant loya"
+                ,"SVNIT","87565464","45215456","vrnvikas1009@gmail.com","yes",true,1,"no time");
 
         clubName = getIntent().getStringExtra("clubName");
         position = getIntent().getIntExtra("position",0);
@@ -81,7 +73,6 @@ public class EventView extends AppCompatActivity {
         if(eventData != null){
             setEventData();
         }
-
     }
 
 
@@ -95,7 +86,7 @@ public class EventView extends AppCompatActivity {
 
     private void setEventData() {
         mEventName.setText(eventData.getEventTitle());
-        mEventDayTime.setText(eventData.getEventStarttime());
+        //mEventDayTime.setText((int) eventData.getEventStarttime());
         mEventAddressLineOne.setText(eventData.getEventVenue());
         mEventOrganizerName.setText(eventData.getEventOrganizerOne());
         mEventorganizerMob.setText(eventData.getEventOrganizerOnePhoneNo());
