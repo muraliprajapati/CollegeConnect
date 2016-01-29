@@ -61,7 +61,7 @@ public class ClubListAtivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.clubNameTextView.setText(clubList[position]);
-            holder.clubImageView.setImageResource(clubImageList[position]);
+//            holder.clubImageView.setImageResource(clubImageList[position]);
         }
 
 
@@ -79,7 +79,7 @@ public class ClubListAtivity extends AppCompatActivity {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                clubImageView = (ImageView) itemView.findViewById(R.id.clubImageView);
+//                clubImageView = (ImageView) itemView.findViewById(R.id.clubImageView);
                 clubNameTextView = (TextView) itemView.findViewById(R.id.clubNameTextView);
                 itemView.setOnClickListener(this);
             }

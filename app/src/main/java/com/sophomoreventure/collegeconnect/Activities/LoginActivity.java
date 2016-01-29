@@ -1,5 +1,7 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +11,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,13 +29,16 @@ import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.R;
 
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+
 import dmax.dialog.SpotsDialog;
 
 /**
  * Created by Murali on 30/12/2015.
  */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, DataListener {
-    EditText emailEditText;
+    AutoCompleteTextView emailEditText;
     EditText passEditText;
     EditText guestNameEditText;
     EditText guestCollegeEditText;
@@ -55,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         guestCradLayout = (LinearLayout) findViewById(R.id.guestCradLayout);
-        emailEditText = (EditText) findViewById(R.id.input_email);
+        emailEditText = (AutoCompleteTextView) findViewById(R.id.input_email);
         passEditText = (EditText) findViewById(R.id.input_password);
         guestNameEditText = (EditText) findViewById(R.id.guest_name_edit_text);
         guestCollegeEditText = (EditText) findViewById(R.id.guest_college_edit_text);
@@ -67,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         dialog = new SpotsDialog(this, R.style.Login_dialog);
         dialog.setCanceledOnTouchOutside(false);
         context = this;
+        emailEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getAccountEmailAddress(this)));
 
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
@@ -201,7 +210,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (errorCode.equals("NOCON")) {
             new android.support.v7.app.AlertDialog.Builder(this)
-                    .setMessage("Make sure your internet is working")
+                    .setMessage("It seems your internet is not working working")
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -213,5 +222,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private ArrayList<String> getAccountEmailAddress(Context context) {
+        ArrayList<String> emailAddressList = new ArrayList<>();
+        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+        Account[] accounts = AccountManager.get(context).getAccounts();
+        for (Account account : accounts) {
+            if (emailPattern.matcher(account.name).matches()) {
+                String possibleEmail = account.name;
+                emailAddressList.add(possibleEmail);
+            }
+        }
+        return emailAddressList;
+    }
 
 }

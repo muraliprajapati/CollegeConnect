@@ -1,7 +1,9 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
 
+import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +29,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.sophomoreventure.collegeconnect.ClubListAtivity;
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
@@ -33,7 +38,9 @@ import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.MyEventsActivity;
 import com.sophomoreventure.collegeconnect.MyEventsAdapter;
+import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
+import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.OtherEventView;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
@@ -42,6 +49,7 @@ import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import dmax.dialog.SpotsDialog;
 import me.relex.circleindicator.CircleIndicator;
 import me.tatarka.support.job.JobInfo;
 import me.tatarka.support.job.JobScheduler;
@@ -52,16 +60,17 @@ import me.tatarka.support.job.JobScheduler;
  */
 
 public class SlideShowActivity extends AppCompatActivity implements
-        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, DataListener {
 
-    private static final long POLL_FREQUENCY = 28800000;
+    private static final long POLL_FREQUENCY = 1800;
     private static final int JOB_ID = 100;
     ViewPager slideShowPager;
     SlideShowAdapter adapter;
     Timer timer;
     Toolbar toolbar;
     int currentPage = 0;
-    int[] imageResArray = new int[]{R.drawable.poster_five, R.drawable.poster_four, R.drawable.poster_three, R.drawable.poster_two, R.drawable.poster_three};
+    int[] imageResArray = new int[]{R.drawable.poster_one, R.drawable.poster_two, R.drawable.poster_three, R.drawable.poster_four, R.drawable.poster_five, R.drawable.poster_six};
+    Dialog dialog;
     //a layout grouping the toolbar and the tabs together
     //private ViewGroup mContainerToolbar;
     private FragmentDrawer mDrawerFragment;
@@ -69,10 +78,10 @@ public class SlideShowActivity extends AppCompatActivity implements
     private NavigationView mNavView;
     private DrawerLayout mDrawerLayout;
     private LinearLayout mainScreen;
-
     private RecyclerView horizonatalRV;
     private RecyclerView aRV;
-
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +94,10 @@ public class SlideShowActivity extends AppCompatActivity implements
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_show);
+        volleySingleton = new VolleySingleton(this);
+        requestQueue = volleySingleton.getRequestQueue();
+        dialog = new SpotsDialog(this);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -110,7 +123,7 @@ public class SlideShowActivity extends AppCompatActivity implements
         });
 
         setupDrawer();
-        //setupJob();
+//        setupJob();
         mainScreen = (LinearLayout) findViewById(R.id.main_screen);
         FragmentManager manager = getSupportFragmentManager();
         adapter = new SlideShowAdapter(manager);
@@ -143,7 +156,6 @@ public class SlideShowActivity extends AppCompatActivity implements
 
         aRV = (RecyclerView) findViewById(R.id.browseEventsRecyclerView);
         CustomLayoutManager layoutManager = new CustomLayoutManager(this);
-
         aRV.setLayoutManager(layoutManager);
         aRV.setAdapter(new MyEventsAdapter(this));
         aRV.setNestedScrollingEnabled(false);
@@ -161,17 +173,19 @@ public class SlideShowActivity extends AppCompatActivity implements
         mNavView = (NavigationView) findViewById(R.id.navView);
         mNavView.setNavigationItemSelectedListener(this);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle dt = new ActionBarDrawerToggle(
-                this, mDrawerLayout, toolbar,
-                0, 0
-        );
+        ActionBarDrawerToggle dt = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, 0, 0);
         mDrawerLayout.setDrawerListener(dt);
         dt.syncState();
+
+//        dialog.show();
+//        RequestorGet.requestUserProfile(requestQueue, API.USER_PROFILE_API, EventUtility.getUserTokenFromPref(this), this);
 
         View header = mNavView.getHeaderView(0);
 
         TextView userNameTextView = (TextView) header.findViewById(R.id.drawer_user_name);
         userNameTextView.setText(EventUtility.getUserNameFromPref(this));
+        TextView drawerEmailTextView = (TextView) header.findViewById(R.id.drawer_user_email);
+        drawerEmailTextView.setText(EventUtility.getUserEmailFromPref(this));
 
 
 
@@ -194,8 +208,6 @@ public class SlideShowActivity extends AppCompatActivity implements
             mainScreen.setTranslationX(slideOffset * 550);
         }
     }
-
-
 
 
     private void setupJob() {
@@ -241,8 +253,9 @@ public class SlideShowActivity extends AppCompatActivity implements
         if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
             mDrawerLayout.closeDrawer(Gravity.LEFT);
         } else {
-            super.onBackPressed();
             finish();
+            super.onBackPressed();
+
         }
     }
 
@@ -304,9 +317,15 @@ public class SlideShowActivity extends AppCompatActivity implements
                 mDrawerLayout.closeDrawers();
                 break;
             case R.id.nav_clubs:
+                mDrawerLayout.closeDrawers();
+                startActivity(new Intent(this, ClubListAtivity.class));
                 menuItem.setChecked(true);
                 return false;
             case R.id.nav_myenents:
+                mDrawerLayout.closeDrawers();
+
+                startActivity(new Intent(this, MyEventsActivity.class));
+
                 menuItem.setChecked(true);
                 break;
             case R.id.nav_myprofile:
@@ -327,7 +346,43 @@ public class SlideShowActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
         int id = v.getId();
+    }
 
+    @Override
+    public void onDataLoaded(boolean response) {
+        Log.i("vikas", "in SlideShoe data loaded");
+
+        dialog.dismiss();
+
+
+    }
+
+    @Override
+    public void setError(String errorCode) {
+
+        switch (errorCode) {
+            case "NOCON":
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                new android.support.v7.app.AlertDialog.Builder(this)
+                        .setMessage("It seems your internet is not working")
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+                break;
+            case "ERR07":
+//                RequestorGet.requestLogin(requestQueue, API.USER_LOGIN_API, EventUtility.getUserEmailFromPref(this), EventUtility.getUserPasswordHashFromPref(this), this);
+                break;
+            default:
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                break;
+        }
     }
 
 
