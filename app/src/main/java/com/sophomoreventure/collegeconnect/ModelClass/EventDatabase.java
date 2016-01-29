@@ -2,15 +2,14 @@ package com.sophomoreventure.collegeconnect.ModelClass;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.sophomoreventure.collegeconnect.Event;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Vikas Kumar on 06-01-2016.
@@ -26,7 +25,9 @@ public class EventDatabase {
         this.context = context;
     }
 
-    public void insertData(List<Event> listData, boolean clearPrevious) {
+    public void insertData(ArrayList<Event> listData, boolean clearPrevious) {
+
+        ArrayList<Event> listDatatemp = listData;
 
         if (clearPrevious) {
             deleteDatabase();
@@ -35,9 +36,9 @@ public class EventDatabase {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        for (int i = 0; i < listData.size(); i++) {
+        for (int i = 0; i < 9; i++) {
 
-            Event event = new Event();
+            Event event = listData.get(i);
             contentValues.put(EventDataBaseHelper.EventName, event.getEventTitle());
             contentValues.put(EventDataBaseHelper.EventDate, event.getEventTime());
             contentValues.put(EventDataBaseHelper.EventStarttime, event.getEventStarttime());
@@ -55,7 +56,12 @@ public class EventDatabase {
             contentValues.put(EventDataBaseHelper.EventVarified, event.isEventvarified());
             contentValues.put(EventDataBaseHelper.IsAdmin, event.isAdmin());
             contentValues.put(EventDataBaseHelper.OrganizerEmail,event.getOrganizerEmail());
-            db.insert(EventDataBaseHelper.Tablename, null, contentValues);
+            long id = db.insert(EventDataBaseHelper.Tablename, null, contentValues);
+            if (id != -1) {
+                Log.i("tag", "data inserted");
+            } else {
+                Log.i("tag", "data not inserted");
+            }
         }
 
     }
