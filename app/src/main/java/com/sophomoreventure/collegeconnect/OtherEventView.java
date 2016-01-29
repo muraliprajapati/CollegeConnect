@@ -58,9 +58,11 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         int baseColor = getResources().getColor(R.color.colorPrimary);
-        float alpha = Math.min(1, (float) scrollY / mParallaxImageHeight);
+        float alpha = Math.min(1, (float) (3 * scrollY) / mParallaxImageHeight);
+
         mToolbarView.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha, baseColor));
         titleTextView.setTextColor(ScrollUtils.getColorWithAlpha(alpha, getResources().getColor(R.color.colorWhite)));
+
         ViewHelper.setTranslationY(mEventImage, scrollY / 2);
     }
 

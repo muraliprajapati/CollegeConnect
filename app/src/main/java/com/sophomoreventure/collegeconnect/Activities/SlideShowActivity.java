@@ -110,7 +110,7 @@ public class SlideShowActivity extends AppCompatActivity implements
         });
 
         setupDrawer();
-        setupJob();
+//        setupJob();
         mainScreen = (LinearLayout) findViewById(R.id.main_screen);
         FragmentManager manager = getSupportFragmentManager();
         adapter = new SlideShowAdapter(manager);
@@ -145,7 +145,7 @@ public class SlideShowActivity extends AppCompatActivity implements
         CustomLayoutManager layoutManager = new CustomLayoutManager(this);
 
         aRV.setLayoutManager(layoutManager);
-        aRV.setAdapter(new MyEventsAdapter(this));
+        aRV.setAdapter(new MyEventsAdapter(this, ""));
         aRV.setNestedScrollingEnabled(false);
     }
 
