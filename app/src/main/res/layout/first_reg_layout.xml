@@ -1,56 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/grey_300">
 
-    <EditText
-        android:id="@+id/user_name_edit_text"
+    <LinearLayout
+
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="16dp"
-        android:hint="Enter user name"
-        android:text="murali" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/user_email_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:background="@drawable/edit_text_bg"
+            android:hint="Enter email address"
+            android:inputType="textEmailAddress" />
 
 
+        <EditText
+            android:id="@+id/password_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:background="@drawable/edit_text_bg"
+            android:drawableRight="@drawable/ic_visibility_grey_500_36dp"
+            android:ems="10"
+            android:hint="Enter password"
+            android:inputType="textPassword" />
 
-    <EditText
-        android:id="@+id/password_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="16dp"
-        android:ems="10"
-        android:hint="Enter password"
-        android:inputType="textPassword"
-        android:text="123" />
+        <EditText
+            android:id="@+id/retype_password_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:background="@drawable/edit_text_bg"
+            android:ems="10"
+            android:hint="Re-type password"
+            android:inputType="textPassword" />
 
-    <EditText
-        android:id="@+id/retype_password_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="16dp"
-        android:ems="10"
-        android:hint="Re-type password"
-        android:inputType="textPassword"
-        android:text="123" />
 
-    <CheckBox
-        android:id="@+id/non_svnitian_check_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:checked="false"
-        android:text="Non-SVNITian" />
+        <EditText
+            android:id="@+id/name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:background="@drawable/edit_text_bg"
+            android:ems="10"
+            android:hint="Full Name"
+            android:inputType="textPersonName" />
 
-    <Button
-        android:id="@+id/next_step_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="next" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/mobile_number_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:background="@drawable/edit_text_bg"
+            android:ems="10"
+            android:hint="Mobile number (optional)"
+            android:inputType="phone"
+            android:maxLength="10"
+            android:numeric="integer" />
+
+        <RadioGroup
+            android:id="@+id/collegeRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <RadioButton
+                android:id="@+id/SVNITianRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="SVNITian"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp" />
+
+            <RadioButton
+
+                android:id="@+id/nonSVNITianRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:checked="false"
+                android:text="Non-SVNITian"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp" />
+        </RadioGroup>
+
+
+        <LinearLayout
+            android:id="@+id/svnitianLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/roll_no_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_margin="16dp"
+                android:background="@drawable/edit_text_bg"
+                android:hint="Roll no." />
+
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <RadioButton
+                    android:id="@+id/hosteliteRadio"
+                    style="@style/Widget.AppCompat.CompoundButton.RadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Hostelite"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp" />
+
+                <RadioButton
+
+                    android:id="@+id/localiteRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:checked="false"
+                    android:text="Localite"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp" />
+            </RadioGroup>
+
+
+            <Spinner
+                android:id="@+id/hostel_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@drawable/edit_text_bg"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/reg_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:background="@color/colorAccent"
+            android:text="Register"
+            android:textColor="#FFFFFF" />
+
+
+    </LinearLayout>
+</ScrollView>
