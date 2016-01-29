@@ -19,4 +19,17 @@
         <item>CHRD</item>
         <item>L&amp;D</item>
     </string-array>
+
+    <string-array name="hostel_list">
+        <item>Choose hostel</item>
+        <item>Bhabha Bhavan</item>
+        <item>Gajjar Bhavan</item>
+        <item>Mother Teresa Bhavan</item>
+        <item>Narmad Bhavan</item>
+        <item>Nehru Bhavan</item>
+        <item>Raman Bhavan</item>
+        <item>Swami Vivekanand Bhavan</item>
+        <item>Tagore Bhavan</item>
+
+    </string-array>
 </resources>

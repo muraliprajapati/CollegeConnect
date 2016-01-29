@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sophomoreventure.collegeconnect" >
 
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -13,8 +14,9 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.SlideShowActivity"
             android:theme="@style/AppTheme.NoActionBar" >
@@ -29,7 +31,6 @@
             android:label="Create Event" />
         <activity
             android:name=".EventView"
-            android:label="Event"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.RegistrationActivity"
@@ -65,6 +66,11 @@
         <activity
             android:name=".ClubDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
 
     </application>

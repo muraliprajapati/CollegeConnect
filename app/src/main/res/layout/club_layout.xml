@@ -4,36 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="128dp"
     android:layout_margin="8dp"
-    android:background="@drawable/translucent_overlay">
+    android:background="@drawable/poster_four">
 
-    <ImageView
-        android:id="@+id/clubImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/poster_four" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <TextView
+        android:id="@+id/clubNameTextView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
         android:background="#A0000000"
-        android:gravity="center">
+        android:gravity="center"
+        android:text="IETE"
+        android:textColor="#FFF"
+        android:textSize="36sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/clubNameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:shadowColor="#000"
-            android:shadowDx="3"
-            android:shadowDy="3"
-            android:shadowRadius="6"
-            android:textColor="#FFF"
-            android:textSize="36sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
 </RelativeLayout>

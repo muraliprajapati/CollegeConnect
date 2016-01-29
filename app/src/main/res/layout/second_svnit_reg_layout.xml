@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/grey_300">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,74 +12,73 @@
         <EditText
             android:id="@+id/name_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
+            android:background="@drawable/edit_text_bg"
             android:ems="10"
             android:hint="Full Name"
-            android:inputType="textPersonName"
-            android:text="murali prajapati" />
+            android:inputType="textPersonName" />
 
-        <EditText
-            android:id="@+id/email_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="16dp"
-            android:ems="10"
-            android:hint="Enter email address"
-            android:inputType="textEmailAddress"
-            android:text="murali.prajapti555@gmail.com" />
 
         <EditText
             android:id="@+id/roll_no_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_margin="16dp"
-            android:hint="Roll no."
-            android:text="u13ec035" />
+            android:background="@drawable/edit_text_bg"
+            android:hint="Roll no." />
 
 
         <EditText
             android:id="@+id/mobile_number_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
+            android:background="@drawable/edit_text_bg"
             android:ems="10"
             android:hint="Mobile number (optional)"
-            android:inputType="phone"
-            android:text="9978506653" />
+            android:inputType="phone" />
 
-        <LinearLayout
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="16dp">
 
-            <CheckBox
-                android:id="@+id/hostelite_check_box"
+            <RadioButton
+                android:id="@+id/hosteliteRadio"
+                style="@style/Widget.AppCompat.CompoundButton.RadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
                 android:checked="false"
-                android:text="Hostelite" />
+                android:text="Hostelite"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp" />
 
-            <CheckBox
-                android:id="@+id/localite_check_box"
+            <RadioButton
+
+                android:id="@+id/localiteRadio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginLeft="8dp"
                 android:checked="false"
-                android:text="Localite" />
-
-        </LinearLayout>
+                android:text="Localite"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp" />
+        </RadioGroup>
 
 
         <EditText
             android:id="@+id/hostel_name_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_margin="16dp"
+            android:background="@drawable/edit_text_bg"
+            android:inputType="text"
             android:text="Hostel name"
             android:visibility="gone" />
 
@@ -89,7 +89,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
-            android:text="Register" />
+            android:background="@color/colorAccent"
+            android:text="Register"
+            android:textColor="#FFFFFF" />
 
 
     </LinearLayout>
