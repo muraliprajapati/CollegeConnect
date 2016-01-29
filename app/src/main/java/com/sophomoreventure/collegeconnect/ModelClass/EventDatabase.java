@@ -2,6 +2,7 @@ package com.sophomoreventure.collegeconnect.ModelClass;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,6 +11,7 @@ import android.util.Log;
 import com.sophomoreventure.collegeconnect.Event;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Vikas Kumar on 06-01-2016.
@@ -17,7 +19,6 @@ import java.util.ArrayList;
 public class EventDatabase {
 
     EventDataBaseHelper helper;
-    private SQLiteDatabase mDatabase;
     private Context context;
 
     public EventDatabase(Context context) {
@@ -25,9 +26,7 @@ public class EventDatabase {
         this.context = context;
     }
 
-    public void insertData(ArrayList<Event> listData, boolean clearPrevious) {
-
-        ArrayList<Event> listDatatemp = listData;
+    public void insertData(List<Event> listData, boolean clearPrevious) {
 
         if (clearPrevious) {
             deleteDatabase();
@@ -36,7 +35,7 @@ public class EventDatabase {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < listData.size(); i++) {
 
             Event event = listData.get(i);
             contentValues.put(EventDataBaseHelper.EventName, event.getEventTitle());
@@ -55,13 +54,8 @@ public class EventDatabase {
             contentValues.put(EventDataBaseHelper.LastRegistrationTime, event.getLastRegistrationTime());
             contentValues.put(EventDataBaseHelper.EventVarified, event.isEventvarified());
             contentValues.put(EventDataBaseHelper.IsAdmin, event.isAdmin());
-            contentValues.put(EventDataBaseHelper.OrganizerEmail,event.getOrganizerEmail());
-            long id = db.insert(EventDataBaseHelper.Tablename, null, contentValues);
-            if (id != -1) {
-                Log.i("tag", "data inserted");
-            } else {
-                Log.i("tag", "data not inserted");
-            }
+            contentValues.put(EventDataBaseHelper.OrganizerEmail, event.getOrganizerEmail());
+            db.insert(EventDataBaseHelper.Tablename, null, contentValues);
         }
 
     }
@@ -69,7 +63,7 @@ public class EventDatabase {
     public void insertRow(String eventname, long eventdate, String eventstarttime,
                           String eventendtime, String eventattend, String eventclub,
                           String eventdescription, String eventfirstorganizer, String eventsecondorganizer,
-                          String eventVanue, String organiizermobfirst,String organiizermobsecond, String organizeremail,
+                          String eventVanue, String organiizermobfirst, String organiizermobsecond, String organizeremail,
                           String eventvarified, boolean isAdmin, int serverID, String lastRegistrationTime) {
 
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -88,9 +82,9 @@ public class EventDatabase {
         contentValues.put(EventDataBaseHelper.OrganizerMobSecond, organiizermobsecond);
         contentValues.put(EventDataBaseHelper.OrganizerEmail, organizeremail);
         contentValues.put(EventDataBaseHelper.EventVarified, eventvarified);
-        contentValues.put(EventDataBaseHelper.IsAdmin,isAdmin);
-        contentValues.put(EventDataBaseHelper.EventServerID,serverID);
-        contentValues.put(EventDataBaseHelper.LastRegistrationTime,lastRegistrationTime);
+        contentValues.put(EventDataBaseHelper.IsAdmin, isAdmin);
+        contentValues.put(EventDataBaseHelper.EventServerID, serverID);
+        contentValues.put(EventDataBaseHelper.LastRegistrationTime, lastRegistrationTime);
         db.insert(EventDataBaseHelper.Tablename, null, contentValues);
 
     }
@@ -195,7 +189,7 @@ public class EventDatabase {
 
     public class EventDataBaseHelper extends SQLiteOpenHelper {
 
-        private static final int DataBaseVersion = 1;
+        private static final int DataBaseVersion = 2;
         private static final String DataBaseName = "eventDatabase";
         private static final String Tablename = "eventTable";
         private static final String UID = "id";
@@ -214,7 +208,7 @@ public class EventDatabase {
         private static final String IsAdmin = "isadmin";
         private static final String EventoganizernameSecond = "eventoeganizernamesecon";
         private static final String OrganizerMobSecond = "eventmobnamesecond";
-        private static final String EventServerID = "srverId";
+        private static final String EventServerID = "serverId";
         private static final String LastRegistrationTime = "registrationTime";
 
         private static final String CREATETABLE = "CREATE TABLE " +
@@ -225,11 +219,11 @@ public class EventDatabase {
                 + EventoganizernameFirst + " VARCHAR(250), " + EventoganizernameSecond + " VARCHAR(250), "
                 + OrganizerEmail + " VARCHAR(250), "
                 + OrganizerMobFirst + " INTEGER, " + OrganizerMobSecond + " INTEGER, "
-                + IsAdmin + " VARCHAR(250), " + EventServerID +  " INTEGER, "
+                + IsAdmin + " VARCHAR(250), " + EventServerID + " INTEGER, "
                 + LastRegistrationTime + " VARCHAR(250), " + EventStarttime + " VARCHAR(250), "
                 + EventEndTime + " VARCHAR(250), " + EventDate + " INTEGER);";
 
-        private static final String DROPTABLE = "DROP TABLE IF EXISTS" + Tablename;
+        private static final String DROPTABLE = "DROP TABLE IF EXISTS " + Tablename;
 
         public EventDataBaseHelper(Context context) {
             super(context, DataBaseName, null, DataBaseVersion);

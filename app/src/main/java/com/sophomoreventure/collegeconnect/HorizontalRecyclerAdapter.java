@@ -15,7 +15,9 @@ import android.widget.TextView;
 public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRecyclerAdapter.ViewHolder> {
 
     Context context;
+    String clubName;
     String[] clubList = {"ACM", "CHRD", "IETE", "SAE", "NIFT", "DRISHTI"};
+
 
 
     public HorizontalRecyclerAdapter(Context context) {
@@ -42,7 +44,7 @@ public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRe
             holder.layout.setBackgroundResource(R.drawable.gradient_orange);
         }
 
-        holder.clubNameTextView.setText(clubList[position]);
+        holder.clubNameTextView.setText("IEEE");
     }
 
 

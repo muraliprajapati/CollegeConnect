@@ -1,21 +1,18 @@
 package com.sophomoreventure.collegeconnect;
 
-import android.content.Context;
 import android.util.Log;
 
-import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
-
+import com.sophomoreventure.collegeconnect.ModelClass.EventModel;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 /**
  * Created by Vikas Kumar on 16-01-2016.
  */
 public class ParserEventResponse {
-    public static ArrayList<Event> parseEventsJSON(JSONObject response, Context context) {
+    public static ArrayList<Event> parseEventsJSON(JSONObject response) {
 
         ArrayList<Event> listEvents = new ArrayList<>();
         String names[] = new String[2];
@@ -26,7 +23,6 @@ public class ParserEventResponse {
         }
 
         try {
-
             JSONArray jsonArray = response.getJSONArray("events");
             for(int i = 0; i < jsonArray.length(); i++ ){
                 Event event = new Event();
@@ -48,13 +44,6 @@ public class ParserEventResponse {
                 String vanue = currentEvent.getString("venue");
                 boolean varified = currentEvent.getBoolean("verified");
 
-                Log.i("tag", about);
-                Log.i("tag", availabeSeats);
-                Log.i("tag", createdby);
-                Log.i("tag", Integer.toString(totalSeats));
-                Log.i("tag", vanue);
-                Log.i("tag", Boolean.toString(varified));
-
                 event.setEventDescription(about);
                 event.setEventVenue(vanue);
                 event.setEventvarified(varified);
@@ -65,14 +54,11 @@ public class ParserEventResponse {
                 listEvents.add(event);
             }
 
-            EventDatabase eventDatabase = new EventDatabase(context);
-            eventDatabase.insertData(listEvents, false);
-
+            Log.i("vikas", "parsing done");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
+        Log.i("vikas", listEvents.size() + "");
         return listEvents;
     }
 }
