@@ -178,7 +178,7 @@ public class RequestorGet {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s", userName, userPassword);
+                String creds = String.format("%s:%s", userName, EventUtility.getHashString(userPassword, "SHA-1"));
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
                 params.put("Authorization", auth);
                 params.put("Content-Type", "application/x-www-form-urlencoded");
