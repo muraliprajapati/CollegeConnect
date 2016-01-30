@@ -1,6 +1,7 @@
 package com.sophomoreventure.collegeconnect;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,16 +32,11 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
     String clubName;
     EventDatabase eventDatabase;
     ArrayList<Event> listData;
-    private BlurLayout mSampleLayout;
-    View hover;
 
-    public MyEventsAdapter(Context context, String clubName, BlurLayout sampleLayout, View hover) {
 
     public MyEventsAdapter(Context context, String clubName) {
         this.context = context;
         this.clubName = clubName;
-        mSampleLayout = sampleLayout;
-        this.hover = hover;
         eventDatabase = new EventDatabase(context);
     }
 
@@ -88,8 +84,6 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
         if (parent instanceof RecyclerView) {
             int layoutId = R.layout.event_card_view;
             View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
-            mSampleLayout = (BlurLayout) view.findViewById(R.id.blur_layout);
-            hover = LayoutInflater.from(context).inflate(R.layout.hover_view, null);
             view.setFocusable(true);
             return new ViewHolder(view);
         } else {
@@ -119,40 +113,6 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
         return 6;
     }
 
-    public void showHover(){
-
-        BlurLayout.setGlobalDefaultDuration(450);
-
-        hover.findViewById(R.id.heart).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                YoYo.with(Techniques.Tada)
-                        .duration(550)
-                        .playOn(v);
-            }
-        });
-        hover.findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                YoYo.with(Techniques.Swing)
-                        .duration(550)
-                        .playOn(v);
-            }
-        });
-        mSampleLayout.setHoverView(hover);
-        mSampleLayout.setBlurDuration(550);
-
-        mSampleLayout.addChildAppearAnimator(hover, R.id.heart, Techniques.FlipInX, 550, 0);
-        mSampleLayout.addChildAppearAnimator(hover, R.id.share, Techniques.FlipInX, 550, 250);
-        mSampleLayout.addChildAppearAnimator(hover, R.id.more, Techniques.FlipInX, 550, 500);
-
-        mSampleLayout.addChildDisappearAnimator(hover, R.id.heart, Techniques.FlipOutX, 550, 500);
-        mSampleLayout.addChildDisappearAnimator(hover, R.id.share, Techniques.FlipOutX, 550, 250);
-        mSampleLayout.addChildDisappearAnimator(hover, R.id.more, Techniques.FlipOutX, 550, 0);
-
-        mSampleLayout.addChildAppearAnimator(hover, R.id.description, Techniques.FadeInUp);
-        mSampleLayout.addChildDisappearAnimator(hover, R.id.description, Techniques.FadeOutDown);
-    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -181,9 +141,6 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
             intent.putExtra("clubName", clubName);
             intent.putExtra("position", getPosition());
             context.startActivity(intent);
-            //showHover();
-//            Intent intent = new Intent(context, EventView.class);
-//            context.startActivity(intent);
         }
     }
 

@@ -18,6 +18,6 @@ public class MyEventsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_events);
         myEventsRV = (RecyclerView) findViewById(R.id.myEventRecyclerView);
         myEventsRV.setLayoutManager(new LinearLayoutManager(this));
-        myEventsRV.setAdapter(new MyEventsAdapter(this, "", null, null));
+        myEventsRV.setAdapter(new MyEventsAdapter(this, ""));
     }
 }

@@ -14,7 +14,6 @@ import com.daimajia.androidviewhover.BlurLayout;
  */
 public class EventsByClubActivity extends AppCompatActivity {
     RecyclerView eventsByClubRV;
-    private BlurLayout mSampleLayout;
     View hover;
 
     @Override
@@ -26,9 +25,8 @@ public class EventsByClubActivity extends AppCompatActivity {
         eventsByClubRV.setLayoutManager(layoutManager);
         String clubName = getIntent().getStringExtra("clubName");
 
-        mSampleLayout = (BlurLayout) findViewById(R.id.blur_layout);
-        hover = LayoutInflater.from(this).inflate(R.layout.hover_view, null);
-        eventsByClubRV.setAdapter(new MyEventsAdapter(this, clubName,mSampleLayout,hover));
+
+        eventsByClubRV.setAdapter(new MyEventsAdapter(this, clubName));
         eventsByClubRV.setNestedScrollingEnabled(false);
 
     }

@@ -77,7 +77,7 @@ public class SlideShowActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
+        /*
         if (EventUtility.isFirstRun(this) || !EventUtility.isLoggedIn(this)) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -85,6 +85,7 @@ public class SlideShowActivity extends AppCompatActivity implements
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
+        */
 
 
         super.onCreate(savedInstanceState);
@@ -149,7 +150,7 @@ public class SlideShowActivity extends AppCompatActivity implements
         CustomLayoutManager layoutManager = new CustomLayoutManager(this);
 
         aRV.setLayoutManager(layoutManager);
-        aRV.setAdapter(new MyEventsAdapter(this, "", null, null));
+        aRV.setAdapter(new MyEventsAdapter(this, ""));
         aRV.setNestedScrollingEnabled(false);
     }
 
