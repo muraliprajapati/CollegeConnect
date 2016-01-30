@@ -54,8 +54,6 @@
         <activity
             android:name=".OtherEventView"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SvnitRegActivity" />
-        <activity android:name=".NonSvnitRegActivity" />
         <activity
             android:name=".ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
