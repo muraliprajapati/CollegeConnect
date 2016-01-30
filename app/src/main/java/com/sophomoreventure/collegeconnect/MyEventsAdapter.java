@@ -1,6 +1,7 @@
 package com.sophomoreventure.collegeconnect;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,9 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.daimajia.androidviewhover.BlurLayout;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 
 import java.util.ArrayList;
@@ -32,6 +36,8 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
 
     public MyEventsAdapter(Context context, String clubName) {
         this.context = context;
+        this.clubName = clubName;
+        eventDatabase = new EventDatabase(context);
     }
 
     public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
@@ -92,6 +98,13 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
         holder.eventNameTextView.setText(eventList[position]);
         holder.eventClubTextView.setText(clubList[position]);
 
+        listData = eventDatabase.selectByClub(clubName);
+        if (listData.size() != 0) {
+            holder.eventNameTextView.setText(listData.get(position).getEventTitle());
+            holder.eventClubTextView.setText(listData.get(position).getEventClub());
+           // holder.dateTextView.setText((int) listData.get(position).getEventStarttime());
+        }
+
     }
 
     @Override
@@ -99,6 +112,8 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
 
         return 6;
     }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView eventImageView;
@@ -113,7 +128,7 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
             eventImageView = (ImageView) itemView.findViewById(R.id.eventImageView);
             eventNameTextView = (TextView) itemView.findViewById(R.id.eventNameTextView);
             eventClubTextView = (TextView) itemView.findViewById(R.id.eventClubTextView);
-            dateTextView = (TextView) itemView.findViewById(R.id.eventDateTextView);
+            //dateTextView = (TextView) itemView.findViewById(R.id.eventDateTextView);
 //            attendingCheckBox = (CheckBox) itemView.findViewById(R.id.attendingCheckBox);
 
 
@@ -122,8 +137,10 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-//            Intent intent = new Intent(context, EventView.class);
-//            context.startActivity(intent);
+            Intent intent = new Intent(context, EventView.class);
+            intent.putExtra("clubName", clubName);
+            intent.putExtra("position", getPosition());
+            context.startActivity(intent);
         }
     }
 

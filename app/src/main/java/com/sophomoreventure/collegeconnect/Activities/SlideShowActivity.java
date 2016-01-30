@@ -54,7 +54,7 @@ import me.tatarka.support.job.JobScheduler;
 public class SlideShowActivity extends AppCompatActivity implements
         ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private static final long POLL_FREQUENCY = 28800000;
+    private static final long POLL_FREQUENCY = 10000; //28800000;
     private static final int JOB_ID = 100;
     ViewPager slideShowPager;
     SlideShowAdapter adapter;
@@ -76,6 +76,8 @@ public class SlideShowActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        /*
         if (EventUtility.isFirstRun(this) || !EventUtility.isLoggedIn(this)) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -83,6 +85,9 @@ public class SlideShowActivity extends AppCompatActivity implements
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
+        */
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_show);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -110,7 +115,7 @@ public class SlideShowActivity extends AppCompatActivity implements
         });
 
         setupDrawer();
-//        setupJob();
+        setupJob();
         mainScreen = (LinearLayout) findViewById(R.id.main_screen);
         FragmentManager manager = getSupportFragmentManager();
         adapter = new SlideShowAdapter(manager);

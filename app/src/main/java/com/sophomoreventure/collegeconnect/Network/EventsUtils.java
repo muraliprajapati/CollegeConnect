@@ -27,7 +27,6 @@ public class EventsUtils {
 
         RequestorGet.requestEventData(requestQueue, API.EVENT_API,context);
 
-
         //ArrayList<Event> listEvents = ParserEventResponse.parseEventsJSON(response);
         //EventDatabase eventDatabase = new EventDatabase(context);
         //eventDatabase.insertData(listEvents,false);

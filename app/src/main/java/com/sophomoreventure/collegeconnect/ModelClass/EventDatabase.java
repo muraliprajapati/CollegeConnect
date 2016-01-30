@@ -26,7 +26,7 @@ public class EventDatabase {
         this.context = context;
     }
 
-    public void insertData(List<Event> listData, boolean clearPrevious) {
+    public void insertData(ArrayList<Event> listData, boolean clearPrevious) {
 
         if (clearPrevious) {
             deleteDatabase();
@@ -34,9 +34,8 @@ public class EventDatabase {
 
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-
+        Log.i("vikas", listData.size() + "inserted list of size : ");
         for (int i = 0; i < listData.size(); i++) {
-
             Event event = listData.get(i);
             contentValues.put(EventDataBaseHelper.EventName, event.getEventTitle());
             contentValues.put(EventDataBaseHelper.EventDate, event.getEventTime());
@@ -60,8 +59,8 @@ public class EventDatabase {
 
     }
 
-    public void insertRow(String eventname, long eventdate, String eventstarttime,
-                          String eventendtime, String eventattend, String eventclub,
+    public void insertRow(String eventname, long eventdate, int eventstarttime,
+                          int eventendtime, int eventattend, String eventclub,
                           String eventdescription, String eventfirstorganizer, String eventsecondorganizer,
                           String eventVanue, String organiizermobfirst, String organiizermobsecond, String organizeremail,
                           String eventvarified, boolean isAdmin, int serverID, String lastRegistrationTime) {
@@ -106,11 +105,10 @@ public class EventDatabase {
         String query = "SELECT * FROM " + EventDataBaseHelper.Tablename + " WHERE " +
                 EventDataBaseHelper.EventClub + "='" + club + "';";
         String whereClause = EventDataBaseHelper.EventClub + "='" + club + "';";
-        String whereClause1 = EventDataBaseHelper.EventClub + " = ?";
-        String[] whereArgs = {club};
-        Cursor cursor = db.query(EventDataBaseHelper.Tablename, null, whereClause1, whereArgs,
-                null, null, null);
-
+        String whereClause1 = EventDataBaseHelper.EventClub + "=?";
+        String[] whereArgs = {"IETE"};
+        Cursor cursor = db.query(EventDataBaseHelper.Tablename, null, EventDataBaseHelper.EventClub+" =?",whereArgs,
+                null, null,null,null);
 
         while (cursor.moveToNext()) {
             Event event = new Event();
@@ -118,10 +116,10 @@ public class EventDatabase {
             int id = cursor.getInt(index1);
             event.setEventTitle(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventName)));
             event.setEventDescription(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventDescription)));
-            event.setEventAttend(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventAttend)));
+            event.setEventAttend(cursor.getInt(cursor.getColumnIndex(EventDataBaseHelper.EventAttend)));
             event.setEventClub(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventClub)));
-            event.setEventEndTime(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventEndTime)));
-            event.setEventStarttime(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventStarttime)));
+            event.setEventEndTime(cursor.getInt(cursor.getColumnIndex(EventDataBaseHelper.EventEndTime)));
+            event.setEventStarttime(cursor.getInt(cursor.getColumnIndex(EventDataBaseHelper.EventStarttime)));
             event.setEventTime(Long.parseLong(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventDate))));
             event.setEventVenue(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVanue)));
             event.setEventOrganizerOne(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventoganizernameFirst)));
@@ -132,12 +130,12 @@ public class EventDatabase {
             event.setEventvarified(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVarified))));
             event.setIsAdmin(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.IsAdmin))));
             event.setEventServerId(cursor.getInt(cursor.getColumnIndex(EventDataBaseHelper.EventServerID)));
-            event.setLastRegistrationTime(Integer.parseInt(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.LastRegistrationTime))));
+            event.setLastRegistrationTime(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.LastRegistrationTime)));
             eventList.add(event);
         }
         cursor.close();
+        Log.i("vikas", eventList.size() + "select ");
         return eventList;
-
     }
 
     public ArrayList<EventModel> viewAllData() {
@@ -170,7 +168,7 @@ public class EventDatabase {
             eventList.add(event);
         }
         cursor.close();
-
+        Log.i("vikas", eventList.size() + " all");
         return eventList;
     }
 
@@ -213,15 +211,15 @@ public class EventDatabase {
 
         private static final String CREATETABLE = "CREATE TABLE " +
                 Tablename + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + EventName + " VARCHAR(250), " + EventAttend + " VARCHAR(250), "
+                + EventName + " VARCHAR(250), " + EventAttend + " INTEGER, "
                 + EventClub + " VARCHAR(250), " + EventDescription + " VARCHAR(250), "
                 + EventVanue + " VARCHAR(250), " + EventVarified + " VARCHAR(250), "
                 + EventoganizernameFirst + " VARCHAR(250), " + EventoganizernameSecond + " VARCHAR(250), "
                 + OrganizerEmail + " VARCHAR(250), "
                 + OrganizerMobFirst + " INTEGER, " + OrganizerMobSecond + " INTEGER, "
                 + IsAdmin + " VARCHAR(250), " + EventServerID + " INTEGER, "
-                + LastRegistrationTime + " VARCHAR(250), " + EventStarttime + " VARCHAR(250), "
-                + EventEndTime + " VARCHAR(250), " + EventDate + " INTEGER);";
+                + LastRegistrationTime + " VARCHAR(250), " + EventStarttime + " INTEGER, "
+                + EventEndTime + " INTEGER, " + EventDate + " INTEGER);";
 
         private static final String DROPTABLE = "DROP TABLE IF EXISTS " + Tablename;
 
