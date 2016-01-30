@@ -77,7 +77,7 @@ public class SlideShowActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        /*
+
         if (EventUtility.isFirstRun(this) || !EventUtility.isLoggedIn(this)) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -85,7 +85,8 @@ public class SlideShowActivity extends AppCompatActivity implements
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
-        */
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_show);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -197,6 +198,8 @@ public class SlideShowActivity extends AppCompatActivity implements
             mainScreen.setTranslationX(slideOffset * 550);
         }
     }
+
+
 
 
     private void setupJob() {

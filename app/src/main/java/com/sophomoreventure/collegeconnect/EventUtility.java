@@ -119,6 +119,18 @@ public class EventUtility {
 
     }
 
+    public static String getUserTokenFromPref(Context context) {
+        SharedPreferences user_pref = context.getSharedPreferences(SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        return user_pref.getString(SharedPrefConstants.USER_SHARED_PREF_USER_TOKEN_KEY, null);
+
+    }
+
+    public static String getUserEmailFromPref(Context context) {
+        SharedPreferences user_pref = context.getSharedPreferences(SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        return user_pref.getString(SharedPrefConstants.USER_SHARED_PREF_EMAIL_KEY, null);
+
+    }
+
 
     public static String getUserPasswordHashFromPref(Context context) {
         SharedPreferences user_pref = context.getSharedPreferences(SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);

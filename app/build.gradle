@@ -44,6 +44,10 @@ dependencies {
     compile 'com.daimajia.easing:library:1.0.0@aar'
     compile 'com.daimajia.androidanimations:library:1.1.2@aar'
     compile 'com.daimajia.androidviewhover:library:1.0.4@aar'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
+    compile 'com.nineoldandroids:library:2.4.0'
+
 
 }
 

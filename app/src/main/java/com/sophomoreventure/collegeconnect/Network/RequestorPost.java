@@ -8,9 +8,11 @@ import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -92,7 +94,6 @@ public class RequestorPost {
                         try {
                             JSONObject jsonObject = new JSONObject(string);
                             Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
-                            ;
                             DataListener listener = (DataListener) context;
                             listener.setError(Parserer.parseResponse(jsonObject));
 
@@ -121,8 +122,8 @@ public class RequestorPost {
 
 
     public static JSONObject requestRegistration(
-            final RequestQueue requestQueue, String url, final String userName,
-            final String userPassword, final JSONObject jsonBody, final boolean svnitian, final Context context) {
+            final RequestQueue requestQueue, String url, final String email,
+            final String userPassword, final JSONObject jsonBody, final Context context) {
 
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
@@ -134,35 +135,42 @@ public class RequestorPost {
                         Log.i("vikas", response.toString());
                         jsonObject = response;
                         try {
-                            parseAndSaveUserInfoToPref(context, userName, userPassword, Parserer.parseToken(response), jsonBody.toString(), svnitian);
-                            listener.onDataLoaded(true);
-                            Intent intent = new Intent(context, SlideShowActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                            context.startActivity(intent);
+                            parseAndSaveUserInfoToPref(context, email, userPassword, Parserer.parseToken(response), jsonBody);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        listener.onDataLoaded(true);
+                        Intent intent = new Intent(context, SlideShowActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        context.startActivity(intent);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i("vikas", error + "");
-                        NetworkResponse response = error.networkResponse;
-                        Log.i("vikas", response.statusCode + "");
-                        String string = new String(response.data);
-                        try {
-                            JSONObject jsonObject = new JSONObject(string);
-                            Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
 
-                            DataListener listener = (DataListener) context;
-                            listener.setError(Parserer.parseResponse(jsonObject));
+                        DataListener listener = (DataListener) context;
+                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                            listener.setError("NOCON");
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        } else {
+                            try {
+                                NetworkResponse response = error.networkResponse;
+                                Log.i("vikas", response.statusCode + "");
+                                String string = new String(response.data);
+                                JSONObject jsonObject = new JSONObject(string);
+                                Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
+                                listener.setError(Parserer.parseResponse(jsonObject));
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
+
+
                     }
                 }) {
 
@@ -170,7 +178,7 @@ public class RequestorPost {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s", userName, userPassword);
+                String creds = String.format("%s:%s", email, userPassword);
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
                 params.put("Authorization", auth);
                 params.put("Content-Type", "application/x-www-form-urlencoded");
@@ -179,6 +187,16 @@ public class RequestorPost {
         };
         requestQueue.add(request);
         return jsonObject;
+
+    }
+
+    private static void saveTokenInPref(Context context, String token) {
+        SharedPreferences prefs = context.getSharedPreferences(
+                Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(Constants.SharedPrefConstants.USER_SHARED_PREF_LOGGED_IN_KEY, true);
+        editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_TOKEN_KEY, token);
+        editor.apply();
 
     }
 
@@ -218,10 +236,10 @@ public class RequestorPost {
 
     }
 
-    private static void parseAndSaveUserInfoToPref(Context context, String userName, String userPassword, String token, String jsonString, boolean svnitian) throws JSONException {
-        JSONObject jsonObject = new JSONObject(jsonString);
+    private static void parseAndSaveUserInfoToPref(Context context, String userName, String userPassword, String token, JSONObject jsonObject) throws JSONException {
+
         String emailId = jsonObject.getString("email");
-        String mobNo = jsonObject.getString("mobno");
+        long mobNo = jsonObject.getLong("mobno");
         String rollNo = jsonObject.getString("rollno");
 
         SharedPreferences prefs = context.getSharedPreferences(Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
@@ -232,9 +250,18 @@ public class RequestorPost {
         editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_TOKEN_KEY, token);
         editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_EMAIL_KEY, emailId);
         editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_ROLL_NO_KEY, rollNo);
-        if (mobNo != null) {
-            editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_MOB_NO_KEY, mobNo);
+        if (mobNo == 0 || Long.toString(mobNo).isEmpty()) {
+            editor.putLong(Constants.SharedPrefConstants.USER_SHARED_PREF_MOB_NO_KEY, 0);
+        } else {
+            editor.putLong(Constants.SharedPrefConstants.USER_SHARED_PREF_MOB_NO_KEY, mobNo);
         }
+
+        if (rollNo == null || rollNo.isEmpty()) {
+            editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_ROLL_NO_KEY, "NA");
+        } else {
+            editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_ROLL_NO_KEY, rollNo);
+        }
+
         editor.apply();
         Log.i("tag", token);
         Log.i("tag", EventUtility.getHashString(userPassword, "SHA-1"));

@@ -217,4 +217,36 @@ public class RequestorGet {
         Log.i("tag", EventUtility.getHashString(userPassword, "SHA-1"));
 
     }
+
+    public static void requestEventData(
+            final RequestQueue requestQueue, String url, final Context context) {
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+
+                        Log.i("vikas", response.toString());
+                        ArrayList<Event> listEvents = ParserEventResponse.parseEventsJSON(response);
+                        EventDatabase eventDatabase = new EventDatabase(context);
+                        eventDatabase.insertData(listEvents, false);
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("vikas", error + "");
+                    }
+                }) {
+
+
+        };
+        requestQueue.add(request);
+
+    }
+
 }
