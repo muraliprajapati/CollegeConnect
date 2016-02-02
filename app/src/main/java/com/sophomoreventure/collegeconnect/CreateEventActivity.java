@@ -1,31 +1,46 @@
 package com.sophomoreventure.collegeconnect;
 
 import android.app.AlertDialog;
-import android.app.FragmentManager;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.commons.io.IOUtils;
+import com.android.volley.RequestQueue;
+import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
+import com.sophomoreventure.collegeconnect.Network.DataListener;
+import com.sophomoreventure.collegeconnect.Network.RequestorPost;
+import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
 import dmax.dialog.SpotsDialog;
@@ -33,41 +48,41 @@ import dmax.dialog.SpotsDialog;
 /**
  * Created by Murali on 24/12/2015.
  */
-public class CreateEventActivity extends AppCompatActivity implements View.OnClickListener {
+public class CreateEventActivity extends AppCompatActivity implements View.OnClickListener, DataListener {
     public static final int RESULT_LOAD_IMAGE = 0;
     public static final int PICKER_BUTTON_ID = R.id.pickerButton;
-    public static final int NOTIFICATION_BUTTON_ID = R.id.notificationButton;
-    public static final int DESCRIPTION_BUTTON_ID = R.id.descriptionButton;
-    public static final int ORGANIZER_BUTTON_ID = R.id.organizerButton;
     public static final int CREATE_EVENT_BUTTON_ID = R.id.createEventButton;
 
-    private static final int EVENT_NAME = 0;
-    private static final int EVENT_CLUB = 1;
-    private static final int EVENT_DESC = 2;
-    private static final int EVENT_TIME = 3;
-    private static final int EVENT_VENUE = 4;
-    private static final int EVENT_ORG_ONE = 5;
-    private static final int EVENT_ORG_ONE_PN = 6;
-    private static final int EVENT_ORG_TWO = 7;
-    private static final int EVENT_ORG_TWO_PN = 8;
 
+    ImageView eventImageView;
+    Button imagePickerButton;
+    Spinner themePicker;
 
-    ImageView imageView;
-    Button pickerButton;
-    Button notificationButton;
-    Button descriptionButton;
-    Button organizerButton;
+    EditText titleEditText;
+    EditText descriptionEditText;
+    EditText venueEditText;
+    AutoCompleteTextView clubNameTextView;
+    TextView eventStartDateAndTimeTextView, eventEndDateAndTimeTextView, lastRegTextView;
+    Button startDatePickButton, endDatePickButton, lastRegDateTimePickButton, clearImageButton;
+
+    EditText orgOneEditText;
+    EditText orgOneEmailEditText;
+    EditText orgOnePhoneEditText;
+    EditText orgTwoEditText;
+    EditText orgTwoEmailEditText;
+    EditText orgTwoPhoneEditText;
     Button createEventButton;
-
-    FragmentManager manager;
-
     EventHub eventHub;
     Event event;
     String eventId;
-    boolean validEvent = false;
-    boolean[] missingFields = new boolean[9];
-    StringBuilder toastString = new StringBuilder("Missing Fields:").append("\n");
+    boolean[] missingFields = new boolean[12];
+    boolean isImageChoosen = false, isThemeSelected = false;
+    long eventStartTime, eventEndTime, eventLastRegTime;
+    Dialog spotsDialog;
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
     private AlertDialog dialog;
+    private String base64ImageString, picturePath, color;
 
     public static boolean areAllFalse(boolean[] array) {
         for (boolean b : array) if (b) return false;
@@ -83,23 +98,110 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
         eventId = event.getEventId().toString();
         eventHub.addEventToEventList(event);
 
-        Arrays.fill(missingFields, Boolean.FALSE);
-        manager = getFragmentManager();
-        imageView = (ImageView) findViewById(R.id.imageView);
-        pickerButton = (Button) findViewById(R.id.pickerButton);
-        notificationButton = (Button) findViewById(R.id.notificationButton);
-        descriptionButton = (Button) findViewById(R.id.descriptionButton);
-        organizerButton = (Button) findViewById(R.id.organizerButton);
+        String[] clubNames = getResources().getStringArray(R.array.club_list);
+
+        eventImageView = (ImageView) findViewById(R.id.eventImageView);
+        imagePickerButton = (Button) findViewById(R.id.pickerButton);
+        clearImageButton = (Button) findViewById(R.id.clearImageButton);
+        clearImageButton.setVisibility(View.GONE);
+        titleEditText = (EditText) findViewById(R.id.titleEditText);
+        descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
+        venueEditText = (EditText) findViewById(R.id.venueEditText);
+        clubNameTextView = (AutoCompleteTextView) findViewById(R.id.clubNameAutoCompleteTextView);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, clubNames);
+        clubNameTextView.setAdapter(adapter);
+
+        eventStartDateAndTimeTextView = (TextView) findViewById(R.id.eventDateAndTime);
+        startDatePickButton = (Button) findViewById(R.id.eventPickDateButton);
+        startDatePickButton.setOnClickListener(this);
+
+        eventEndDateAndTimeTextView = (TextView) findViewById(R.id.eventEndDateAndTime);
+        endDatePickButton = (Button) findViewById(R.id.eventPickEndDateButton);
+        endDatePickButton.setOnClickListener(this);
+
+        orgOneEditText = (EditText) findViewById(R.id.orgOneEditText);
+        orgOneEmailEditText = (EditText) findViewById(R.id.orgOneEmailEditText);
+        orgOnePhoneEditText = (EditText) findViewById(R.id.orgOnePhoneEditText);
+        orgTwoEditText = (EditText) findViewById(R.id.orgTwoEditText);
+        orgTwoEmailEditText = (EditText) findViewById(R.id.orgTwoEmailEditText);
+        orgTwoPhoneEditText = (EditText) findViewById(R.id.orgTwoPhoneEditText);
+
+        lastRegTextView = (TextView) findViewById(R.id.lastRegTextView);
+        lastRegDateTimePickButton = (Button) findViewById(R.id.eventLastRegDateButton);
+        lastRegDateTimePickButton.setOnClickListener(this);
+
+
         createEventButton = (Button) findViewById(R.id.createEventButton);
         dialog = new SpotsDialog(this);
         dialog.setMessage("Posting event");
         dialog.setCanceledOnTouchOutside(false);
-        pickerButton.setOnClickListener(this);
-        notificationButton.setOnClickListener(this);
-        descriptionButton.setOnClickListener(this);
-        organizerButton.setOnClickListener(this);
+
+        imagePickerButton.setOnClickListener(this);
+        clearImageButton.setOnClickListener(this);
         createEventButton.setOnClickListener(this);
 
+        titleEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        themePicker = (Spinner) findViewById(R.id.themeSpinner);
+        String[] colorNames = {"Choose theme", "Red", "Blue", "Green", "Orange"};
+
+        themePicker.setAdapter(new ColorSpinnerAdapter(this, R.id.colorName, colorNames));
+        themePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                color = parent.getItemAtPosition(position).toString();
+
+                GradientDrawable gd = (GradientDrawable) eventImageView.getBackground();
+                gd.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+//                gd.setOrientation(GradientDrawable.Orientation.TL_BR);
+//
+//                if (color.equalsIgnoreCase("red")) {
+                isThemeSelected = true;
+//                    int[] colors = {Color.parseColor("#f44336"), Color.parseColor("#e57373")};
+//                    gd.setColors(colors);
+//                } else if ((color.equalsIgnoreCase("blue"))) {
+                isThemeSelected = true;
+//                    int[] colors = {Color.parseColor("#3f51b5"), Color.parseColor("#7986cb")};
+//                    gd.setColors(colors);
+//                } else if ((color.equalsIgnoreCase("green"))) {
+                isThemeSelected = true;
+//                    int[] colors = {Color.parseColor("#4caf50"), Color.parseColor("#81c784")};
+//                    gd.setColors(colors);
+//                } else if ((color.equalsIgnoreCase("orange"))) {
+                isThemeSelected = true;
+//                    int[] colors = {Color.parseColor("#ff5722"), Color.parseColor("#ff8a65")};
+//                    gd.setColors(colors);
+//                }else if ((color.equalsIgnoreCase("Choose theme"))) {
+                isThemeSelected = false;
+//                    int[] colors = {Color.parseColor("#ff5722"), Color.parseColor("#ff8a65")};
+//
+//                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        volleySingleton = new VolleySingleton(this);
+        requestQueue = volleySingleton.getRequestQueue();
+        spotsDialog = new SpotsDialog(this, R.style.Login_dialog);
     }
 
     @Override
@@ -107,24 +209,29 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            isImageChoosen = true;
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
+            picturePath = cursor.getString(columnIndex);
+            Toast.makeText(this, picturePath, Toast.LENGTH_LONG).show();
             cursor.close();
-            imageView.setImageURI(selectedImage);
+            eventImageView.setImageURI(selectedImage);
+            clearImageButton.setVisibility(View.VISIBLE);
+            themePicker.setClickable(false);
+            themePicker.setEnabled(false);
+            base64ImageString = convertImageToBase64(picturePath);
 
         }
-
-
     }
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
+        DateTimePickerFragment fragment;
 
         switch (id) {
             case PICKER_BUTTON_ID:
@@ -132,87 +239,135 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
                 break;
 
-            case NOTIFICATION_BUTTON_ID:
-                NotificationDialogFragment notificationDialogFragment = NotificationDialogFragment.newInstance(eventId);
-                notificationDialogFragment.show(manager, "NOTIFICATION_DIALOG_FRAGMENT");
+            case R.id.clearImageButton:
+                eventImageView.setImageResource(0);
+                clearImageButton.setVisibility(View.GONE);
+                themePicker.setClickable(true);
+                themePicker.setEnabled(true);
                 break;
 
-            case DESCRIPTION_BUTTON_ID:
-                TitleDescriptionDialogFragment titleDescriptionDialogFragment = TitleDescriptionDialogFragment.newInstance(eventId);
-                titleDescriptionDialogFragment.show(manager, "TITLE_DESCRIPTION_FRAGMENT");
-                break;
-
-            case ORGANIZER_BUTTON_ID:
-                OrganizerDialogFragment organizerDialogFragment = OrganizerDialogFragment.newInstance(eventId);
-                organizerDialogFragment.show(manager, "ORGANIZER_FRAGMENT");
-                break;
             case CREATE_EVENT_BUTTON_ID:
                 Arrays.fill(missingFields, Boolean.FALSE);
-                validateEvent();
-                validEvent = areAllFalse(missingFields);
-                if (validEvent) {
-                    Log.i("tag", "event valid");
-                    showArray(missingFields);
-                    EventRegTask task = new EventRegTask();
-                    task.execute();
-                    dialog.show();
+
+
+                if (isValidEvent()) {
+                    try {
+                        spotsDialog.show();
+
+                        RequestorPost.requestCreateEvent(requestQueue, API.EVENT_API,
+                                EventUtility.getUserEmailFromPref(this),
+                                EventUtility.getUserPasswordHashFromPref(this), createJson(), this);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
 //                    Toast.makeText(CreateEventActivity.this, "Event Added", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.i("tag", "event invalid");
                     showArray(missingFields);
-                    showErrorToast();
                 }
 
+                break;
+
+            case R.id.eventPickDateButton:
+                fragment = DateTimePickerFragment.newInstance(event.getEventId().toString(), R.id.eventPickDateButton);
+                fragment.show(getFragmentManager(), "START_DATE_PICKER_FRAGMENT");
+                break;
+
+            case R.id.eventPickEndDateButton:
+
+                fragment = DateTimePickerFragment.newInstance(event.getEventId().toString(), R.id.eventPickEndDateButton);
+                fragment.show(getFragmentManager(), "END_DATE_PICKER_FRAGMENT");
+                break;
+
+            case R.id.eventLastRegDateButton:
+
+                fragment = DateTimePickerFragment.newInstance(event.getEventId().toString(), R.id.eventLastRegDateButton);
+                fragment.show(getFragmentManager(), "LAST_REG_DATE_PICKER_FRAGMENT");
                 break;
         }
     }
 
-    private void validateEvent() {
+    public void setDateTime(long dateTimeInMillis, int id) {
+        switch (id) {
+            case R.id.eventPickDateButton:
+                eventStartTime = dateTimeInMillis;
+                eventStartDateAndTimeTextView.setText(EventUtility.getFriendlyDayString(dateTimeInMillis));
+                break;
 
-        if (event.getEventTitle().isEmpty() || event.getEventTitle() == null) {
-            missingFields[EVENT_NAME] = true;
-            toastString.append("Event Name").append("\n");
-        }
-        if (event.getEventClub().isEmpty() || event.getEventClub() == null) {
-            missingFields[EVENT_CLUB] = true;
-            toastString.append("Event club").append("\n");
-        }
-        if (event.getEventDescription().isEmpty() || event.getEventDescription() == null) {
-            missingFields[EVENT_DESC] = true;
-            toastString.append("Event description").append("\n");
-        }
-        if (Long.toString(event.getEventTime()).isEmpty() || event.getEventTime() == 0) {
-            missingFields[EVENT_TIME] = true;
-            toastString.append("Event time").append("\n");
-        }
-        if (event.getEventVenue().isEmpty() || event.getEventVenue() == null) {
-            missingFields[EVENT_VENUE] = true;
-            toastString.append("Event venue").append("\n");
-        }
-        if (event.getEventOrganizerOne().isEmpty() || event.getEventOrganizerOne() == null) {
-            missingFields[EVENT_ORG_ONE] = true;
-            toastString.append("Event organizer one").append("\n");
-        }
-        if (event.getEventOrganizerOnePhoneNo().isEmpty() || event.getEventOrganizerOnePhoneNo() == null) {
-            missingFields[EVENT_ORG_ONE_PN] = true;
-            toastString.append("Event organizer one phone no.").append("\n");
-        }
-        if (event.getEventOrganizerTwo().isEmpty() || event.getEventOrganizerTwo() == null) {
-            missingFields[EVENT_ORG_TWO] = true;
-            toastString.append("Event organizer two").append("\n");
-        }
-        if (event.getEventOrganizerTwoPhoneNo().isEmpty() || event.getEventOrganizerTwoPhoneNo() == null) {
-            missingFields[EVENT_ORG_TWO_PN] = true;
-            toastString.append("Event organizer two phone no.").append("\n");
-        }
+            case R.id.eventPickEndDateButton:
+                eventEndTime = dateTimeInMillis;
+                eventEndDateAndTimeTextView.setText(EventUtility.getFriendlyDayString(dateTimeInMillis));
+                break;
 
+            case R.id.eventLastRegDateButton:
+                eventLastRegTime = dateTimeInMillis;
+                lastRegTextView.setText(EventUtility.getFriendlyDayString(dateTimeInMillis));
+                break;
+        }
 
     }
 
-    private void showErrorToast() {
-        Toast.makeText(this, toastString.toString(), Toast.LENGTH_LONG).show();
-        toastString.delete(0, toastString.length());
-        toastString.append("Missing Fields:").append("\n");
+    private boolean isValidEvent() {
+        clearErrors();
+
+        if (titleEditText.getText().toString().isEmpty()) {
+            missingFields[0] = true;
+            titleEditText.setError("Cannot be empty");
+        }
+
+        if (descriptionEditText.getText().toString().isEmpty()) {
+            missingFields[1] = true;
+            descriptionEditText.setError("Cannot be empty");
+        }
+        if (eventStartDateAndTimeTextView.getText().toString().equalsIgnoreCase("Event Start Date and Time")) {
+            missingFields[2] = true;
+            Snackbar.make(findViewById(R.id.createEventScrollView), "Set Event Date and Time", Snackbar.LENGTH_LONG)
+                    .show();
+        }
+        if (venueEditText.getText().toString().isEmpty()) {
+            missingFields[3] = true;
+            venueEditText.setError("Cannot be empty");
+        }
+        if (orgOneEditText.getText().toString().isEmpty()) {
+            missingFields[4] = true;
+            orgOneEditText.setError("Cannot be empty");
+        }
+        if (orgOnePhoneEditText.getText().toString().isEmpty()) {
+            missingFields[5] = true;
+            orgOnePhoneEditText.setError("Cannot be empty");
+        }
+
+        if (orgTwoEditText.getText().toString().isEmpty()) {
+            missingFields[6] = true;
+            orgTwoEditText.setError("Cannot be empty");
+        }
+        if (orgTwoPhoneEditText.getText().toString().isEmpty()) {
+            missingFields[7] = true;
+            orgTwoPhoneEditText.setError("Cannot be empty");
+        }
+        if (!orgTwoEmailEditText.getText().toString().isEmpty() && !isEmailValid(orgTwoEmailEditText.getText().toString())) {
+            missingFields[8] = true;
+            orgTwoEmailEditText.setError("Invalid Email id");
+        }
+
+        if (!orgOnePhoneEditText.getText().toString().isEmpty() && orgOnePhoneEditText.getText().toString().length() < 10) {
+            missingFields[9] = true;
+            orgOnePhoneEditText.setError("Phone number is not valid");
+        }
+
+        if (!orgTwoPhoneEditText.getText().toString().isEmpty() && orgTwoPhoneEditText.getText().toString().length() < 10) {
+            missingFields[10] = true;
+            orgTwoPhoneEditText.setError("Phone number is not valid");
+        }
+
+        if (!isImageChoosen && !isThemeSelected) {
+            missingFields[11] = true;
+            Snackbar.make(findViewById(R.id.createEventScrollView), "Select Poster or Theme", Snackbar.LENGTH_LONG)
+                    .show();
+        }
+
+        return areAllFalse(missingFields);
     }
 
     private void showArray(boolean[] array) {
@@ -221,83 +376,93 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private class EventRegTask extends AsyncTask<Void, Void, Void> {
+    private JSONObject createJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            String urlString = API.EVENT_API;
-            HttpURLConnection connection = null;
-            try {
-                URL url = new URL(urlString);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setUseCaches(false);
+        jsonObject.put("name", titleEditText.getText().toString());
+        jsonObject.put("about", descriptionEditText.getText().toString());
+        jsonObject.put("sdt", eventStartTime / 1000);
+        jsonObject.put("edt", eventEndTime / 1000);
+        jsonObject.put("venue", venueEditText.getText().toString());
+        jsonObject.put("seats", 50);
+        jsonObject.put("lastregtime", eventLastRegTime / 1000);
 
 
-                String userCredentials = "123:123";
-                final String basicAuth = "Basic " + Base64.encodeToString(userCredentials.getBytes(), Base64.NO_WRAP);
-                connection.setRequestProperty("Authorization", basicAuth);
-                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                connection.setRequestProperty("Content-Type", "application/json");
-                connection.setUseCaches(false);
-                byte[] outputBytes = createJson().toString().getBytes("UTF-8");
-                OutputStream os = connection.getOutputStream();
-                os.write(outputBytes);
-                connection.connect();
-
-                int responseCode = connection.getResponseCode();
-                //String responseMsg = connection.getResponseMessage();
-                Log.i("tag", "RESPONSE CODE: " + responseCode);
-
-                if (responseCode == 200) {
-                    InputStream inputStr = connection.getInputStream();
-                    String encoding = connection.getContentEncoding() == null ? "UTF-8"
-                            : connection.getContentEncoding();
-                    String jsonResponse = IOUtils.toString(inputStr, encoding);
-                    Log.i("tag", jsonResponse);
-
-
-                }
-
-            } catch (Exception e) {
-                Log.d("tag", e.getLocalizedMessage());
-            }
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            dialog.dismiss();
-            Toast.makeText(CreateEventActivity.this, "Event Added", Toast.LENGTH_SHORT).show();
-            cancel(true);
-
-        }
-
-        JSONObject createJson() throws JSONException {
-            jsonObject.put("name", event.getEventTitle());
-            jsonObject.put("about", event.getEventDescription());
-            jsonObject.put("sdt", event.getEventTime() / 1000);
-            jsonObject.put("edt", event.getEventTime() / 1000);
-            jsonObject.put("venue", event.getEventVenue());
-            jsonObject.put("seats", 50);
-            jsonObject.put("lastregtime", event.getEventTime() / 1000);
-            JSONArray array = new JSONArray();
-            JSONObject object = new JSONObject();
-            object.put("contactname", event.getEventOrganizerOne());
-            object.put("contactnumber", Integer.parseInt(event.getEventOrganizerOnePhoneNo()));
-            array.put(0, object);
-            object.put("contactname", event.getEventOrganizerTwo());
-            object.put("contactnumber", Integer.parseInt(event.getEventOrganizerTwoPhoneNo()));
-            array.put(1, object);
-            jsonObject.put("contacts", array);
-            Log.i("tag", jsonObject.toString());
-            return jsonObject;
-        }
-
+        JSONArray array = new JSONArray();
+        JSONObject object = new JSONObject();
+        object.put("contactname", orgOneEditText.getText().toString());
+        object.put("contactnumber", Long.parseLong(orgOnePhoneEditText.getText().toString()));
+        array.put(0, object);
+        object.put("contactname", orgTwoEditText.getText().toString());
+        object.put("contactnumber", Long.parseLong(orgTwoPhoneEditText.getText().toString()));
+        array.put(1, object);
+        jsonObject.put("contacts", array);
+//        jsonObject.put("image", base64ImageString);
+        Log.i("tag", jsonObject.toString());
+        return jsonObject;
     }
 
+    private boolean isEmailValid(CharSequence email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private void clearErrors() {
+        titleEditText.setError(null);
+        descriptionEditText.setError(null);
+        venueEditText.setError(null);
+        orgOneEditText.setError(null);
+        orgOneEmailEditText.setError(null);
+        orgOnePhoneEditText.setError(null);
+        orgTwoEditText.setError(null);
+        orgTwoEmailEditText.setError(null);
+        orgTwoPhoneEditText.setError(null);
+    }
+
+    private String convertImageToBase64(String imageLocation) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap bm = BitmapFactory.decodeFile(imageLocation.trim());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+        byte[] byteArrayImage = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(byteArrayImage, 0);
+        Log.i("tag", encodedImage);
+        return encodedImage;
+    }
+
+    @Override
+    public void onDataLoaded(boolean response) {
+        if (spotsDialog.isShowing()) {
+            spotsDialog.dismiss();
+        }
+        new android.support.v7.app.AlertDialog.Builder(this)
+                .setMessage("Your Event has been posted successfully")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(CreateEventActivity.this, SlideShowActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        CreateEventActivity.this.startActivity(intent);
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void setError(String errorCode) {
+        if (spotsDialog.isShowing()) {
+            spotsDialog.dismiss();
+        }
+        if (errorCode.equals("NOCON")) {
+            new android.support.v7.app.AlertDialog.Builder(this)
+                    .setMessage("It seems your internet is not working working")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }
+    }
 }
