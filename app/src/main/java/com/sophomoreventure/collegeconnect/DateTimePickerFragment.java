@@ -36,7 +36,7 @@ public class DateTimePickerFragment extends DialogFragment implements View.OnCli
     EventHub eventHub;
     Event event;
 
-    int index;
+    int buttonId;
 
     int dayOfMonth;
     int monthOfYear;
@@ -44,20 +44,19 @@ public class DateTimePickerFragment extends DialogFragment implements View.OnCli
     int hour;
     int minute;
 
-    static DateTimePickerFragment newInstance(String id, int index) {
+    static DateTimePickerFragment newInstance(String eventId, int id) {
         Bundle bundle = new Bundle();
-        bundle.putString(KEY_EVENT_ID, id);
-        bundle.putInt(KEY_INDEX, index);
+        bundle.putString(KEY_EVENT_ID, eventId);
+        bundle.putInt(KEY_INDEX, id);
         DateTimePickerFragment fragment = new DateTimePickerFragment();
         fragment.setArguments(bundle);
         return fragment;
-
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.i("tag", "date-onCreaateDialog");
-        index = getArguments().getInt(KEY_INDEX);
+        buttonId = getArguments().getInt(KEY_INDEX);
         eventId = UUID.fromString(getArguments().getString(KEY_EVENT_ID));
 
         view = View.inflate(getActivity(), R.layout.fragment_date_time_picker, null);
@@ -91,15 +90,15 @@ public class DateTimePickerFragment extends DialogFragment implements View.OnCli
         Calendar calendar = setupCalendar();
         switch (id) {
             case R.id.positive_button:
-                if (index == -1) {
-                    event.setEventTime(calendar.getTimeInMillis());
-                    sendResult(Activity.RESULT_OK, event.getEventId());
-                } else {
-                    event.addNotificationDateTime(index, calendar.getTimeInMillis());
-                    sendResult(Activity.RESULT_OK, event.getEventId());
-                }
+//                if (index == -1) {
+//                    event.setEventTime(calendar.getTimeInMillis());
+//                    sendResult(Activity.RESULT_OK, event.getEventId());
+//                } else {
+//                    event.addNotificationDateTime(index, calendar.getTimeInMillis());
+//                    sendResult(Activity.RESULT_OK, event.getEventId());
+//                }
 
-
+                ((CreateEventActivity) getActivity()).setDateTime(calendar.getTimeInMillis(), buttonId);
 //
 //                Log.i("tag", "" + datePicker.getDayOfMonth());
 //                Log.i("tag", "" + datePicker.getMonth());

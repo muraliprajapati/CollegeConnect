@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sophomoreventure.collegeconnect" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.sophomoreventure.collegeconnect">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="ANDROID.PERMISSION.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
@@ -19,13 +21,20 @@
         tools:replace="android:icon,android:label">
 
         <activity
-            android:name=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:name=".SplashActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".Activities.SlideShowActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity
             android:name=".CreateEventActivity"
@@ -36,7 +45,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.RegistrationActivity"
-            android:label="@string/title_activity_registration" />
+            android:label="Sign Up" />
 
         <activity
             android:name=".Activities.LoginActivity"
@@ -44,7 +53,7 @@
 
         <activity
             android:name=".MyEventsActivity"
-            android:label="My Events">
+            android:label="Events by Drishti">
         </activity>
 
         <service
@@ -67,6 +76,15 @@
             android:label="Clubs" />
         <activity
             android:name=".ClubDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SparshEventListAtivity"
+            android:label="Sparsh Events " />
+        <activity
+            android:name=".SparshEventActivity"
+            android:label="Technical" />
+        <activity
+            android:name=".SparshEventView"
             android:theme="@style/AppTheme.NoActionBar" />
 
 

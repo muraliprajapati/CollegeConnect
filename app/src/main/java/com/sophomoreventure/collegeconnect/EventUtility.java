@@ -2,6 +2,8 @@ package com.sophomoreventure.collegeconnect;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.util.TypedValue;
 
 import com.sophomoreventure.collegeconnect.Constants.SharedPrefConstants;
 
@@ -171,6 +173,9 @@ public class EventUtility {
         return getErrorHashMap().get(errorCode);
     }
 
-
+    public static int dpToPx(float dp, Resources resources) {
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics());
+        return (int) px;
+    }
 }
 

@@ -44,7 +44,7 @@ public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRe
             holder.layout.setBackgroundResource(R.drawable.gradient_orange);
         }
 
-        holder.clubNameTextView.setText("IEEE");
+        holder.clubNameTextView.setText(clubList[position]);
     }
 
 
@@ -66,8 +66,6 @@ public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRe
             itemView.setOnClickListener(this);
 
         }
-
-
         @Override
         public void onClick(View v) {
             Intent i = new Intent(v.getContext(), EventsByClubActivity.class);
