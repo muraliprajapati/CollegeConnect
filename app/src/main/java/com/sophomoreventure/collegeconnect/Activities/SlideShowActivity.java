@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sophomoreventure.collegeconnect.ClubListAtivity;
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
@@ -36,6 +37,7 @@ import com.sophomoreventure.collegeconnect.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.OtherEventView;
 import com.sophomoreventure.collegeconnect.R;
+import com.sophomoreventure.collegeconnect.SparshEventListAtivity;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
 import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
 
@@ -57,12 +59,9 @@ public class SlideShowActivity extends AppCompatActivity implements
     private static final long POLL_FREQUENCY = 10000; //28800000;
     private static final int JOB_ID = 100;
     ViewPager slideShowPager;
-    SlideShowAdapter adapter;
-    Timer timer;
     Toolbar toolbar;
     int currentPage = 0;
-    int[] imageResArray = new int[]{R.drawable.poster_five, R.drawable.poster_four, R.drawable.poster_three, R.drawable.poster_two, R.drawable.poster_three};
-    //a layout grouping the toolbar and the tabs together
+    int[] imageResArray = new int[]{R.drawable.poster_five, R.drawable.poster_four, R.drawable.poster_three, R.drawable.poster_two, R.drawable.poster_three};    //a layout grouping the toolbar and the tabs together
     //private ViewGroup mContainerToolbar;
     private FragmentDrawer mDrawerFragment;
     private JobScheduler mJobScheduler;
@@ -77,25 +76,14 @@ public class SlideShowActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        /*
-        if (EventUtility.isFirstRun(this) || !EventUtility.isLoggedIn(this)) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-        }
-        */
 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide_show);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle(null);
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        ((AppBarLayout) findViewById(R.id.app_bar)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
 
@@ -115,43 +103,55 @@ public class SlideShowActivity extends AppCompatActivity implements
         });
 
         setupDrawer();
-        setupJob();
-        mainScreen = (LinearLayout) findViewById(R.id.main_screen);
-        FragmentManager manager = getSupportFragmentManager();
-        adapter = new SlideShowAdapter(manager);
+//        setupJob();
+//        mainScreen = (LinearLayout) findViewById(R.id.main_screen);
+
         slideShowPager = (ViewPager) findViewById(R.id.slideShowPager);
-        slideShowPager.setAdapter(adapter);
+        slideShowPager.setAdapter(new SlideShowAdapter(getSupportFragmentManager()));
+
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(slideShowPager);
         slideShowPager.addOnPageChangeListener(this);
 
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
+
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (currentPage == adapter.getCount()) {
+                        if (currentPage == slideShowPager.getAdapter().getCount()) {
                             currentPage = 0;
                         }
                         slideShowPager.setCurrentItem(currentPage++, true);
                     }
                 });
             }
-        }, 500, 1500);
+        }, 1500, 1500);
 
         horizonatalRV = (RecyclerView) findViewById(R.id.byClubRecyclerView);
-        horizonatalRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        horizonatalRV.setAdapter(new HorizontalRecyclerAdapter(this));
         horizonatalRV.setNestedScrollingEnabled(false);
+        horizonatalRV.setLayoutManager(new LinearLayoutManager(SlideShowActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        horizonatalRV.setAdapter(new HorizontalRecyclerAdapter(SlideShowActivity.this));
+
+//        RelativeLayout.LayoutParams params = new
+//                RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.MATCH_PARENT);
+//
+//        params.height=EventUtility.dpToPx(256,getResources())*6;
 
         aRV = (RecyclerView) findViewById(R.id.browseEventsRecyclerView);
-        CustomLayoutManager layoutManager = new CustomLayoutManager(this);
-
-        aRV.setLayoutManager(layoutManager);
-        aRV.setAdapter(new MyEventsAdapter(this, ""));
         aRV.setNestedScrollingEnabled(false);
+//        aRV.setLayoutParams(params);
+        CustomLayoutManager layoutManager = new CustomLayoutManager(aRV);
+        layoutManager.setChildSize(EventUtility.dpToPx(256, getResources()));
+        aRV.setLayoutManager(layoutManager);
+//        aRV.setLayoutManager(new LinearLayoutManager(this));
+        aRV.setHasFixedSize(true);
+
+        aRV.setAdapter(new MyEventsAdapter(SlideShowActivity.this, ""));
+
+
     }
 
 
@@ -165,6 +165,7 @@ public class SlideShowActivity extends AppCompatActivity implements
         //setup the NavigationDrawer
         mNavView = (NavigationView) findViewById(R.id.navView);
         mNavView.setNavigationItemSelectedListener(this);
+        mNavView.setCheckedItem(R.id.nav_events);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle dt = new ActionBarDrawerToggle(
                 this, mDrawerLayout, toolbar,
@@ -193,12 +194,12 @@ public class SlideShowActivity extends AppCompatActivity implements
     }
 
 
-    private void translateMainScreen(float slideOffset) {
-        if (mainScreen != null) {
-
-            mainScreen.setTranslationX(slideOffset * 550);
-        }
-    }
+//    private void translateMainScreen(float slideOffset) {
+//        if (mainScreen != null) {
+//
+//            mainScreen.setTranslationX(slideOffset * 550);
+//        }
+//    }
 
 
 
@@ -246,8 +247,8 @@ public class SlideShowActivity extends AppCompatActivity implements
         if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
             mDrawerLayout.closeDrawer(Gravity.LEFT);
         } else {
-            super.onBackPressed();
             finish();
+
         }
     }
 
@@ -291,8 +292,6 @@ public class SlideShowActivity extends AppCompatActivity implements
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
-
-
         }
 
 
@@ -302,16 +301,28 @@ public class SlideShowActivity extends AppCompatActivity implements
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         int id = menuItem.getItemId();
+        menuItem.setChecked(false);
 
         switch (id) {
+
+            case R.id.nav_sparsh_events:
+                menuItem.setChecked(true);
+                mDrawerLayout.closeDrawers();
+                launchActivityDelayed(SparshEventListAtivity.class);
+                break;
             case R.id.nav_events:
                 menuItem.setChecked(true);
                 mDrawerLayout.closeDrawers();
                 break;
             case R.id.nav_clubs:
+                mDrawerLayout.closeDrawers();
+                launchActivityDelayed(ClubListAtivity.class);
                 menuItem.setChecked(true);
-                return false;
+                break;
+
             case R.id.nav_myenents:
+                mDrawerLayout.closeDrawers();
+                launchActivityDelayed(MyEventsActivity.class);
                 menuItem.setChecked(true);
                 break;
             case R.id.nav_myprofile:
@@ -335,6 +346,21 @@ public class SlideShowActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mNavView.setCheckedItem(R.id.nav_events);
+    }
+
+    private void launchActivityDelayed(final Class activity) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(SlideShowActivity.this, activity));
+            }
+        }, 260);
+    }
 
     class SlideShowAdapter extends FragmentStatePagerAdapter {
 

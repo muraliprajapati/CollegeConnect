@@ -13,12 +13,15 @@ import android.widget.ImageView;
 
 import com.sophomoreventure.collegeconnect.R;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by Murali on 08/12/2015.
  */
 public class SlideShowFragment extends Fragment {
     public static final String IMAGE_RES_KEY = "res_id";
     static int imageResId = 0;
+    private WeakReference<ImageView> imageViewReference;
 
     public static Fragment newInstance(int id) {
         Bundle bundle = new Bundle();
@@ -72,9 +75,18 @@ public class SlideShowFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_slideshow,container,false);
         ImageView slideShowImage = (ImageView) view.findViewById(R.id.slideShowImageView);
-        slideShowImage.setImageBitmap(decodeSampledBitmapFromResource(getResources(),
-                getArguments().getInt(IMAGE_RES_KEY, R.drawable.poster_four), 300, 200));
+        imageViewReference = new WeakReference<ImageView>(slideShowImage);
+        Bitmap bitmap = decodeSampledBitmapFromResource(getResources(),
+                getArguments().getInt(IMAGE_RES_KEY, R.drawable.poster_four), 300, 200);
+        if (imageViewReference != null && bitmap != null) {
+            if (imageViewReference.get() != null) {
+                imageViewReference.get().setImageBitmap(bitmap);
+            }
+        }
+//        slideShowImage.setImageBitmap();
 
         return view;
     }
+
+
 }
