@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
@@ -38,12 +39,21 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
         mToolbarView = findViewById(R.id.toolbar);
         mToolbarView.setBackgroundColor(ScrollUtils.getColorWithAlpha(0, getResources().getColor(R.color.colorPrimary)));
         titleTextView = (TextView) findViewById(R.id.title);
-        titleTextView.setText("Club name");
+        titleTextView.setText("Drishti");
         titleTextView.setTextColor(ScrollUtils.getColorWithAlpha(0, getResources().getColor(R.color.colorWhite)));
 
         mScrollView = (ObservableScrollView) findViewById(R.id.scroll);
         mScrollView.setScrollViewCallbacks(this);
         mParallaxImageHeight = getResources().getDimensionPixelSize(R.dimen.parallax_image_height);
+
+        Button button = (Button) findViewById(R.id.eventsByClubButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ClubDetailActivity.this, MyEventsActivity.class));
+
+            }
+        });
     }
 
     @Override
