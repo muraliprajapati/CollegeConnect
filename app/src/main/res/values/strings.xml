@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">College Connect</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
@@ -31,5 +31,8 @@
         <item>Swami Vivekanand Bhavan</item>
         <item>Tagore Bhavan</item>
 
+
     </string-array>
+    <string name="drishti">Drishti is a technical hobby club of SVNIT that has been involved in all technical activities carried out in the college. DRISHTI has been directly patronizing and organizing various technical and knowledge spreading activities in SVNIT since its inception by carrying out a number of workshops which include a broad spectrum of topics ranging from image processing and robotics and from astronomy to Rubik\'s cube. Drishti promotes student participation in nationally recognized technical festivals like Techfest-IITB and Kshitij-IIT Kharagpur. DRISHTI also represents SVNIT in various national/International competitions like ROBOCON and CANSAT.</string>
+    <string name="yantr_yuddha">Construct a wired/wireless,radio controlled,maneuverable machine proficient in destructing an opponent\'s machine in a one-on-one tournament.</string>
 </resources>

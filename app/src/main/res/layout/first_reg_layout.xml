@@ -3,7 +3,7 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_300">
+    android:background="@color/activity_bg">
 
     <LinearLayout
 
@@ -29,7 +29,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
             android:background="@drawable/edit_text_bg"
-            android:drawableRight="@drawable/ic_visibility_grey_500_36dp"
             android:ems="10"
             android:hint="Enter password"
             android:inputType="textPassword" />
@@ -163,9 +162,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
-            android:background="@color/colorAccent"
-            android:text="Register"
-            android:textColor="#FFFFFF" />
+            android:background="@drawable/button_state_bg"
+
+            android:text="SIGN UP"
+
+            android:textColor="@android:color/black" />
 
 
     </LinearLayout>

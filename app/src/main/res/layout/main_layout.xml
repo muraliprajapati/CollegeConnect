@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <include layout="@layout/tp_layout" />
+
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -41,5 +41,6 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
+    <include layout="@layout/tp_layout" />
 
 </android.support.design.widget.CoordinatorLayout>

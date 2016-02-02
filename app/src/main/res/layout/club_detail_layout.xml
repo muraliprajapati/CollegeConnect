@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/parallax_image_height"
                 android:scaleType="centerCrop"
-                android:src="@drawable/poster_four" />
+                android:src="@drawable/d" />
 
             <View
                 android:id="@+id/anchor"

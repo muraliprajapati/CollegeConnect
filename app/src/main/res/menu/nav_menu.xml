@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group
+        android:id="@+id/menu_group_sparsh"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_sparsh_events"
+            android:checkable="true"
+            android:icon="@drawable/ic_list_white_24dp"
+            android:title="Sparsh Events" />
+    </group>
+
+    <group
         android:id="@+id/menu_group_1"
         android:checkableBehavior="none">
         <item
             android:id="@+id/nav_events"
+            android:checkable="true"
             android:icon="@drawable/ic_events_drawer"
-            android:title="Events"
-            android:checkable="true"/>
+            android:title="College Events" />
         <item
             android:id="@+id/nav_clubs"
+            android:checkable="true"
             android:icon="@drawable/ic_list_white_24dp"
-            android:title="Clubs"
-            android:checkable="true"/>
+            android:title="Clubs" />
 
     </group>
     <group
@@ -20,14 +30,14 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_myenents"
+            android:checkable="true"
             android:icon="@drawable/ic_events_fav"
-            android:title="My Events"
-            android:checkable="true"/>
+            android:title="My Events" />
         <item
             android:id="@+id/nav_myprofile"
+            android:checkable="true"
             android:icon="@drawable/ic_people_black_18dp"
-            android:title="My Profile"
-            android:checkable="true"/>
+            android:title="My Profile" />
     </group>
 
     <group
@@ -35,14 +45,14 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_settings"
+            android:checkable="true"
             android:icon="@drawable/ic_settings_white_24dp"
-            android:title="Setting"
-            android:checkable="true"/>
+            android:title="Setting" />
         <item
             android:id="@+id/nav_rate"
+            android:checkable="true"
             android:icon="@drawable/ic_star_white_24dp"
-            android:title="Rate This App "
-            android:checkable="true"/>
+            android:title="Rate This App " />
         </group>
 
 </menu>

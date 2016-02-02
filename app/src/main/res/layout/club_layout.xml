@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="128dp"
     android:layout_margin="8dp"
-    android:background="@drawable/poster_four">
+    android:background="@drawable/login_bg_22">
 
 
     <TextView
@@ -15,7 +15,7 @@
         android:gravity="center"
         android:text="IETE"
         android:textColor="#FFF"
-        android:textSize="36sp"
+        android:textSize="28sp"
         android:textStyle="bold" />
 
 </RelativeLayout>
