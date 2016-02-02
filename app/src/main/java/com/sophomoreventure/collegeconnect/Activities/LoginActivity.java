@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -40,37 +39,24 @@ import dmax.dialog.SpotsDialog;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, DataListener {
     AutoCompleteTextView emailEditText;
     EditText passEditText;
-    EditText guestNameEditText;
-    EditText guestCollegeEditText;
+
     TextView forgotPasswordTextView;
     Button loginButton;
     Button regButton;
-    Button guestLoginButton;
-    Button guestFinalLoginButton;
-    LinearLayout guestCradLayout;
-    boolean isLayoutVisibile = false;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-    private String userName = null;
-    private String userPassword = null;
+
     private Context context;
-    private TextView circular;
     private AlertDialog dialog;
-    private String loginErrorCode = "empty";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        guestCradLayout = (LinearLayout) findViewById(R.id.guestCradLayout);
         emailEditText = (AutoCompleteTextView) findViewById(R.id.input_email);
         passEditText = (EditText) findViewById(R.id.input_password);
-        guestNameEditText = (EditText) findViewById(R.id.guest_name_edit_text);
-        guestCollegeEditText = (EditText) findViewById(R.id.guest_college_edit_text);
         loginButton = (Button) findViewById(R.id.login_button);
         regButton = (Button) findViewById(R.id.register_button);
-        guestLoginButton = (Button) findViewById(R.id.guest_login_button);
-        guestFinalLoginButton = (Button) findViewById(R.id.guest_final_login_button);
         forgotPasswordTextView = (TextView) findViewById(R.id.forgot_password_text_view);
         dialog = new SpotsDialog(this, R.style.Login_dialog);
         dialog.setCanceledOnTouchOutside(false);
@@ -82,8 +68,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         regButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
-        guestLoginButton.setOnClickListener(this);
-        guestFinalLoginButton.setOnClickListener(this);
+
         forgotPasswordTextView.setOnClickListener(this);
     }
 
@@ -92,8 +77,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         String userName = emailEditText.getText().toString();
         String password = passEditText.getText().toString();
-        String guestName = guestNameEditText.getText().toString();
-        String guestCollege = guestCollegeEditText.getText().toString();
+
         int id = v.getId();
         switch (id) {
             case R.id.login_button:
@@ -118,41 +102,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
 
                 break;
+
             case R.id.register_button:
                 startActivity(new Intent(v.getContext(), RegistrationActivity.class));
                 break;
 
-            case R.id.guest_login_button:
-                if (isLayoutVisibile) {
-                    guestCradLayout.setVisibility(View.GONE);
-                    isLayoutVisibile = false;
-                } else {
-                    guestCradLayout.setVisibility(View.VISIBLE);
-                    isLayoutVisibile = true;
-                }
-
-                break;
             case R.id.forgot_password_text_view:
                 startActivity(new Intent(this, ForgotPasswordActivity.class));
                 break;
-            case R.id.guest_final_login_button:
-                if (isEmptyGuestName(guestName) || isEmptyGuestCollege(guestCollege)) {
-                    guestNameEditText.setError("Name cannot be empty");
-                    guestNameEditText.requestFocus();
-                    guestCollegeEditText.setError("College cannot be empty");
 
-                } else if (isEmptyGuestName(guestName)) {
-                    guestNameEditText.setError("Name cannot be empty");
-                    guestNameEditText.requestFocus();
-                } else if (isEmptyGuestCollege(guestCollege)) {
-                    guestCollegeEditText.setError("College cannot be empty");
-                    guestCollegeEditText.requestFocus();
-                } else {
-//                    Toast.makeText(LoginActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
-                    dialog.show();
-                }
-
-                break;
         }
     }
 
@@ -166,15 +124,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return TextUtils.isEmpty(userPassword);
     }
 
-    private boolean isEmptyGuestName(String userName) {
 
-        return TextUtils.isEmpty(userName);
-    }
-
-    private boolean isEmptyGuestCollege(String collegeName) {
-
-        return TextUtils.isEmpty(collegeName);
-    }
 
 
     @Override
