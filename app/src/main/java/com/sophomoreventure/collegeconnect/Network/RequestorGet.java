@@ -20,7 +20,6 @@ import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventUtility;
-import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.ParserEventResponse;
 
 import org.json.JSONException;
@@ -162,17 +161,19 @@ public class RequestorGet {
                     }
                 },
                 new Response.ErrorListener() {
-                    DataListener listener = (DataListener) context;
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i("vikas", error + "");
-                        NetworkResponse response = error.networkResponse;
-                        Log.i("vikas", response.statusCode + "");
-                        String string = new String(response.data);
+
+                        DataListener listener = (DataListener) context;
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
                             listener.setError("NOCON");
+
                         } else {
                             try {
+                                NetworkResponse response = error.networkResponse;
+                                Log.i("vikas", response.statusCode + "");
+                                String string = new String(response.data);
                                 JSONObject jsonObject = new JSONObject(string);
                                 Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
                                 listener.setError(Parserer.parseResponse(jsonObject));

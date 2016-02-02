@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventsLoadedListener;
-import com.sophomoreventure.collegeconnect.Logging.L;
-import com.sophomoreventure.collegeconnect.ModelClass.EventModel;
 
 import java.util.ArrayList;
 
@@ -16,14 +14,14 @@ import me.tatarka.support.job.JobService;
  * Created by Vikas Kumar on 30-12-2015.
  */
 public class ServiceClass extends JobService implements EventsLoadedListener{
-    private JobParameters jobParameters;
     Context context;
+    private JobParameters jobParameters;
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         this.jobParameters = jobParameters;
         context = this;
-        L.T(this, "jobDone");
+//        L.T(this, "jobDone");
         //jobFinished(jobParameters, false);
         new TaskLoadEventsData(context).execute();
         return true;
