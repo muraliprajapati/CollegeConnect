@@ -15,7 +15,7 @@ import android.widget.TextView;
 public class ColorSpinnerAdapter extends ArrayAdapter<String> {
     Context context;
     String[] list;
-    String[] colorList = {"#FFFFFF", "#f44336", "#3f51b5", "#4caf50", "#ff5722"};
+    String[] colorList = {"#FFFFFF", "#2196f3", "#9c27b0", "#607d8b", "#009688"};
 
 
     public ColorSpinnerAdapter(Context context, int resource, String[] list) {
@@ -47,7 +47,7 @@ public class ColorSpinnerAdapter extends ArrayAdapter<String> {
         GradientDrawable sd = (GradientDrawable) colorView.getBackground();
 
         if (position == 0) {
-            sd.setColor(Color.parseColor(colorList[position]));
+            colorView.setVisibility(View.GONE);
             colorTextView.setText(list[position]);
         }
         sd.setColor(Color.parseColor(colorList[position]));
