@@ -1,7 +1,6 @@
 package com.sophomoreventure.collegeconnect.Network;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Base64;
 import android.util.Log;
@@ -16,7 +15,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.EventUtility;
 
@@ -71,7 +69,7 @@ public class RequestorPost {
     }
 
     public static JSONObject requestJsonData(
-            final RequestQueue requestQueue, String url, final String userName,
+            final RequestQueue requestQueue, final String url, final String userName,
             final String userPassword, final Context context) {
 
 
@@ -95,7 +93,7 @@ public class RequestorPost {
                             JSONObject jsonObject = new JSONObject(string);
                             Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
                             DataListener listener = (DataListener) context;
-                            listener.setError(Parserer.parseResponse(jsonObject));
+                            listener.setError(url, Parserer.parseResponse(jsonObject));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -122,7 +120,7 @@ public class RequestorPost {
 
 
     public static JSONObject requestRegistration(
-            final RequestQueue requestQueue, String url, final String email,
+            final RequestQueue requestQueue, final String url, final String email,
             final String userPassword, final JSONObject jsonBody, final Context context) {
 
 
@@ -139,12 +137,8 @@ public class RequestorPost {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        listener.onDataLoaded(true);
-                        Intent intent = new Intent(context, SlideShowActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        context.startActivity(intent);
+                        listener.onDataLoaded(url);
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -154,7 +148,7 @@ public class RequestorPost {
 
                         DataListener listener = (DataListener) context;
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                            listener.setError("NOCON");
+                            listener.setError(url, "NOCON");
 
                         } else {
                             try {
@@ -163,7 +157,7 @@ public class RequestorPost {
                                 String string = new String(response.data);
                                 JSONObject jsonObject = new JSONObject(string);
                                 Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
-                                listener.setError(Parserer.parseResponse(jsonObject));
+                                listener.setError(url, Parserer.parseResponse(jsonObject));
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -191,7 +185,7 @@ public class RequestorPost {
     }
 
     public static void requestCreateEvent(
-            final RequestQueue requestQueue, String url, final String email,
+            final RequestQueue requestQueue, final String url, final String email,
             final String userPassword, final JSONObject jsonBody, final Context context) {
 
 
@@ -203,7 +197,7 @@ public class RequestorPost {
                     public void onResponse(JSONObject response) {
                         Log.i("vikas", response.toString());
                         jsonObject = response;
-                        listener.onDataLoaded(true);
+                        listener.onDataLoaded(url);
 
                     }
                 },
@@ -214,7 +208,7 @@ public class RequestorPost {
 
                         DataListener listener = (DataListener) context;
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                            listener.setError("NOCON");
+                            listener.setError(url, "NOCON");
 
                         } else {
                             try {
@@ -223,7 +217,7 @@ public class RequestorPost {
                                 String string = new String(response.data);
                                 JSONObject jsonObject = new JSONObject(string);
                                 Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
-                                listener.setError(Parserer.parseResponse(jsonObject));
+                                listener.setError(url, Parserer.parseResponse(jsonObject));
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -260,7 +254,7 @@ public class RequestorPost {
     }
 
     public static void requestForgotPassword(
-            final RequestQueue requestQueue, String url, final JSONObject jsonBody, final Context context) {
+            final RequestQueue requestQueue, final String url, final JSONObject jsonBody, final Context context) {
 
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
@@ -270,23 +264,40 @@ public class RequestorPost {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("vikas", response.toString());
-                        listener.onDataLoaded(true);
+                        listener.onDataLoaded(url);
 
                     }
                 },
                 new Response.ErrorListener() {
-                    @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i("vikas", error + "");
-                        NetworkResponse response = error.networkResponse;
-                        Log.i("vikas", response.statusCode + "");
 
-                        if (response.statusCode == 404) {
-                            DataListener listener = (DataListener) context;
-                            listener.setError("Email is not registered");
+                        DataListener listener = (DataListener) context;
 
+                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                            listener.setError(url, "NOCON");
+
+                        } else {
+                            try {
+                                NetworkResponse response = error.networkResponse;
+                                Log.i("vikas", response.statusCode + "");
+                                String string = new String(response.data);
+                                JSONObject jsonObject = new JSONObject(string);
+                                Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
+                                if (response.statusCode == 404) {
+                                    listener.setError(url, "Email is not registered");
+
+                                }
+//                                listener.setError(Parserer.parseResponse(jsonObject));
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
+
+
                     }
+
                 }) {
 
 
@@ -295,30 +306,40 @@ public class RequestorPost {
 
     }
 
-    private static void parseAndSaveUserInfoToPref(Context context, String userName, String userPassword, String token, JSONObject jsonObject) throws JSONException {
+    private static void parseAndSaveUserInfoToPref(Context context, String userEmail, String userPassword, String token, JSONObject jsonObject) throws JSONException {
+        String rollNo, hostelName;
+        long mobNo;
+        boolean hostelite;
+        String name = jsonObject.getString("name");
 
-        String emailId = jsonObject.getString("email");
-        long mobNo = jsonObject.getLong("mobno");
-        String rollNo = jsonObject.getString("rollno");
 
         SharedPreferences prefs = context.getSharedPreferences(Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(Constants.SharedPrefConstants.USER_SHARED_PREF_LOGGED_IN_KEY, true);
-        editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_NAME_KEY, userName);
-        editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_PASSWORD_KEY, EventUtility.getHashString(userPassword, "SHA-1"));
+        editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_EMAIL_KEY, userEmail);
+        editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_PASSWORD_KEY, userPassword);
         editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_TOKEN_KEY, token);
-        editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_EMAIL_KEY, emailId);
-        editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_ROLL_NO_KEY, rollNo);
-        if (mobNo == 0 || Long.toString(mobNo).isEmpty()) {
-            editor.putLong(Constants.SharedPrefConstants.USER_SHARED_PREF_MOB_NO_KEY, 0);
-        } else {
+        editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_NAME_KEY, name);
+
+
+        if (jsonObject.has("mobno")) {
+            mobNo = jsonObject.getLong("mobno");
             editor.putLong(Constants.SharedPrefConstants.USER_SHARED_PREF_MOB_NO_KEY, mobNo);
         }
 
-        if (rollNo == null || rollNo.isEmpty()) {
-            editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_ROLL_NO_KEY, "NA");
-        } else {
+        if (jsonObject.has("rollno")) {
+            rollNo = jsonObject.getString("rollno");
             editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_ROLL_NO_KEY, rollNo);
+        }
+
+        if (jsonObject.has("hostel_or_local")) {
+            hostelite = jsonObject.getBoolean("hostel_or_local");
+            editor.putBoolean(Constants.SharedPrefConstants.USER_SHARED_PREF_HOSTELITE_KEY, hostelite);
+        }
+
+        if (jsonObject.has("hostelname")) {
+            hostelName = jsonObject.getString("hostelname");
+            editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_HOSTEL_NAME_KEY, hostelName);
         }
 
         editor.apply();

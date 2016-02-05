@@ -19,10 +19,10 @@ public class Parserer {
             response = jsonObject.getString("message");
             Log.i("vikas", response);
             if (response.equalsIgnoreCase("ERR14")) {
-                dataListener.onDataLoaded(true);
+//                dataListener.onDataLoaded(true);
                 return true;
             } else {
-                dataListener.onDataLoaded(false);
+//                dataListener.onDataLoaded(false);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -50,7 +50,7 @@ public class Parserer {
         try {
 
             response = jsonObject.getString("token");
-            Log.i("vikas", response);
+//            Log.i("vikas", response);
 
         } catch (JSONException e) {
             e.printStackTrace();

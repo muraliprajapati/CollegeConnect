@@ -8,4 +8,10 @@
         <color android:color="#bdc3c7" />
     </item>
 
+    <item android:state_enabled="false">
+        <color android:color="@color/activity_bg" />
+    </item>
+    <item android:state_enabled="true">
+        <color android:color="@android:color/white" />
+    </item>
 </selector>

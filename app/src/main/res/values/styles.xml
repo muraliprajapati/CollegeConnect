@@ -37,6 +37,14 @@
 
     </style>
 
+    <style name="Create_Event_dialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="DialogTitleText">Posting Event...</item>
+        <item name="DialogSpotColor">@android:color/holo_orange_dark</item>
+        <item name="DialogSpotCount">4</item>
+
+    </style>
+
 
     <style name="CustomShowcaseTheme" parent="ShowcaseView.Light">
         <item name="sv_backgroundColor">#3300A621</item>

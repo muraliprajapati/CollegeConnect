@@ -14,6 +14,8 @@ public interface Constants {
         String USER_SHARED_PREF_EMAIL_KEY = "email";
         String USER_SHARED_PREF_MOB_NO_KEY = "mobile_no";
         String USER_SHARED_PREF_ROLL_NO_KEY = "roll_no";
+        String USER_SHARED_PREF_HOSTELITE_KEY = "hostelite";
+        String USER_SHARED_PREF_HOSTEL_NAME_KEY = "hostel_name";
 
         String GCM_SHARED_PREF_FILE_NAME = "com.sophomoreventure.collegeconnect.gcm_pref";
 

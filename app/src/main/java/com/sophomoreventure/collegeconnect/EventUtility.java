@@ -3,12 +3,11 @@ package com.sophomoreventure.collegeconnect;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.TypedValue;
 
 import com.sophomoreventure.collegeconnect.Constants.SharedPrefConstants;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -40,15 +39,6 @@ public class EventUtility {
         return empty;
     }
 
-    public static JSONObject getJsonForRegistration(String rollNo, String name, String email, int mobileNo) throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("rollno", rollNo);
-        jsonObject.put("name", name);
-        jsonObject.put("email", email);
-        jsonObject.put("mobno", mobileNo);
-        return jsonObject;
-
-    }
 
     public static boolean isFirstRun(Context context) {
 
@@ -140,13 +130,21 @@ public class EventUtility {
 
     }
 
+    public static void removeUserLoginFromPref(Context context) {
+        SharedPreferences user_pref = context.getSharedPreferences(SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = user_pref.edit();
+        editor.putBoolean(SharedPrefConstants.USER_SHARED_PREF_LOGGED_IN_KEY, false);
+        editor.apply();
+
+    }
+
     private static HashMap<String, String> getErrorHashMap() {
         HashMap<String, String> errorMap = new HashMap<>();
         //HTTP CODE 401 (UNAUTHORIZED ACCESS)
         errorMap.put("ERR01", "Login required");
         errorMap.put("ERR02", "Username empty");
         errorMap.put("ERR03", "Password empty");
-        errorMap.put("ERR04", "Incorrect username");
+        errorMap.put("ERR04", "Email is not registered");
         errorMap.put("ERR05", "Incorrect password");
         errorMap.put("ERR06", "Token Invalid");
         errorMap.put("ERR07", "Token expired");
@@ -176,6 +174,46 @@ public class EventUtility {
     public static int dpToPx(float dp, Resources resources) {
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics());
         return (int) px;
+    }
+
+
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
+                                                         int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 1;
+            final int halfWidth = width / 1;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }
 

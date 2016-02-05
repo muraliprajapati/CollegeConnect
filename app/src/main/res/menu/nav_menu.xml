@@ -24,6 +24,12 @@
             android:icon="@drawable/ic_list_white_24dp"
             android:title="Clubs" />
 
+        <item
+            android:id="@+id/nav_notice_board"
+            android:checkable="true"
+            android:icon="@drawable/ic_list_white_24dp"
+            android:title="Notice board" />
+
     </group>
     <group
         android:id="@+id/menu_group_2"

@@ -9,12 +9,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
@@ -26,11 +28,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
@@ -42,6 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
 import dmax.dialog.SpotsDialog;
@@ -53,17 +59,19 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
     public static final int RESULT_LOAD_IMAGE = 0;
     public static final int PICKER_BUTTON_ID = R.id.pickerButton;
     public static final int CREATE_EVENT_BUTTON_ID = R.id.createEventButton;
-
-
+    Cloudinary cloudinary;
+    String imageName, imageUrl;
     ImageView eventImageView;
     Button imagePickerButton;
     Spinner themePicker;
+    TextView nameEditText;
     EditText titleEditText;
     EditText descriptionEditText;
     EditText venueEditText;
     AutoCompleteTextView clubNameTextView;
     TextView eventStartDateAndTimeTextView, eventEndDateAndTimeTextView, lastRegTextView;
     Button startDatePickButton, endDatePickButton, lastRegDateTimePickButton, clearImageButton;
+
     EditText orgOneEditText;
     EditText orgOneEmailEditText;
     EditText orgOnePhoneEditText;
@@ -99,18 +107,22 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
         eventHub = EventHub.getEventHub(this);
         eventId = event.getEventId().toString();
         eventHub.addEventToEventList(event);
-
+        cloudinary = new Cloudinary(CloudinaryConfig.getConfig());
         String[] clubNames = getResources().getStringArray(R.array.club_list);
         clubServerID = getIntent().getStringExtra("clubId");
         database = new EventDatabase(this);
         if(clubServerID != null){
             setEventDate(database.selectByEventId(clubServerID));
         }
+        nameEditText = (TextView) findViewById(R.id.name);
+        nameEditText.setVisibility(View.GONE);
         eventImageView = (ImageView) findViewById(R.id.eventImageView);
+        eventImageView.setImageResource(R.drawable.placeholder);
         imagePickerButton = (Button) findViewById(R.id.pickerButton);
         clearImageButton = (Button) findViewById(R.id.clearImageButton);
         clearImageButton.setVisibility(View.GONE);
         titleEditText = (EditText) findViewById(R.id.titleEditText);
+        titleEditText.clearFocus();
         descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
         venueEditText = (EditText) findViewById(R.id.venueEditText);
         clubNameTextView = (AutoCompleteTextView) findViewById(R.id.clubNameAutoCompleteTextView);
@@ -138,8 +150,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
 
 
         createEventButton = (Button) findViewById(R.id.createEventButton);
-        dialog = new SpotsDialog(this);
-        dialog.setMessage("Posting event");
+        dialog = new SpotsDialog(this, R.style.Create_Event_dialog);
         dialog.setCanceledOnTouchOutside(false);
 
         imagePickerButton.setOnClickListener(this);
@@ -154,7 +165,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                nameEditText.setText(s.toString());
             }
 
             @Override
@@ -162,8 +173,10 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
+
         themePicker = (Spinner) findViewById(R.id.themeSpinner);
-        String[] colorNames = {"Choose theme", "Red", "Blue", "Green", "Orange"};
+        String[] colorNames = {"Choose theme", "Blue", "Purple", "Blue Grey", "Teal"};
+        final String[] colorList = {"#FFFFFF", "#2196f3", "#9c27b0", "#607d8b", "#009688"};
 
         themePicker.setAdapter(new ColorSpinnerAdapter(this, R.id.colorName, colorNames));
         themePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -172,31 +185,46 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
 
                 color = parent.getItemAtPosition(position).toString();
 
-                GradientDrawable gd = (GradientDrawable) eventImageView.getBackground();
-                gd.setGradientType(GradientDrawable.LINEAR_GRADIENT);
-//                gd.setOrientation(GradientDrawable.Orientation.TL_BR);
-//
-//                if (color.equalsIgnoreCase("red")) {
-                isThemeSelected = true;
-//                    int[] colors = {Color.parseColor("#f44336"), Color.parseColor("#e57373")};
-//                    gd.setColors(colors);
-//                } else if ((color.equalsIgnoreCase("blue"))) {
-                isThemeSelected = true;
-//                    int[] colors = {Color.parseColor("#3f51b5"), Color.parseColor("#7986cb")};
-//                    gd.setColors(colors);
-//                } else if ((color.equalsIgnoreCase("green"))) {
-                isThemeSelected = true;
-//                    int[] colors = {Color.parseColor("#4caf50"), Color.parseColor("#81c784")};
-//                    gd.setColors(colors);
-//                } else if ((color.equalsIgnoreCase("orange"))) {
-                isThemeSelected = true;
-//                    int[] colors = {Color.parseColor("#ff5722"), Color.parseColor("#ff8a65")};
-//                    gd.setColors(colors);
-//                }else if ((color.equalsIgnoreCase("Choose theme"))) {
-                isThemeSelected = false;
-//                    int[] colors = {Color.parseColor("#ff5722"), Color.parseColor("#ff8a65")};
-//
-//                }
+                if (color.equalsIgnoreCase("Blue")) {
+                    colorCode = colorList[1];
+                    eventImageView.setImageResource(R.drawable.blue_gradient);
+                    imagePickerButton.setEnabled(false);
+                    clearImageButton.setVisibility(View.VISIBLE);
+                    nameEditText.setVisibility(View.VISIBLE);
+                    isThemeSelected = true;
+
+                } else if ((color.equalsIgnoreCase("Purple"))) {
+                    colorCode = colorList[2];
+                    eventImageView.setImageResource(R.drawable.purple_gradient);
+                    imagePickerButton.setEnabled(false);
+                    clearImageButton.setVisibility(View.VISIBLE);
+                    nameEditText.setVisibility(View.VISIBLE);
+                    isThemeSelected = true;
+
+                } else if ((color.equalsIgnoreCase("Blue Grey"))) {
+                    colorCode = colorList[3];
+                    eventImageView.setImageResource(R.drawable.blue_grey_gradient);
+                    imagePickerButton.setEnabled(false);
+                    clearImageButton.setVisibility(View.VISIBLE);
+                    nameEditText.setVisibility(View.VISIBLE);
+                    isThemeSelected = true;
+
+                } else if ((color.equalsIgnoreCase("Teal"))) {
+                    colorCode = colorList[4];
+                    eventImageView.setImageResource(R.drawable.teal_gradient);
+                    imagePickerButton.setEnabled(false);
+                    clearImageButton.setVisibility(View.VISIBLE);
+                    nameEditText.setVisibility(View.VISIBLE);
+                    isThemeSelected = true;
+
+                } else if ((color.equalsIgnoreCase("Choose theme"))) {
+                    eventImageView.setImageResource(0);
+                    imagePickerButton.setEnabled(true);
+                    clearImageButton.setVisibility(View.GONE);
+                    nameEditText.setVisibility(View.GONE);
+                    isThemeSelected = false;
+
+                }
             }
 
             @Override
@@ -237,13 +265,14 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
-            Toast.makeText(this, picturePath, Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, picturePath, Toast.LENGTH_LONG).show();
             cursor.close();
             eventImageView.setImageURI(selectedImage);
             clearImageButton.setVisibility(View.VISIBLE);
+            nameEditText.setVisibility(View.GONE);
             themePicker.setClickable(false);
             themePicker.setEnabled(false);
-            base64ImageString = convertImageToBase64(picturePath);
+
 
         }
     }
@@ -264,24 +293,68 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
                 clearImageButton.setVisibility(View.GONE);
                 themePicker.setClickable(true);
                 themePicker.setEnabled(true);
+                imagePickerButton.setEnabled(true);
+                nameEditText.setVisibility(View.GONE);
+
                 break;
 
             case CREATE_EVENT_BUTTON_ID:
                 Arrays.fill(missingFields, Boolean.FALSE);
 
-
                 if (isValidEvent()) {
                     try {
                         spotsDialog.show();
 
-                        RequestorPost.requestCreateEvent(requestQueue, API.EVENT_API,
-                                EventUtility.getUserEmailFromPref(this),
-                                EventUtility.getUserPasswordHashFromPref(this), createJson(), this);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    imageName = titleEditText.getText().toString().toLowerCase()
+                            + "By" + clubNameTextView.getText().toString();
+                    imageUrl = cloudinary.url().generate(imageName);
+                    Log.i("tag", imageName + " and " + imageUrl);
+                    Log.i("tag", "" + EventUtility.getUserEmailFromPref(this));
+                    Log.i("tag", "" + EventUtility.getUserPasswordHashFromPref(this));
+                    final EditText confPassEditText = new EditText(CreateEventActivity.this);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT);
 
-//                    Toast.makeText(CreateEventActivity.this, "Event Added", Toast.LENGTH_SHORT).show();
+                    confPassEditText.setLayoutParams(lp);
+                    confPassEditText.setHint("Your password");
+                    confPassEditText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                    orgTwoPhoneEditText.clearFocus();
+                    new android.support.v7.app.AlertDialog.Builder(this)
+                            .setTitle("Confirm Password")
+                            .setView(confPassEditText)
+                            .setPositiveButton("Post", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Log.i("tag", confPassEditText.getText().toString());
+                                    if (EventUtility.getHashString(confPassEditText.getText().toString(), "SHA-1")
+                                            .equalsIgnoreCase(EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this))) {
+
+                                        try {
+                                            spotsDialog.show();
+                                            new PhotoUploadTask().execute(picturePath, imageName);
+                                            RequestorPost.requestCreateEvent(requestQueue, API.EVENT_API,
+                                                    EventUtility.getUserEmailFromPref(CreateEventActivity.this),
+                                                    EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this), createJson(), CreateEventActivity.this);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        dialog.dismiss();
+                                    } else {
+                                        Toast.makeText(CreateEventActivity.this, "Password doesn't match", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .create()
+                            .show();
+
                 } else {
                     Log.i("tag", "event invalid");
                     showArray(missingFields);
@@ -367,8 +440,8 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
             orgTwoPhoneEditText.setError("Cannot be empty");
         }
         if (!orgTwoEmailEditText.getText().toString().isEmpty() && !isEmailValid(orgTwoEmailEditText.getText().toString())) {
-            missingFields[8] = true;
-            orgTwoEmailEditText.setError("Invalid Email id");
+            missingFields[8] = false;
+//            orgTwoEmailEditText.setError("Invalid Email id");
         }
 
         if (!orgOnePhoneEditText.getText().toString().isEmpty() && orgOnePhoneEditText.getText().toString().length() < 10) {
@@ -416,7 +489,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
         object.put("contactnumber", Long.parseLong(orgTwoPhoneEditText.getText().toString()));
         array.put(1, object);
         jsonObject.put("contacts", array);
-//        jsonObject.put("image", base64ImageString);
+        jsonObject.put("image", imageUrl);
         Log.i("tag", jsonObject.toString());
         return jsonObject;
     }
@@ -442,7 +515,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap bm = BitmapFactory.decodeFile(imageLocation.trim());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+        bm.compress(Bitmap.CompressFormat.PNG, 10, baos);
         byte[] byteArrayImage = baos.toByteArray();
         String encodedImage = Base64.encodeToString(byteArrayImage, 0);
         Log.i("tag", encodedImage);
@@ -450,7 +523,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void onDataLoaded(boolean response) {
+    public void onDataLoaded(String apiUrl) {
         if (spotsDialog.isShowing()) {
             spotsDialog.dismiss();
         }
@@ -470,7 +543,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void setError(String errorCode) {
+    public void setError(String apiUrl, String errorCode) {
         if (spotsDialog.isShowing()) {
             spotsDialog.dismiss();
         }
@@ -485,4 +558,42 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
                     .show();
         }
     }
+
+
+    private class PhotoUploadTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Showing progress dialog
+        }
+
+        @Override
+        protected Void doInBackground(String... filePath) {
+
+            try {
+
+                cloudinary.uploader().upload(filePath[0], ObjectUtils.asMap("public_id", filePath[1]));
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.i("vikas", e + "");
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            // Dismiss the progress dialog
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+    }
+
+
 }
