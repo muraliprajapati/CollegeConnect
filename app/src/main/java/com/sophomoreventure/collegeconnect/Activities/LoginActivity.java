@@ -7,17 +7,21 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.API;
@@ -36,7 +40,7 @@ import dmax.dialog.SpotsDialog;
 /**
  * Created by Murali on 30/12/2015.
  */
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, DataListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, DataListener, View.OnKeyListener {
     AutoCompleteTextView emailEditText;
     EditText passEditText;
 
@@ -52,6 +56,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            emailEditText.setText(savedInstanceState.getString("email", null));
+            passEditText.setText(savedInstanceState.getString("password", null));
+        }
         setContentView(R.layout.activity_login);
         emailEditText = (AutoCompleteTextView) findViewById(R.id.input_email);
         passEditText = (EditText) findViewById(R.id.input_password);
@@ -62,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         dialog.setCanceledOnTouchOutside(false);
         context = this;
         emailEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getAccountEmailAddress(this)));
-
+        passEditText.setOnKeyListener(this);
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
 
@@ -75,8 +83,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        String userName = emailEditText.getText().toString();
-        String password = passEditText.getText().toString();
+        final String userName = emailEditText.getText().toString();
+        final String password = EventUtility.getHashString(passEditText.getText().toString(), "SHA-1");
 
         int id = v.getId();
         switch (id) {
@@ -97,7 +105,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     emailEditText.clearFocus();
                     passEditText.clearFocus();
                     dialog.show();
-                    RequestorGet.requestLogin(requestQueue, API.USER_LOGIN_API, userName, password, this);
+                    Log.i("tag", password);
+                    RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API, userName, password, LoginActivity.this);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            RequestorGet.requestLogin(requestQueue, API.USER_LOGIN_API, userName, password, LoginActivity.this);
+                        }
+                    }, 500);
 
                 }
 
@@ -124,8 +140,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return TextUtils.isEmpty(userPassword);
     }
 
-
-
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putString("email", emailEditText.getText().toString());
+        outState.putString("password", passEditText.getText().toString());
+    }
 
     @Override
     public void onBackPressed() {
@@ -134,40 +154,59 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onDataLoaded(boolean response) {
-        if (dialog.isShowing()) {
+    public void onDataLoaded(String apiUrl) {
+        if (apiUrl.equalsIgnoreCase(API.USER_PROFILE_API)) {
+            Log.i("vikas", "in onDataLoded");
+            dialog.dismiss();
+        } else if (apiUrl.equalsIgnoreCase(API.USER_LOGIN_API)) {
+            Intent intent = new Intent(context, SlideShowActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            context.startActivity(intent);
             dialog.dismiss();
         }
 
     }
 
     @Override
-    public void setError(String errorCode) {
+    public void setError(String apiUrl, String errorCode) {
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        emailEditText.setError(null);
-        passEditText.setError(null);
-        Log.i("vikas", "in setError");
-        if (errorCode.equals("ERR04")) {
-            emailEditText.setError(EventUtility.getErrorString(errorCode));
-            emailEditText.requestFocus();
-        }
-        if (errorCode.equals("ERR05")) {
-            passEditText.setError(EventUtility.getErrorString(errorCode));
-            passEditText.requestFocus();
+
+        switch (apiUrl) {
+            case API.USER_LOGIN_API:
+                emailEditText.setError(null);
+                passEditText.setError(null);
+                Log.i("vikas", "in setError");
+                if (errorCode.equals("ERR04")) {
+                    emailEditText.setError(EventUtility.getErrorString(errorCode));
+                    emailEditText.requestFocus();
+                }
+                if (errorCode.equals("ERR05")) {
+                    passEditText.setError(EventUtility.getErrorString(errorCode));
+                    passEditText.requestFocus();
+                }
+
+                if (errorCode.equals("NOCON")) {
+                    new android.support.v7.app.AlertDialog.Builder(this)
+                            .setMessage("It seems your internet is not working")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                }
+                if (errorCode.equals("SERVERERR")) {
+                    Toast.makeText(LoginActivity.this, "Server error occured. Please try again",
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
+
         }
 
-        if (errorCode.equals("NOCON")) {
-            new android.support.v7.app.AlertDialog.Builder(this)
-                    .setMessage("It seems your internet is not working working")
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .show();
-        }
 
 
     }
@@ -183,6 +222,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         return emailAddressList;
+    }
+
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_ENTER:
+                    onClick(loginButton);
+                    return true;
+                default:
+                    break;
+            }
+        }
+        return false;
     }
 
 }

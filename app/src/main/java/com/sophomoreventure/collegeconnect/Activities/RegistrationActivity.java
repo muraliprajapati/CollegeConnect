@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.sophomoreventure.collegeconnect.API;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
+import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.R;
@@ -194,7 +196,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             if (isValidUserInfo()) {
                 if (password.getText().toString().equals(rePassword.getText().toString())) {
                     String userEmailData = userEmail.getText().toString();
-                    String userPasswordData = password.getText().toString();
+                    String userPasswordData = EventUtility.getHashString(password.getText().toString(), "SHA-1");
                     try {
                         dialog.show();
                         RequestorPost.requestRegistration(requestQueue, API.USER_REG_API,
@@ -264,15 +266,28 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public void onDataLoaded(boolean response) {
+    public void onDataLoaded(String apiUrl) {
         if (dialog.isShowing()) {
             dialog.dismiss();
+        }
+        switch (apiUrl) {
+            case API.USER_REG_API:
+                RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
+                        EventUtility.getUserTokenFromPref(this), "None", this);
+                break;
+            case API.USER_PROFILE_API:
+                Intent intent = new Intent(context, SlideShowActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                context.startActivity(intent);
+                break;
         }
 
     }
 
     @Override
-    public void setError(String errorCode) {
+    public void setError(String apiUrl, String errorCode) {
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
@@ -281,29 +296,36 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         mobileNo.setError(null);
         Log.i("vikas", "in setError");
         if (errorCode.equals("ERR15")) {
+            mobileNo.requestFocus();
             mobileNo.setError(EventUtility.getErrorString(errorCode));
         }
         if (errorCode.equals("ERR16")) {
+            userEmail.requestFocus();
             userEmail.setError(EventUtility.getErrorString(errorCode));
         }
         if (errorCode.equals("ERR17")) {
+            userEmail.requestFocus();
             userEmail.setError(EventUtility.getErrorString("ERR16"));
             mobileNo.setError(EventUtility.getErrorString("ERR15"));
         }
         if (errorCode.equals("ERR18")) {
+            rollNo.requestFocus();
             rollNo.setError(EventUtility.getErrorString(errorCode));
         }
         if (errorCode.equals("ERR19")) {
+            mobileNo.requestFocus();
             rollNo.setError(EventUtility.getErrorString("ERR18"));
             mobileNo.setError(EventUtility.getErrorString("ERR15"));
         }
 
         if (errorCode.equals("ERR20")) {
+            userEmail.requestFocus();
             rollNo.setError(EventUtility.getErrorString("ERR18"));
             userEmail.setError(EventUtility.getErrorString("ERR16"));
         }
 
         if (errorCode.equals("ERR21")) {
+            userEmail.requestFocus();
             userEmail.setError(EventUtility.getErrorString("ERR16"));
             mobileNo.setError(EventUtility.getErrorString("ERR15"));
             rollNo.setError(EventUtility.getErrorString("ERR18"));

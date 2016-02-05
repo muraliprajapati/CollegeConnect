@@ -17,8 +17,8 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="175dp"
-            android:layout_height="175dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_alignLeft="@+id/forgot_password_text_view"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/forgot_password_text_view"
