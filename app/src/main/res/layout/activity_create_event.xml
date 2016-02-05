@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/createEventScrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,13 +23,13 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:background="@drawable/preview_gradient"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder" />
 
             <Button
                 android:id="@+id/clearImageButton"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_alignRight="@id/eventImageView"
                 android:background="@drawable/ic_highlight_off_blue_grey_500_18dp" />
 
@@ -60,10 +61,10 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/button_bg"
-
+                android:background="@drawable/button_state_bg"
                 android:gravity="center"
-                android:text="Pick a poster" />
+                android:text="Pick a image"
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:layout_width="0dp"
@@ -81,7 +82,8 @@
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/theme_picker_bg"
-                android:gravity="center" />
+                android:gravity="center"
+                android:paddingLeft="8dp" />
 
         </LinearLayout>
 
@@ -114,7 +116,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:hint="Event name" />
+                android:hint="Event name"
+                android:text="aadas" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -126,7 +129,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:hint="Event description" />
+                android:hint="Event description"
+                android:text="asda" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -138,6 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+
                 android:hint="Club name" />
         </android.support.design.widget.TextInputLayout>
 
@@ -150,7 +155,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:hint="Event venue " />
+                android:hint="Event venue "
+                android:text="adas" />
         </android.support.design.widget.TextInputLayout>
 
 
@@ -227,7 +233,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:hint="Name of first organizer" />
+                android:hint="Name of first organizer"
+                android:text="adsad" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -241,7 +248,8 @@
                 android:layout_margin="8dp"
                 android:hint="Enter Phone number"
                 android:inputType="phone"
-                android:maxLength="10" />
+                android:maxLength="10"
+                android:text="5255554789" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -254,7 +262,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:hint="Email of first organizer"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:text="" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -268,7 +277,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:hint="Name of second organizer" />
+                android:hint="Name of second organizer"
+                android:text="adasd" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -282,7 +292,8 @@
                 android:layout_margin="8dp"
                 android:hint="Enter Phone number"
                 android:inputType="phone"
-                android:maxLength="10" />
+                android:maxLength="10"
+                android:text="5255554789" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -295,7 +306,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:hint="Email of second organizer"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:text="" />
 
         </android.support.design.widget.TextInputLayout>
 
