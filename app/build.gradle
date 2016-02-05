@@ -27,6 +27,8 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
+    compile files('libs/cloudinary-core-1.2.2.jar')
+    compile files('libs/cloudinary-android-1.2.2.jar')
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'me.tatarka.support:jobscheduler:0.1.1'

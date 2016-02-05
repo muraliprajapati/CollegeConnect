@@ -35,6 +35,7 @@ import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.MyEventsActivity;
 import com.sophomoreventure.collegeconnect.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
+import com.sophomoreventure.collegeconnect.NoticeBoardActivity;
 import com.sophomoreventure.collegeconnect.OtherEventView;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.SparshEventListAtivity;
@@ -178,6 +179,8 @@ public class SlideShowActivity extends AppCompatActivity implements
 
         TextView userNameTextView = (TextView) header.findViewById(R.id.drawer_user_name);
         userNameTextView.setText(EventUtility.getUserNameFromPref(this));
+        TextView userEmailTextView = (TextView) header.findViewById(R.id.drawer_user_email);
+        userEmailTextView.setText(EventUtility.getUserEmailFromPref(this));
 
 
 
@@ -317,6 +320,12 @@ public class SlideShowActivity extends AppCompatActivity implements
             case R.id.nav_clubs:
                 mDrawerLayout.closeDrawers();
                 launchActivityDelayed(ClubListAtivity.class);
+                menuItem.setChecked(true);
+                break;
+
+            case R.id.nav_notice_board:
+                mDrawerLayout.closeDrawers();
+                launchActivityDelayed(NoticeBoardActivity.class);
                 menuItem.setChecked(true);
                 break;
 

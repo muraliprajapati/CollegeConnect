@@ -61,11 +61,11 @@ public class DateTimePickerFragment extends DialogFragment implements View.OnCli
 
         view = View.inflate(getActivity(), R.layout.fragment_date_time_picker, null);
         alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle("Set Time For Notification");
+        alertDialog.setTitle("Set Date and Time For Event");
 
         datePicker = (DatePicker) view.findViewById(R.id.date_picker);
         timePicker = (TimePicker) view.findViewById(R.id.time_picker);
-        timePicker.setIs24HourView(true);
+        timePicker.setIs24HourView(false);
 
         datePicker.setMinDate(System.currentTimeMillis() - 1000);
 
@@ -99,6 +99,7 @@ public class DateTimePickerFragment extends DialogFragment implements View.OnCli
 //                }
 
                 ((CreateEventActivity) getActivity()).setDateTime(calendar.getTimeInMillis(), buttonId);
+                Log.i("tag", calendar.getTimeInMillis() + "");
 //
 //                Log.i("tag", "" + datePicker.getDayOfMonth());
 //                Log.i("tag", "" + datePicker.getMonth());

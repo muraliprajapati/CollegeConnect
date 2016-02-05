@@ -5,43 +5,135 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.Activities.LoginActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
+import com.sophomoreventure.collegeconnect.Network.DataListener;
+import com.sophomoreventure.collegeconnect.Network.RequestorGet;
+import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 
 /**
  * Created by Murali on 01/02/2016.
  */
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity implements DataListener {
+    ProgressBar progressBar;
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
+        volleySingleton = new VolleySingleton(this);
+        requestQueue = volleySingleton.getRequestQueue();
         setContentView(R.layout.activity_splash);
+        progressBar = (ProgressBar) findViewById(R.id.loadingProgress);
+        progressBar.setIndeterminate(true);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (EventUtility.isFirstRun(SplashActivity.this) || !EventUtility.isLoggedIn(SplashActivity.this)) {
-                            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        } else {
-                            Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
-                        finish();
-                    }
-                });
+                if (EventUtility.isFirstRun(SplashActivity.this) || !EventUtility.isLoggedIn(SplashActivity.this)) {
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
+                            EventUtility.getUserTokenFromPref(SplashActivity.this), "None", SplashActivity.this);
+                }
             }
-        }, 3000);
+        }, 1500);
+
+
+    }
+
+    @Override
+    public void onDataLoaded(String apiUrl) {
+        Log.i("vikas", "in onDataLoded");
+        Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
+        switch (apiUrl) {
+            case API.USER_PROFILE_API:
+                Log.i("vikas", "case user profile api");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                break;
+
+            case API.USER_LOGIN_API:
+                Log.i("vikas", "case user login api");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                break;
+        }
+
+    }
+
+    @Override
+    public void setError(String apiUrl, String errorCode) {
+
+        switch (apiUrl) {
+            case API.USER_PROFILE_API:
+                Log.i("vikas", "in setError user profile api");
+                if (errorCode.equals("ERR04")) {
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    EventUtility.removeUserLoginFromPref(this);
+                    startActivity(intent);
+                }
+                if (errorCode.equals("ERR05")) {
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    Toast.makeText(this, "It seems you changed your password so please login again", Toast.LENGTH_LONG).show();
+                    EventUtility.removeUserLoginFromPref(this);
+                    startActivity(intent);
+                }
+                if (errorCode.equals("ERR06")) {
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+                if (errorCode.equals("ERR07")) {
+                    RequestorGet.requestLogin(requestQueue, API.USER_LOGIN_API,
+                            EventUtility.getUserEmailFromPref(this),
+                            EventUtility.getUserPasswordHashFromPref(this), this);
+
+
+                }
+
+
+                break;
+
+            case API.USER_LOGIN_API:
+
+                Log.i("vikas", "in setError user login api");
+                if (errorCode.equals("ERR04")) {
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    EventUtility.removeUserLoginFromPref(this);
+                    finish();
+                }
+                if (errorCode.equals("ERR05")) {
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    Toast.makeText(this, "It seems you changed your password so please login again", Toast.LENGTH_LONG).show();
+                    startActivity(intent);
+                    EventUtility.removeUserLoginFromPref(this);
+                    finish();
+                }
+        }
+
+
     }
 }

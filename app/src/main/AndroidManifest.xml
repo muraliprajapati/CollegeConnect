@@ -87,6 +87,10 @@
             android:name=".SparshEventView"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".NoticeBoardActivity"
+            android:label="Notice board" />
+
 
     </application>
 

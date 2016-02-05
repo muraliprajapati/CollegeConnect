@@ -1,5 +1,6 @@
 package com.sophomoreventure.collegeconnect;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,11 +20,14 @@ import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import dmax.dialog.SpotsDialog;
+
 /**
  * Created by Murali on 22/01/2016.
  */
 public class ForgotPasswordActivity extends AppCompatActivity implements View.OnClickListener, DataListener {
     EditText emailEditText;
+    Dialog spotsDialog;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
 
@@ -36,6 +40,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         resetPasswordButton.setOnClickListener(this);
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
+        spotsDialog = new SpotsDialog(this);
     }
 
     @Override
@@ -43,6 +48,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         if (v.getId() == R.id.resetPasswordButton) {
             if (isEmailValid(emailEditText.getText())) {
                 try {
+                    spotsDialog.show();
                     RequestorPost.requestForgotPassword(requestQueue, API.USER_FORGOT_PASSWORD_API, getJsonBody(emailEditText.getText().toString()), this);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -59,7 +65,10 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     }
 
     @Override
-    public void onDataLoaded(boolean response) {
+    public void onDataLoaded(String url) {
+        if (spotsDialog.isShowing()) {
+            spotsDialog.dismiss();
+        }
         new AlertDialog.Builder(this)
                 .setMessage("An Email has been sent to your email id with password reset link. Please check your email")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -76,8 +85,23 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     }
 
     @Override
-    public void setError(String errorCode) {
-        emailEditText.setError(errorCode);
+    public void setError(String apiUrl, String errorCode) {
+        if (spotsDialog.isShowing()) {
+            spotsDialog.dismiss();
+        }
+        if (errorCode.equals("NOCON")) {
+            new android.support.v7.app.AlertDialog.Builder(this)
+                    .setMessage("It seems your internet is not working")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        } else {
+            emailEditText.setError(errorCode);
+        }
+
 
     }
 
