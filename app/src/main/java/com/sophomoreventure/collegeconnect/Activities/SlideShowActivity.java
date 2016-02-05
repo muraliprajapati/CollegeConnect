@@ -1,9 +1,12 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
-
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
@@ -19,19 +22,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.sophomoreventure.collegeconnect.ClubListAtivity;
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
+import com.sophomoreventure.collegeconnect.ImageHandler;
 import com.sophomoreventure.collegeconnect.MyEventsActivity;
 import com.sophomoreventure.collegeconnect.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
@@ -48,15 +57,14 @@ import me.relex.circleindicator.CircleIndicator;
 import me.tatarka.support.job.JobInfo;
 import me.tatarka.support.job.JobScheduler;
 
-
 /**
  * Created by Murali on 08/12/2015.
  */
 
-public class SlideShowActivity extends AppCompatActivity implements
+public class SlideShowActivity extends DrawerActivity implements
         ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private static final long POLL_FREQUENCY = 10000; //28800000;
+    private static final long POLL_FREQUENCY =  5000 ;//28800000;
     private static final int JOB_ID = 100;
     ViewPager slideShowPager;
     Toolbar toolbar;
@@ -66,20 +74,27 @@ public class SlideShowActivity extends AppCompatActivity implements
     private FragmentDrawer mDrawerFragment;
     private JobScheduler mJobScheduler;
     private NavigationView mNavView;
-    private DrawerLayout mDrawerLayout;
     private LinearLayout mainScreen;
-
     private RecyclerView horizonatalRV;
     private RecyclerView aRV;
+    private GoogleApiClient client;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_slide_show);
+
+        //setContentView(R.layout.activity_slide_show);
+        //View child = getLayoutInflater().inflate(R.layout.main_layout, null);
+        //LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //View myView = inflater.inflate(R.layout.main_layout, null);
+
+
+        FrameLayout activityContainer = (FrameLayout) findViewById(R.id.activity_content);
+        getLayoutInflater().inflate(R.layout.main_layout, activityContainer, true);
+
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setTitle(null);
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
@@ -102,7 +117,15 @@ public class SlideShowActivity extends AppCompatActivity implements
             }
         });
 
-        setupDrawer();
+
+        Resources res = this.getResources();
+        int id = R.drawable.poster_five;
+        Bitmap bmp = BitmapFactory.decodeResource(res, id);
+        ImageHandler handler = new ImageHandler(this);
+        handler.save(bmp, "poster");
+        Log.i("vikas kumar", "written");
+
+        //setupDrawer();
 //        setupJob();
 //        mainScreen = (LinearLayout) findViewById(R.id.main_screen);
 
@@ -112,7 +135,6 @@ public class SlideShowActivity extends AppCompatActivity implements
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(slideShowPager);
         slideShowPager.addOnPageChangeListener(this);
-
 
         new Timer().schedule(new TimerTask() {
             @Override
@@ -149,11 +171,18 @@ public class SlideShowActivity extends AppCompatActivity implements
 //        aRV.setLayoutManager(new LinearLayoutManager(this));
         aRV.setHasFixedSize(true);
 
-        aRV.setAdapter(new MyEventsAdapter(SlideShowActivity.this, ""));
+        aRV.setAdapter(new MyEventsAdapter(SlideShowActivity.this, "",0));
 
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    @Override
+    protected boolean useToolbar() {
+        return false;
+    }
 
     private void setupDrawer() {
 
@@ -202,8 +231,6 @@ public class SlideShowActivity extends AppCompatActivity implements
 //    }
 
 
-
-
     private void setupJob() {
         mJobScheduler = JobScheduler.getInstance(this);
         new Handler().postDelayed(new Runnable() {
@@ -244,12 +271,7 @@ public class SlideShowActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
-            mDrawerLayout.closeDrawer(Gravity.LEFT);
-        } else {
-            finish();
-
-        }
+        super.onBackPressed();
     }
 
     @Override
@@ -349,7 +371,6 @@ public class SlideShowActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        mNavView.setCheckedItem(R.id.nav_events);
     }
 
     private void launchActivityDelayed(final Class activity) {
@@ -360,6 +381,48 @@ public class SlideShowActivity extends AppCompatActivity implements
                 startActivity(new Intent(SlideShowActivity.this, activity));
             }
         }, 260);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        /*
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "SlideShow Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.sophomoreventure.collegeconnect.Activities/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+        */
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        /*
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "SlideShow Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.sophomoreventure.collegeconnect.Activities/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+        */
     }
 
     class SlideShowAdapter extends FragmentStatePagerAdapter {
@@ -379,5 +442,3 @@ public class SlideShowActivity extends AppCompatActivity implements
         }
     }
 }
-
-

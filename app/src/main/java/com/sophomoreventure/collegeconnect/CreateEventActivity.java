@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
+import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
@@ -57,14 +58,12 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
     ImageView eventImageView;
     Button imagePickerButton;
     Spinner themePicker;
-
     EditText titleEditText;
     EditText descriptionEditText;
     EditText venueEditText;
     AutoCompleteTextView clubNameTextView;
     TextView eventStartDateAndTimeTextView, eventEndDateAndTimeTextView, lastRegTextView;
     Button startDatePickButton, endDatePickButton, lastRegDateTimePickButton, clearImageButton;
-
     EditText orgOneEditText;
     EditText orgOneEmailEditText;
     EditText orgOnePhoneEditText;
@@ -84,6 +83,9 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
     private AlertDialog dialog;
     private String base64ImageString, picturePath, color;
 
+    private String clubServerID = null;
+    private EventDatabase database;
+
     public static boolean areAllFalse(boolean[] array) {
         for (boolean b : array) if (b) return false;
         return true;
@@ -99,7 +101,11 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
         eventHub.addEventToEventList(event);
 
         String[] clubNames = getResources().getStringArray(R.array.club_list);
-
+        clubServerID = getIntent().getStringExtra("clubId");
+        database = new EventDatabase(this);
+        if(clubServerID != null){
+            setEventDate(database.selectByEventId(clubServerID));
+        }
         eventImageView = (ImageView) findViewById(R.id.eventImageView);
         imagePickerButton = (Button) findViewById(R.id.pickerButton);
         clearImageButton = (Button) findViewById(R.id.clearImageButton);
@@ -202,6 +208,20 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
         spotsDialog = new SpotsDialog(this, R.style.Login_dialog);
+    }
+
+    private void setEventDate(Event event) {
+        titleEditText.setText(event.getEventTitle());
+        descriptionEditText.setText(event.getEventDescription());
+        venueEditText.setText(event.getEventVenue());
+        clubNameTextView.setText(event.getEventClub());
+        orgOneEditText.setText(event.getEventOrganizerOne());
+        orgOneEmailEditText.setText(event.getOrganizerEmailOne());
+        orgOnePhoneEditText.setText(event.getEventOrganizerOnePhoneNo());
+        orgTwoEditText.setText(event.getEventOrganizerTwo());
+        orgTwoEmailEditText.setText(event.getOrganizerEmailTwo());
+        orgTwoPhoneEditText.setText(event.getEventOrganizerTwoPhoneNo());
+
     }
 
     @Override

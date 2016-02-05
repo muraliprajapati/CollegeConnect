@@ -3,11 +3,15 @@ package com.sophomoreventure.collegeconnect;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
+import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
+import java.util.ArrayList;
 
 /**
  * Created by Murali on 10/01/2016.
@@ -16,41 +20,84 @@ public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRe
 
     Context context;
     String clubName;
-    String[] clubList = {"ACM", "CHRD", "IETE", "SAE", "NIFT", "DRISHTI"};
-
-
+    ArrayList<String> listClubs;
+    ClubsDataBase database;
+    EventDatabase eventDatabase;
+    ArrayList<Event> events;
 
     public HorizontalRecyclerAdapter(Context context) {
         this.context = context;
+        database = new ClubsDataBase(context);
+        eventDatabase = new EventDatabase(context);
+
+        //database.insertRow("300","cosmos","about space","vikas","8390180497","vrnvikas@gmail.com");
+        //database.insertRow("400","space","cosmos","vikas kumar","8390180497","vrnvikas1994@gmail.com");
+        //eventDatabase.insertRow("fuckthegirl","today","now","now","true","space","asdasd","sadasd","asdasd",
+        //"asdasd","asdasd","asdasd","asdad","asdad","asdads","asdads","1200","asdasd");
+        listClubs = database.getClubTitles();
+        //String name = database.getClubByID(String.valueOf(100));
+        //events = eventDatabase.selectByClub("IETE");
+        //Event event = eventDatabase.selectByEventId(1);
+        //Log.i("vikas", listClubs.size() + "  "  + name + listClubs.get(0));
+
     }
 
     @Override
     public HorizontalRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (parent instanceof RecyclerView) {
-            int layoutId = R.layout.single_column;
+
+        if(listClubs != null ){
+            if (listClubs.size() != 0){
+                if (parent instanceof RecyclerView) {
+                    int layoutId = R.layout.single_column;
+                    View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+                    view.setFocusable(true);
+                    return new ViewHolder(view);
+                } else {
+                    throw new RuntimeException("Not bound to RecyclerView");
+                }
+            }else {
+                int layoutId = R.layout.message_view;
+                View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+                view.setFocusable(true);
+                return new ViewHolder(view);
+            }
+        }else {
+            int layoutId = R.layout.message_view;
             View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
             view.setFocusable(true);
             return new ViewHolder(view);
-        } else {
-            throw new RuntimeException("Not bound to RecyclerView");
         }
     }
 
     @Override
     public void onBindViewHolder(HorizontalRecyclerAdapter.ViewHolder holder, int position) {
-        if (position % 2 == 0) {
-            holder.layout.setBackgroundResource(R.drawable.gradient_blue);
-        } else {
-            holder.layout.setBackgroundResource(R.drawable.gradient_orange);
+
+        if(listClubs != null){
+            if(listClubs.size() != 0){
+                if (position % 2 == 0) {
+                    holder.layout.setBackgroundResource(R.drawable.gradient_blue);
+                } else {
+                    holder.layout.setBackgroundResource(R.drawable.gradient_orange);
+                }
+
+                holder.clubNameTextView.setText(listClubs.get(position));
+            }
         }
 
-        holder.clubNameTextView.setText(clubList[position]);
     }
 
 
     @Override
     public int getItemCount() {
-        return 6;
+        if(listClubs != null){
+            if (listClubs.size() != 0){
+                return listClubs.size();
+            }else {
+                return 1;
+            }
+        }else {
+            return 1;
+        }
     }
 
 
@@ -69,6 +116,8 @@ public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRe
         @Override
         public void onClick(View v) {
             Intent i = new Intent(v.getContext(), EventsByClubActivity.class);
+            i.putExtra("position",getPosition());
+            i.putExtra("clubName",clubNameTextView.getText().toString());
             context.startActivity(i);
 
         }

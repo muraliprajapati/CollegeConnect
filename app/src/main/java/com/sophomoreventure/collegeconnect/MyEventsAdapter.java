@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,29 +14,53 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
+import com.sophomoreventure.collegeconnect.Network.RequestorGet;
+import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Murali on 10/01/2016.
  */
 public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHolder> {
 
+    private final int mPosition;
     Context context;
-    String[] clubList = {"Sparsh", "CHRD", "CHRD", "Sparsh", "Sparsh", "Drishti"};
-    String[] eventList = {"Sparsh", "Shamiyana", "Chhanak", "Fashion Night", "Singing Night", "Udaan"};
     int[] imageResArray = new int[]{R.drawable.poster_one, R.drawable.poster_two, R.drawable.poster_three, R.drawable.poster_four, R.drawable.poster_five, R.drawable.poster_five};
     String clubName;
+    private ImageLoader mImageLoader;
     EventDatabase eventDatabase;
+    ArrayList<String> listClubs;
+    private VolleySingleton mVolleySingleton;
+    ClubsDataBase database;
     ArrayList<Event> listData;
     private WeakReference<ImageView> imageViewReference;
 
-    public MyEventsAdapter(Context context, String clubName) {
+    public MyEventsAdapter(Context context, String clubName,int position) {
         this.context = context;
         this.clubName = clubName;
+        this.clubName = clubName;
+        mPosition = position;
+        database = new ClubsDataBase(context);
         eventDatabase = new EventDatabase(context);
+        mVolleySingleton = new VolleySingleton(context);
+        mImageLoader = mVolleySingleton.getImageLoader();
+
+        listClubs = database.getClubTitles();
+        Log.i("vikas",listClubs.size() + "");
+        if(listClubs != null){
+            if(listClubs.size() != 0){
+                listData = eventDatabase.selectByClub(clubName);
+            }
+        }
     }
 
     public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
@@ -79,28 +104,48 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (parent instanceof RecyclerView) {
-            int layoutId = R.layout.event_card_view;
-            View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
-
-            return new ViewHolder(view);
-        } else {
-            throw new RuntimeException("Not bound to RecyclerView");
+        int layoutId;
+        if(listClubs != null && listData != null){
+            if (parent instanceof RecyclerView) {
+                layoutId = R.layout.event_card_view;
+            } else {
+                throw new RuntimeException("Not bound to RecyclerView");
+            }
+        }else {
+            layoutId = R.layout.message_view;
         }
+
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+        return new ViewHolder(view);
+
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Bitmap bitmap = decodeSampledBitmapFromResource(context.getResources(),
-                imageResArray[position], 300, 200);
-        holder.eventNameTextView.setText(eventList[position]);
-        holder.eventClubTextView.setText(clubList[position]);
-        if (imageViewReference != null && bitmap != null) {
-            if (imageViewReference.get() != null) {
-                imageViewReference.get().setImageBitmap(bitmap);
+        //Bitmap bitmap = decodeSampledBitmapFromResource(context.getResources(),
+          //      imageResArray[position], 300, 200);
+
+        if(listData != null){
+            if (listData.size() != 0) {
+
+               //Date date = new java.util.Date(Long.parseLong(String.valueOf(listData.get(position).getEventStarttime())));
+                //String eventDateTime = new SimpleDateFormat("MM dd, yyyy hh:mm").format(date);
+                holder.eventNameTextView.setText(listData.get(position).getEventTitle());
+                holder.eventClubTextView.setText(listData.get(position).getEventClub());
+                //holder.dateTextView.setText(eventDateTime);
+                if(listData.get(0).getEventLiked().equals("true")){
+                    holder.attendingCheckBox.setChecked(true);
+                }
+
+                String urlThumnail = listData.get(position).getUrlThumbnail();
+                loadImages("http://res.cloudinary.com/dio1mknsg/image/upload/v1454591821/sample_id.jpg", holder);
+
+            }else {
+
             }
+        }else {
+            // add something
         }
-        listData = eventDatabase.selectByClub(clubName);
 //        if (listData.size() != 0) {
 //            holder.eventNameTextView.setText(listData.get(position).getEventTitle());
 //            holder.eventClubTextView.setText(listData.get(position).getEventClub());
@@ -112,7 +157,31 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
     @Override
     public int getItemCount() {
 
-        return clubList.length;
+        if(listData != null){
+            if (listData.size() != 0) {
+                return listData.size();
+            }
+            else {
+                return 1;
+            }
+
+        }
+        else return 1;
+    }
+
+    private void loadImages(String urlThumbnail, final ViewHolder holder) {
+        if (true) {
+            mImageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    holder.eventImageView.setImageBitmap(response.getBitmap());
+                }
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+        }
     }
 
 
@@ -130,21 +199,47 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
             eventImageView = (ImageView) itemView.findViewById(R.id.eventImageView);
             eventNameTextView = (TextView) itemView.findViewById(R.id.eventNameTextView);
             eventClubTextView = (TextView) itemView.findViewById(R.id.eventClubTextView);
-
+            dateTextView = (TextView) itemView.findViewById(R.id.eventDateTextView);
             imageViewReference = new WeakReference<ImageView>(eventImageView);
             //dateTextView = (TextView) itemView.findViewById(R.id.eventDateTextView);
-//            attendingCheckBox = (CheckBox) itemView.findViewById(R.id.attendingCheckBox);
-
+            attendingCheckBox = (CheckBox) itemView.findViewById(R.id.attendingCheckBox);
+            if(attendingCheckBox != null){
+                attendingCheckBox.setOnClickListener(this);
+            }
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(context, EventView.class);
-            intent.putExtra("clubName", clubName);
-            intent.putExtra("position", getPosition());
-            context.startActivity(intent);
+
+            if(view.getId() == attendingCheckBox.getId()){
+                Event event = listData.get(getPosition());
+                String id = event.getEventServerId();
+                boolean attending = attendingCheckBox.isChecked();
+                sendAttendRequest(id,attending);
+                if(attending){
+                    attendingCheckBox.setChecked(true);
+                }else {
+                    attendingCheckBox.setChecked(false);
+                }
+
+            }else {
+                Intent intent = new Intent(context, EventView.class);
+                intent.putExtra("clubName", clubName);
+                intent.putExtra("position", getPosition());
+                context.startActivity(intent);
+            }
+        }
+
+        private void sendAttendRequest(String eventID ,boolean attend) {
+            VolleySingleton volleySingleton =  new VolleySingleton(context);
+            RequestQueue requestQueue = volleySingleton.getRequestQueue();
+            if(attend){
+                RequestorGet.attendRequest(requestQueue,API.FOLLOW_EVENT_API+eventID+"/follow" ,context);
+            }else {
+                RequestorGet.attendRequest(requestQueue,API.FOLLOW_EVENT_API+eventID+"/unfollow",context);
+            }
+
         }
     }
-
 }

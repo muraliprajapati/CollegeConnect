@@ -30,7 +30,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignRight="@id/eventImageView"
-                android:background="@drawable/ic_highlight_off_blue_grey_500_18dp" />
+                 />
 
             <TextView
                 android:id="@+id/name"
