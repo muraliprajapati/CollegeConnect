@@ -12,8 +12,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sophomoreventure.collegeconnect.ClubListAtivity;
 import com.sophomoreventure.collegeconnect.Constants;
@@ -55,7 +58,7 @@ import me.tatarka.support.job.JobScheduler;
  */
 
 public class SlideShowActivity extends AppCompatActivity implements
-        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final long POLL_FREQUENCY = 10000; //28800000;
     private static final int JOB_ID = 100;
@@ -69,7 +72,7 @@ public class SlideShowActivity extends AppCompatActivity implements
     private NavigationView mNavView;
     private DrawerLayout mDrawerLayout;
     private LinearLayout mainScreen;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView horizonatalRV;
     private RecyclerView aRV;
 
@@ -94,15 +97,24 @@ public class SlideShowActivity extends AppCompatActivity implements
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
+                    swipeRefreshLayout.setEnabled(false);
                     collapsingToolbarLayout.setTitle("College Connect");
                     isShow = true;
                 } else if (isShow) {
+                    swipeRefreshLayout.setEnabled(false);
                     collapsingToolbarLayout.setTitle("");
                     isShow = false;
                 }
+
+                if (collapsingToolbarLayout.getHeight() + verticalOffset < 4 * ViewCompat.getMinimumHeight(collapsingToolbarLayout)) {
+                    swipeRefreshLayout.setEnabled(false);
+                } else {
+                    swipeRefreshLayout.setEnabled(true);
+                }
             }
         });
-
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
         setupDrawer();
 //        setupJob();
 //        mainScreen = (LinearLayout) findViewById(R.id.main_screen);
@@ -369,6 +381,19 @@ public class SlideShowActivity extends AppCompatActivity implements
                 startActivity(new Intent(SlideShowActivity.this, activity));
             }
         }, 260);
+    }
+
+    @Override
+    public void onRefresh() {
+        Toast.makeText(SlideShowActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 2000);
+
     }
 
     class SlideShowAdapter extends FragmentStatePagerAdapter {
