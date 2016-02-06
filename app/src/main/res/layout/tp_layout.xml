@@ -11,8 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-
         <include layout="@layout/complete_rv_by_club" />
         <include layout="@layout/complete_rv_browse_events" />
 

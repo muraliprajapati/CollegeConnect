@@ -1,5 +1,6 @@
 package com.sophomoreventure.collegeconnect;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
+import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 
 /**
  * Created by Murali on 18/01/2016.
@@ -25,6 +27,8 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
     private View mToolbarView;
     private ObservableScrollView mScrollView;
     private int mParallaxImageHeight;
+    EventDatabase eventDatabase;
+    Event event = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,7 +39,11 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        String id = getIntent().getStringExtra("clubId");
+        eventDatabase = new EventDatabase(this);
+        if(id != null){
+            event = eventDatabase.selectByEventId(id);
+        }
 
         mEventImage = (ImageView) findViewById(R.id.event_image);
         mToolbarView = findViewById(R.id.toolbar);
@@ -46,6 +54,16 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
         mScrollView = (ObservableScrollView) findViewById(R.id.event_scroll);
         mScrollView.setScrollViewCallbacks(this);
         mParallaxImageHeight = getResources().getDimensionPixelSize(R.dimen.parallax_image_height);
+
+        if(event != null){
+            setData(event);
+        }
+
+    }
+
+
+    public void setData(Event event){
+        titleTextView.setText(event.getEventTitle());
 
     }
 
@@ -84,4 +102,14 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
         }
         return true;
     }
+
+    public void editEvent(Context context){
+        Intent i = new Intent(context,CreateEventActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(i);
+    }
+
+
+
 }

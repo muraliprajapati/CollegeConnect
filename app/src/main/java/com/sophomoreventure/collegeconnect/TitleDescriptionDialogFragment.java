@@ -118,7 +118,7 @@ public class TitleDescriptionDialogFragment extends DialogFragment implements Al
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE:
-                    eventDateAndTimeTextView.setText(EventUtility.getFriendlyDayString(event.getEventTime()));
+                    eventDateAndTimeTextView.setText(EventUtility.getFriendlyDayString(Long.parseLong(event.getEventTime())));
                     break;
             }
         }

@@ -20,12 +20,11 @@ public class VolleySingleton {
         mRequestQueue= Volley.newRequestQueue(context);
         mImageLoader=new ImageLoader(mRequestQueue,new ImageLoader.ImageCache() {
 
-            private LruCache<String, Bitmap> cache=new LruCache<>((int)(Runtime.getRuntime().maxMemory()/1024)/8);
+            private LruCache<String, Bitmap> cache=new LruCache<>((int)(Runtime.getRuntime().maxMemory()/1024)/8); // 4mb
             @Override
             public Bitmap getBitmap(String url) {
                 return cache.get(url);
             }
-
             @Override
             public void putBitmap(String url, Bitmap bitmap) {
                 cache.put(url, bitmap);

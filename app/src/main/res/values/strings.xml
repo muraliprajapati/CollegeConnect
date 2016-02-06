@@ -39,4 +39,5 @@ We are making a team to work upon it, all those who wants to contribute in it.
 kindly meet on Monday (1/2/2016) at central canteen 12:30 pm sharp.</string>
     <string name="drishti">Drishti is a technical hobby club of SVNIT that has been involved in all technical activities carried out in the college. DRISHTI has been directly patronizing and organizing various technical and knowledge spreading activities in SVNIT since its inception by carrying out a number of workshops which include a broad spectrum of topics ranging from image processing and robotics and from astronomy to Rubik\'s cube. Drishti promotes student participation in nationally recognized technical festivals like Techfest-IITB and Kshitij-IIT Kharagpur. DRISHTI also represents SVNIT in various national/International competitions like ROBOCON and CANSAT.</string>
     <string name="yantr_yuddha">Construct a wired/wireless,radio controlled,maneuverable machine proficient in destructing an opponent\'s machine in a one-on-one tournament.</string>
+    <string name="title_activity_event_calendar">EventCalendar</string>
 </resources>

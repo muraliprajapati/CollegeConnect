@@ -33,9 +33,10 @@
 
         <activity
             android:name=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Activities.DrawerActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".CreateEventActivity"
             android:label="Create Event" />
@@ -53,8 +54,7 @@
 
         <activity
             android:name=".MyEventsActivity"
-            android:label="Events by Drishti">
-        </activity>
+            android:label="Events by Drishti"></activity>
 
         <service
             android:name=".Network.ServiceClass"
@@ -86,7 +86,18 @@
         <activity
             android:name=".SparshEventView"
             android:theme="@style/AppTheme.NoActionBar" />
+        <!--
+             ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
+        <activity
+            android:name=".Activities.EventCalendar"
+            android:label="@string/title_activity_event_calendar"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".NoticeBoardActivity"
             android:label="Notice board" />

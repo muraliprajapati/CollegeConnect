@@ -13,9 +13,13 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 
+import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Murali on 10/01/2016.
@@ -23,18 +27,20 @@ import java.util.ArrayList;
 public class ClubEventsAdapter extends RecyclerView.Adapter<ClubEventsAdapter.ViewHolder> {
 
     Context context;
-    String[] clubList = {"Drishti"};
-    String[] eventList = {"Udaan"};
     int[] imageResArray = new int[]{R.drawable.poster_six};
     String clubName;
     EventDatabase eventDatabase;
+    ArrayList<String> listClubs;
+    ClubsDataBase database;
     ArrayList<Event> listData;
+    Event event;
+    private WeakReference<ImageView> imageViewReference;
 
 
-    public ClubEventsAdapter(Context context, String clubName) {
+    public ClubEventsAdapter(Context context,String id) {
         this.context = context;
-        this.clubName = clubName;
         eventDatabase = new EventDatabase(context);
+        event = eventDatabase.selectByEventId(id);
     }
 
     public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
@@ -78,24 +84,38 @@ public class ClubEventsAdapter extends RecyclerView.Adapter<ClubEventsAdapter.Vi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (parent instanceof RecyclerView) {
-            int layoutId = R.layout.event_card_view;
-            View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
-            view.setFocusable(true);
-            return new ViewHolder(view);
-        } else {
-            throw new RuntimeException("Not bound to RecyclerView");
-        }
+        int layoutId;
+            if (parent instanceof RecyclerView) {
+                layoutId = R.layout.event_card_view;
+            } else {
+                throw new RuntimeException("Not bound to RecyclerView");
+            }
+
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.eventImageView.setImageBitmap(decodeSampledBitmapFromResource(context.getResources(),
                 imageResArray[position], 300, 200));
-        holder.eventNameTextView.setText(eventList[position]);
-        holder.eventClubTextView.setText(clubList[position]);
 
-        listData = eventDatabase.selectByClub(clubName);
+        if (listData.size() != 0) {
+
+            Date date = new java.util.Date(Long.parseLong(String.valueOf(listData.get(position).getEventStarttime())));
+            String eventDateTime = new SimpleDateFormat("MM dd, yyyy hh:mm").format(date);
+
+            holder.eventNameTextView.setText(listData.get(position).getEventTitle());
+            holder.eventClubTextView.setText(listData.get(position).getEventClub());
+            holder.dateTextView.setText(eventDateTime);
+            if(listData.get(0).getEventLiked().equals("true")){
+                holder.attendingCheckBox.setChecked(true);
+            }
+
+        }else {
+
+
+        }
 //        if (listData.size() != 0) {
 //            holder.eventNameTextView.setText(listData.get(position).getEventTitle());
 //            holder.eventClubTextView.setText(listData.get(position).getEventClub());
@@ -107,7 +127,16 @@ public class ClubEventsAdapter extends RecyclerView.Adapter<ClubEventsAdapter.Vi
     @Override
     public int getItemCount() {
 
-        return clubList.length;
+        if(listData != null){
+            if (listData.size() != 0) {
+                return listData.size();
+            }
+            else {
+                return 1;
+            }
+
+        }
+        else return 1;
     }
 
 
@@ -124,17 +153,17 @@ public class ClubEventsAdapter extends RecyclerView.Adapter<ClubEventsAdapter.Vi
             eventImageView = (ImageView) itemView.findViewById(R.id.eventImageView);
             eventNameTextView = (TextView) itemView.findViewById(R.id.eventNameTextView);
             eventClubTextView = (TextView) itemView.findViewById(R.id.eventClubTextView);
+            dateTextView = (TextView) itemView.findViewById(R.id.eventDateTextView);
+            imageViewReference = new WeakReference<ImageView>(eventImageView);
             //dateTextView = (TextView) itemView.findViewById(R.id.eventDateTextView);
-//            attendingCheckBox = (CheckBox) itemView.findViewById(R.id.attendingCheckBox);
-
-            itemView.setOnClickListener(this);
+            attendingCheckBox = (CheckBox) itemView.findViewById(R.id.attendingCheckBox);
+            itemView.setOnClickListener(this);;
         }
 
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(context, EventView.class);
-            intent.putExtra("clubName", clubName);
-            intent.putExtra("position", getPosition());
+            intent.putExtra("clubId", listData.get(getPosition()).getEventServerId());
             context.startActivity(intent);
         }
     }

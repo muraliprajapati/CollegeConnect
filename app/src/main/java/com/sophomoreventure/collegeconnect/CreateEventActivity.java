@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.android.volley.RequestQueue;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
+import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
@@ -80,7 +82,6 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
     EventHub eventHub;
     Event event;
     String eventId;
-
     boolean[] missingFields = new boolean[12];
     boolean isImageChoosen = false, isThemeSelected = false;
     long eventStartTime, eventEndTime, eventLastRegTime;
@@ -88,7 +89,11 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
     private AlertDialog dialog;
-    private String base64ImageString, picturePath, color, colorCode;
+    private String base64ImageString, picturePath, color;
+
+    private String clubServerID = null;
+    private EventDatabase database;
+    private String colorCode;
 
     public static boolean areAllFalse(boolean[] array) {
         for (boolean b : array) if (b) return false;
@@ -105,6 +110,11 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
         eventHub.addEventToEventList(event);
         cloudinary = new Cloudinary(CloudinaryConfig.getConfig());
         String[] clubNames = getResources().getStringArray(R.array.club_list);
+        clubServerID = getIntent().getStringExtra("clubId");
+        database = new EventDatabase(this);
+        if(clubServerID != null){
+            setEventDate(database.selectByEventId(clubServerID));
+        }
         nameEditText = (TextView) findViewById(R.id.name);
         nameEditText.setVisibility(View.GONE);
         eventImageView = (ImageView) findViewById(R.id.eventImageView);
@@ -138,6 +148,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
         lastRegTextView = (TextView) findViewById(R.id.lastRegTextView);
         lastRegDateTimePickButton = (Button) findViewById(R.id.eventLastRegDateButton);
         lastRegDateTimePickButton.setOnClickListener(this);
+
 
         createEventButton = (Button) findViewById(R.id.createEventButton);
         dialog = new SpotsDialog(this, R.style.Create_Event_dialog);
@@ -225,7 +236,21 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
 
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
-        spotsDialog = new SpotsDialog(this, R.style.Create_Event_dialog);
+        spotsDialog = new SpotsDialog(this, R.style.Login_dialog);
+    }
+
+    private void setEventDate(Event event) {
+        titleEditText.setText(event.getEventTitle());
+        descriptionEditText.setText(event.getEventDescription());
+        venueEditText.setText(event.getEventVenue());
+        clubNameTextView.setText(event.getEventClub());
+        orgOneEditText.setText(event.getEventOrganizerOne());
+        orgOneEmailEditText.setText(event.getOrganizerEmailOne());
+        orgOnePhoneEditText.setText(event.getEventOrganizerOnePhoneNo());
+        orgTwoEditText.setText(event.getEventOrganizerTwo());
+        orgTwoEmailEditText.setText(event.getOrganizerEmailTwo());
+        orgTwoPhoneEditText.setText(event.getEventOrganizerTwoPhoneNo());
+
     }
 
     @Override
@@ -279,6 +304,8 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
 
                 if (isValidEvent()) {
 
+                        spotsDialog.show();
+
                     imageName = titleEditText.getText().toString().toLowerCase()
                             + "By" + clubNameTextView.getText().toString();
                     imageUrl = cloudinary.url().generate(imageName);
@@ -328,6 +355,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
                             })
                             .create()
                             .show();
+
 
                 } else {
                     Log.i("tag", "event invalid");

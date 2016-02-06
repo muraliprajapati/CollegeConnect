@@ -22,7 +22,8 @@ public class EventsByClubActivity extends AppCompatActivity {
         CustomLayoutManager layoutManager = new CustomLayoutManager(this);
         eventsByClubRV.setLayoutManager(new LinearLayoutManager(this));
         String clubName = getIntent().getStringExtra("clubName");
-        eventsByClubRV.setAdapter(new MyEventsAdapter(this, clubName));
+        int position = getIntent().getIntExtra("position",0);
+        eventsByClubRV.setAdapter(new MyEventsAdapter(this, clubName,position));
         eventsByClubRV.setNestedScrollingEnabled(false);
 
     }

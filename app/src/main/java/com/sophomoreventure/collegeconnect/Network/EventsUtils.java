@@ -7,6 +7,7 @@ import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.API;
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.Event;
+import com.sophomoreventure.collegeconnect.ModelClass.ClubModel;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.ModelClass.EventModel;
 import com.sophomoreventure.collegeconnect.ParserEventResponse;
@@ -32,5 +33,11 @@ public class EventsUtils {
         //eventDatabase.insertData(listEvents,false);
 
         return  null;
+    }
+
+    public static ArrayList<ClubModel> loadClubData(RequestQueue requestQueue, Context context) {
+
+        RequestorGet.requestClubData(requestQueue,API.CLUB_LIST_GET_API,context);
+        return null;
     }
 }

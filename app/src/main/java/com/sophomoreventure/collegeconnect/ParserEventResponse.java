@@ -19,7 +19,7 @@ public class ParserEventResponse {
 
         ArrayList<Event> listEvents = new ArrayList<>();
         String names[] = new String[2];
-        int mobNumbers[] = new int[2];
+        String mobNumbers[] = new String[2];
         EventDatabase eventDatabase = new EventDatabase(context);
         if(response == null || response.length() == 0){
             return null;
@@ -32,51 +32,52 @@ public class ParserEventResponse {
                 JSONObject currentEvent = jsonArray.getJSONObject(i);
                 String about  = currentEvent.getString("about");
                 String clubName = currentEvent.getString("clubname");
-                int clubID = currentEvent.getInt("club_id");
+                String clubID = String.valueOf(currentEvent.getInt("club_id"));
                 String availabeSeats = currentEvent.getString("available_seats");
                 JSONArray contacts = currentEvent.getJSONArray("contacts");
 
                 for(int j = 0; j < contacts.length() ; j++){
                     JSONObject current = contacts.getJSONObject(j);
-                    int mobileNo = current.getInt("mobno");
+                    String mobileNo = String.valueOf(current.getInt("mobno"));
                     String name = current.getString("name");
                     names[j] = name;
                     mobNumbers[j] = mobileNo;
                 }
                 String eventName = currentEvent.getString("name");
-                int createdby = currentEvent.getInt("createdby");
-                int totalSeats = currentEvent.getInt("total_seats");
+                String createdby = String.valueOf(currentEvent.getInt("createdby"));
+                String totalSeats = String.valueOf(currentEvent.getInt("total_seats"));
                 String venue = currentEvent.getString("venue");
-                boolean verified = currentEvent.getBoolean("verified");
-                int eventEndTime = currentEvent.getInt("edt");
-                int startDateTime = currentEvent.getInt("sdt");
-                int occupiedSeats = currentEvent.getInt("occupied_seats");
-                int lastRegistrationTime = currentEvent.getInt("lrt");
+                String verified = String.valueOf(currentEvent.getBoolean("verified"));
+                String eventEndTime = String.valueOf(currentEvent.getInt("edt"));
+                String startDateTime = String.valueOf(currentEvent.getInt("sdt"));
+                String occupiedSeats = String.valueOf(currentEvent.getInt("occupied_seats"));
+                String lastRegistrationTime = String.valueOf(currentEvent.getInt("lrt"));
 
 
-                event.setEventStarttime(startDateTime);
-                event.setEventEndTime(eventEndTime);
+                event.setEventStarttime(String.valueOf(startDateTime));
+                event.setEventEndTime(String.valueOf(eventEndTime));
                 event.setLastRegistrationTime(String.valueOf(lastRegistrationTime));
-                event.setEventAttend(occupiedSeats);
+                event.setEventAttend(String.valueOf(occupiedSeats));
                 event.setEventTitle(eventName);
                 event.setEventDescription(about);
                 event.setEventVenue(venue);
                 event.setEventClub(clubName);
-                event.setEventvarified(verified);
+                event.setEventvarified(String.valueOf(verified));
                 event.setEventOrganizerOne(names[0]);
                 event.setEventOrganizerTwo(names[1]);
                 event.setEventOrganizerOnePhoneNo(String.valueOf(mobNumbers[0]));
                 event.setEventOrganizerTwoPhoneNo(String.valueOf(mobNumbers[1]));
                 listEvents.add(event);
-                eventDatabase.insertRow(eventName,0,startDateTime,eventEndTime,occupiedSeats,clubName,about,names[0],names[1]
-                    ,venue,String.valueOf(mobNumbers[0]),String.valueOf(mobNumbers[1]),"null","False",false,1,
-                        String.valueOf(lastRegistrationTime));
+                eventDatabase.insertRow(eventName, "0", startDateTime, eventEndTime, occupiedSeats, clubName, about, names[0], names[1]
+                        , venue, String.valueOf(mobNumbers[0]), String.valueOf(mobNumbers[1]), "null", "False", "false", "1",
+                        String.valueOf(lastRegistrationTime), "false");
+                Log.i("vikas", "Event parsing done  " + clubName);
             }
 
 
             //eventDatabase.insertData(listEvents,false);
 
-            Log.i("vikas", "parsing done");
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

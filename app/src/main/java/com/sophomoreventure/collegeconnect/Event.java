@@ -12,35 +12,94 @@ public class Event {
     private String eventTitle;
     private String EventClub;
     private String eventDescription;
-    private long eventTime;
+    private String eventTime;
     private String eventVenue;
     private String eventOrganizerOne;
     private String eventOrganizerOnePhoneNo;
     private String eventOrganizerTwo;
     private String eventOrganizerTwoPhoneNo;
     private long[] notificationDateTime = new long[5];
-    private boolean isAdmin;
-    private int EventAttend;
-    private long EventStarttime;
-    private long EventEndTime;
-    private boolean Eventvarified;
-    private int eventServerId;
+    private String isAdmin;
+    private String EventAttend;
+    private String eventLiked;
+    private String EventStarttime;
+    private String EventEndTime;
+    private String Eventvarified;
+    private String eventServerId;
     private String lastRegistrationTime;
-    private String organizerEmail;
+    private String organizerEmailOne;
+    private String organizerEmailTwo;
+    private String UrlThumbnail;
 
-    public String getOrganizerEmail() {
-        return organizerEmail;
+    public String getOrganizerEmailOne() {
+        return organizerEmailOne;
     }
 
-    public void setOrganizerEmail(String organizerEmail) {
-        this.organizerEmail = organizerEmail;
+    public void setOrganizerEmailOne(String organizerEmailOne) {
+        this.organizerEmailOne = organizerEmailOne;
     }
 
-    public int getEventServerId() {
+    public String getOrganizerEmailTwo() {
+        return organizerEmailTwo;
+    }
+
+    public void setOrganizerEmailTwo(String organizerEmailTwo) {
+        this.organizerEmailTwo = organizerEmailTwo;
+    }
+
+    public String getEventTime() {
+        return eventTime;
+    }
+
+    public void setEventTime(String eventTime) {
+        this.eventTime = eventTime;
+    }
+
+    public String getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(String isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public String getEventAttend() {
+        return EventAttend;
+    }
+
+    public void setEventAttend(String eventAttend) {
+        EventAttend = eventAttend;
+    }
+
+    public String getEventStarttime() {
+        return EventStarttime;
+    }
+
+    public void setEventStarttime(String eventStarttime) {
+        EventStarttime = eventStarttime;
+    }
+
+    public String getEventEndTime() {
+        return EventEndTime;
+    }
+
+    public void setEventEndTime(String eventEndTime) {
+        EventEndTime = eventEndTime;
+    }
+
+    public String getEventvarified() {
+        return Eventvarified;
+    }
+
+    public void setEventvarified(String eventvarified) {
+        Eventvarified = eventvarified;
+    }
+
+    public String getEventServerId() {
         return eventServerId;
     }
 
-    public void setEventServerId(int eventServerId) {
+    public void setEventServerId(String eventServerId) {
         this.eventServerId = eventServerId;
     }
 
@@ -52,23 +111,34 @@ public class Event {
         this.lastRegistrationTime = lastRegistrationTime;
     }
 
+    public String getEventLiked() {
+        return eventLiked;
+    }
+
+    public void setEventLiked(String eventLiked) {
+        this.eventLiked = eventLiked;
+    }
+
     public Event() {
         eventId = UUID.randomUUID();
         eventTitle = "null";
         EventClub = "null";
         eventDescription = "null";
-        eventTime = 0;
+        eventTime = "null";
         eventVenue = "null";
         eventOrganizerOne = "null";
         eventOrganizerOnePhoneNo = "null";
         eventOrganizerTwo = "null";
         eventOrganizerTwoPhoneNo = "null";
+        eventLiked = "false";
         initNotificationDateTime(notificationDateTime);
-        EventAttend = 0;
-        EventStarttime = 0;
-        EventEndTime = 0;
-        Eventvarified = false;
-        organizerEmail = "null";
+        EventAttend = "null";
+        EventStarttime = "null";
+        EventEndTime = "null";
+        Eventvarified = "null";
+        organizerEmailOne = "null";
+        organizerEmailTwo = "null";
+        UrlThumbnail = "null";
     }
     public void setEventId(UUID eventId) {
         this.eventId = eventId;
@@ -82,40 +152,12 @@ public class Event {
         this.notificationDateTime = notificationDateTime;
     }
 
-    public void setIsAdmin(boolean isAdmin) {
-        this.isAdmin = isAdmin;
+    public String getUrlThumbnail() {
+        return UrlThumbnail;
     }
 
-    public int getEventAttend() {
-        return EventAttend;
-    }
-
-    public void setEventAttend(int eventAttend) {
-        EventAttend = eventAttend;
-    }
-
-    public long getEventStarttime() {
-        return EventStarttime;
-    }
-
-    public void setEventStarttime(long eventStarttime) {
-        EventStarttime = eventStarttime;
-    }
-
-    public long getEventEndTime() {
-        return EventEndTime;
-    }
-
-    public void setEventEndTime(long eventEndTime) {
-        EventEndTime = eventEndTime;
-    }
-
-    public boolean isEventvarified() {
-        return Eventvarified;
-    }
-
-    public void setEventvarified(boolean eventvarified) {
-        Eventvarified = eventvarified;
+    public void setUrlThumbnail(String urlThumbnail) {
+        UrlThumbnail = urlThumbnail;
     }
 
     public UUID getEventId() {
@@ -131,13 +173,6 @@ public class Event {
         this.eventTitle = eventTitle;
     }
 
-    public long getEventTime() {
-        return eventTime;
-    }
-
-    public void setEventTime(long eventTime) {
-        this.eventTime = eventTime;
-    }
 
     public String getEventClub() {
         return EventClub;
@@ -196,13 +231,7 @@ public class Event {
         this.eventOrganizerTwoPhoneNo = eventOrganizerTwoPhoneNo;
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
-    }
 
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
-    }
 
     public long[] getNotificationDateTimeArray() {
         return notificationDateTime;

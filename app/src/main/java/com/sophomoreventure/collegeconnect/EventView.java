@@ -54,11 +54,11 @@ public class EventView extends AppCompatActivity {
         mEventorganizerMob = (TextView) findViewById(R.id.event_organizer_phone);
         eventDatabase = new EventDatabase(this);
 
-        eventDatabase.insertRow("sparsh",121212,1212,1212,12,"IETE","for all","Murali Parjapati","Vikas"
-                        ,"SVNIT","87565464","87565464","vrnvikas1009@gmail.com","yes",true,1,"lasttimeNone");
+       // eventDatabase.insertRow("sparsh",121212,1212,1212,12,"IETE","for all","Murali Parjapati","Vikas"
+        //                ,"SVNIT","87565464","87565464","vrnvikas1009@gmail.com","yes",true,1,"lasttimeNone");
 
-        eventDatabase.insertRow("Light Follower",121212,1212,1212,12,"DRISTI","for all","vikas","Siddhant loya"
-                ,"SVNIT","87565464","45215456","vrnvikas1009@gmail.com","yes",true,1,"no time");
+       // eventDatabase.insertRow("Light Follower",121212,1212,1212,12,"DRISTI","for all","vikas","Siddhant loya"
+        //        ,"SVNIT","87565464","45215456","vrnvikas1009@gmail.com","yes",true,1,"no time");
 
         clubName = getIntent().getStringExtra("clubName");
         position = getIntent().getIntExtra("position",0);

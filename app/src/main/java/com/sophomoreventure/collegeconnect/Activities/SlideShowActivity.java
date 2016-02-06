@@ -4,6 +4,10 @@ package com.sophomoreventure.collegeconnect.Activities;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
@@ -21,20 +25,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.sophomoreventure.collegeconnect.ClubListAtivity;
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
+import com.sophomoreventure.collegeconnect.ImageHandler;
 import com.sophomoreventure.collegeconnect.MyEventsActivity;
 import com.sophomoreventure.collegeconnect.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
@@ -52,7 +62,6 @@ import me.relex.circleindicator.CircleIndicator;
 import me.tatarka.support.job.JobInfo;
 import me.tatarka.support.job.JobScheduler;
 
-
 /**
  * Created by Murali on 08/12/2015.
  */
@@ -60,7 +69,7 @@ import me.tatarka.support.job.JobScheduler;
 public class SlideShowActivity extends AppCompatActivity implements
         ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private static final long POLL_FREQUENCY = 10000; //28800000;
+    private static final long POLL_FREQUENCY =  5000 ;//28800000;
     private static final int JOB_ID = 100;
     ViewPager slideShowPager;
     Toolbar toolbar;
@@ -70,20 +79,28 @@ public class SlideShowActivity extends AppCompatActivity implements
     private FragmentDrawer mDrawerFragment;
     private JobScheduler mJobScheduler;
     private NavigationView mNavView;
-    private DrawerLayout mDrawerLayout;
     private LinearLayout mainScreen;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView horizonatalRV;
     private RecyclerView aRV;
+    private GoogleApiClient client;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_slide_show);
+
+        //setContentView(R.layout.activity_slide_show);
+        //View child = getLayoutInflater().inflate(R.layout.main_layout, null);
+        //LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //View myView = inflater.inflate(R.layout.main_layout, null);
+
+
+        FrameLayout activityContainer = (FrameLayout) findViewById(R.id.activity_content);
+        getLayoutInflater().inflate(R.layout.main_layout, activityContainer, true);
+
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setTitle(null);
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
@@ -116,6 +133,16 @@ public class SlideShowActivity extends AppCompatActivity implements
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         setupDrawer();
+
+
+        Resources res = this.getResources();
+        int id = R.drawable.poster_five;
+        Bitmap bmp = BitmapFactory.decodeResource(res, id);
+        ImageHandler handler = new ImageHandler(this);
+        handler.save(bmp, "poster");
+        Log.i("vikas kumar", "written");
+
+        //setupDrawer();
 //        setupJob();
 //        mainScreen = (LinearLayout) findViewById(R.id.main_screen);
 
@@ -162,11 +189,15 @@ public class SlideShowActivity extends AppCompatActivity implements
 //        aRV.setLayoutManager(new LinearLayoutManager(this));
         aRV.setHasFixedSize(true);
 
-        aRV.setAdapter(new MyEventsAdapter(SlideShowActivity.this, ""));
+        aRV.setAdapter(new MyEventsAdapter(SlideShowActivity.this, "",0));
 
 
     }
 
+    @Override
+    protected boolean useToolbar() {
+        return false;
+    }
 
     private void setupDrawer() {
 

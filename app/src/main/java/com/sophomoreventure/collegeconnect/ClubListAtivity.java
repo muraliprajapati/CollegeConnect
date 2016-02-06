@@ -39,7 +39,6 @@ public class ClubListAtivity extends AppCompatActivity {
         String[] clubList;
         int[] clubImageList;
 
-
         public ClubListAdapter(Context context, String[] clubList, int[] clubImageList) {
             this.context = context;
             this.clubImageList = clubImageList;

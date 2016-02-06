@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventsLoadedListener;
+import com.sophomoreventure.collegeconnect.ModelClass.ClubModel;
 import com.sophomoreventure.collegeconnect.ModelClass.EventModel;
 
 import org.json.JSONObject;
@@ -34,6 +35,7 @@ public class TaskLoadEventsData extends AsyncTask<Void, Void, ArrayList<Event>> 
     protected ArrayList<Event> doInBackground(Void... params) {
         // Load events here form api
         ArrayList<Event> listEvents = EventsUtils.loadEventsData(requestQueue,context);
+        ArrayList<ClubModel> listClubData = EventsUtils.loadClubData(requestQueue,context);
         return listEvents;
     }
 

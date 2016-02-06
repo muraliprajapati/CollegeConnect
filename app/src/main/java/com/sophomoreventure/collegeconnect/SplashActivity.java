@@ -1,5 +1,6 @@
 package com.sophomoreventure.collegeconnect;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,13 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.Activities.LoginActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
+import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+import me.tatarka.support.job.JobInfo;
+import me.tatarka.support.job.JobScheduler;
 
 /**
  * Created by Murali on 01/02/2016.
@@ -24,24 +27,33 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
 
+    private static final long POLL_FREQUENCY = 50000;//28800000;
+    private static final int JOB_ID = 100;
+    private JobScheduler mJobScheduler;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
         setContentView(R.layout.activity_splash);
         progressBar = (ProgressBar) findViewById(R.id.loadingProgress);
         progressBar.setIndeterminate(true);
+        setupJob();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (EventUtility.isFirstRun(SplashActivity.this) || !EventUtility.isLoggedIn(SplashActivity.this)) {
-                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    //Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+
+                    Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    finish();
+                    //startActivity(intent);
+                    //finish();
                 } else {
                     RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
                             EventUtility.getUserTokenFromPref(SplashActivity.this), "None", SplashActivity.this);
@@ -134,6 +146,26 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
                 }
         }
 
+}
 
+
+    private void setupJob() {
+        mJobScheduler = JobScheduler.getInstance(this);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                buildJob();
+            }
+        }, 3000);
+    }
+
+    private void buildJob() {
+
+        JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, new ComponentName(this, ServiceClass.class));
+        builder.setPeriodic(POLL_FREQUENCY)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+                .setPersisted(true);
+        mJobScheduler.schedule(builder.build());
     }
 }
