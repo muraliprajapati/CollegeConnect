@@ -156,7 +156,7 @@ public class RequestorGet {
 
                         DataListener listener = (DataListener) context;
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                            listener.setError("NOCON");
+                            listener.setError("NOCON","");
 
                         } else {
                             try {
@@ -165,7 +165,7 @@ public class RequestorGet {
                                 String string = new String(response.data);
                                 JSONObject jsonObject = new JSONObject(string);
                                 Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
-                                listener.setError(Parserer.parseResponse(jsonObject));
+                                listener.setError(Parserer.parseResponse(jsonObject),"");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

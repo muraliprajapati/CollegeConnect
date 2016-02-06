@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.Activities.LoginActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
@@ -17,7 +16,6 @@ import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
-
 import me.tatarka.support.job.JobInfo;
 import me.tatarka.support.job.JobScheduler;
 
@@ -48,11 +46,14 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
             @Override
             public void run() {
                 if (EventUtility.isFirstRun(SplashActivity.this) || !EventUtility.isLoggedIn(SplashActivity.this)) {
-                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    //Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+
+                    Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    finish();
+                    //startActivity(intent);
+                    //finish();
                 } else {
                     RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
                             EventUtility.getUserTokenFromPref(SplashActivity.this), "None", SplashActivity.this);
@@ -145,9 +146,7 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
                 }
         }
 
-
-        }, 3000);
-    }
+}
 
 
     private void setupJob() {

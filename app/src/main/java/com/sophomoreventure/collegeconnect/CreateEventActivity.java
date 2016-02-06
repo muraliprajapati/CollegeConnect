@@ -93,6 +93,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
 
     private String clubServerID = null;
     private EventDatabase database;
+    private String colorCode;
 
     public static boolean areAllFalse(boolean[] array) {
         for (boolean b : array) if (b) return false;
@@ -302,7 +303,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
                 Arrays.fill(missingFields, Boolean.FALSE);
 
                 if (isValidEvent()) {
-                    try {
+
                         spotsDialog.show();
 
                     imageName = titleEditText.getText().toString().toLowerCase()
@@ -354,6 +355,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
                             })
                             .create()
                             .show();
+
 
                 } else {
                     Log.i("tag", "event invalid");
