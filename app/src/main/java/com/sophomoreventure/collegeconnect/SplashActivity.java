@@ -11,8 +11,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.sophomoreventure.collegeconnect.Activities.LoginActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
+import com.sophomoreventure.collegeconnect.GCM.RegistrationService;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
@@ -27,10 +30,13 @@ import me.tatarka.support.job.JobScheduler;
 public class SplashActivity extends AppCompatActivity implements DataListener {
     private static final long POLL_FREQUENCY = 50000;//28800000;
     private static final int JOB_ID = 100;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String SENDER_ID = "35113555015";
     ProgressBar progressBar;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
     private JobScheduler mJobScheduler;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -49,7 +55,14 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
             public void run() {
                 if (EventUtility.isFirstRun(SplashActivity.this) || !EventUtility.isLoggedIn(SplashActivity.this)) {
                     Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    if (checkPlayServices()) {
+                        // Start IntentService to register this application with GCM.
+                        Intent gcmIntent = new Intent(SplashActivity.this, RegistrationService.class);
+                        startService(gcmIntent);
+                    } else {
+                        Log.i("tag", "No valid Google Play Services APK found.");
 
+                    }
 //                    Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -164,7 +177,20 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
 
 }
 
-
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i("tag", "This device is not supported.");
+            }
+            return false;
+        }
+        return true;
+    }
     private void setupJob() {
         mJobScheduler = JobScheduler.getInstance(this);
         new Handler().postDelayed(new Runnable() {

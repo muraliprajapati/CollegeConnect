@@ -188,6 +188,7 @@ public class RequestorPost {
     public static void requestCreateEvent(
             final RequestQueue requestQueue, final String url, final String email,
             final String userPassword, final JSONObject jsonBody, final Context context) {
+        Log.i("vikas", "in requestCreateEvent");
 
         HttpsTrustManager.allowAllSSL();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
@@ -244,6 +245,53 @@ public class RequestorPost {
 
     }
 
+    public static void requestGcmToken(
+            final RequestQueue requestQueue, final String url, final JSONObject jsonBody, final Context context) {
+        Log.i("vikas", "in requestCreateEvent");
+
+        HttpsTrustManager.allowAllSSL();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+                new Response.Listener<JSONObject>() {
+//                    DataListener listener = (DataListener) context;
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("vikas", response.toString());
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("vikas", error + "");
+
+                        DataListener listener = (DataListener) context;
+                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                            listener.setError(url, "NOCON");
+
+                        } else {
+                            try {
+                                NetworkResponse response = error.networkResponse;
+                                Log.i("vikas", response.statusCode + "");
+                                String string = new String(response.data);
+                                JSONObject jsonObject = new JSONObject(string);
+                                Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
+                                listener.setError(url, Parserer.parseResponse(jsonObject));
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+                    }
+                }) {
+
+
+        };
+        requestQueue.add(request);
+
+    }
     private static void saveTokenInPref(Context context, String token) {
         SharedPreferences prefs = context.getSharedPreferences(
                 Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);

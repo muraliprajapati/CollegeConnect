@@ -25,6 +25,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -93,11 +94,11 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
     boolean isImageChosen = false, isThemeSelected = false;
     long eventStartTime, eventEndTime, eventLastRegTime;
     Dialog spotsDialog;
+    ViewGroup rootView;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
     private AlertDialog dialog;
     private String base64ImageString, picturePath, color;
-
     private String clubServerID = null;
     private EventDatabase database;
     private String colorCode;
@@ -113,6 +114,7 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout_create_event);
+        rootView = (ViewGroup) findViewById(R.id.createEventScrollView);
         event = new Event();
         eventHub = EventHub.getEventHub(this);
         eventId = event.getEventId().toString();
@@ -244,8 +246,13 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         requestQueue = volleySingleton.getRequestQueue();
         spotsDialog = new SpotsDialog(this, R.style.Create_Event_dialog);
         try {
-            getClubIdList();
-            clubNameTextView.setText(getClubIdList().get(0).toString());
+
+            if (!getClubIdList().isEmpty()) {
+                clubNameTextView.setText(getClubIdList().get(0).toString());
+            } else {
+                clubNameTextView.setText("Individual");
+            }
+
         } catch (JSONException e) {
             Log.i("tag", "" + e);
         } catch (FileNotFoundException e) {
@@ -356,19 +363,22 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
                                             spotsDialog.show();
                                             if (isImageChosen) {
                                                 new PhotoUploadTask().execute(picturePath, imageName);
+                                            } else {
+                                                RequestorPost.requestCreateEvent(requestQueue, API.EVENT_API,
+                                                        EventUtility.getUserEmailFromPref(CreateEventActivity.this),
+                                                        EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this), createJson(), CreateEventActivity.this);
                                             }
 
 
-                                            RequestorPost.requestCreateEvent(requestQueue, API.EVENT_API,
-                                                    EventUtility.getUserEmailFromPref(CreateEventActivity.this),
-                                                    EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this), createJson(), CreateEventActivity.this);
+
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
 
                                         dialog.dismiss();
                                     } else {
-                                        Toast.makeText(CreateEventActivity.this, "Password doesn't match", Toast.LENGTH_SHORT).show();
+                                        Snackbar.make(rootView, "Password doesn't share same opinion", Snackbar.LENGTH_LONG)
+                                                .show();
                                     }
                                 }
                             })
@@ -502,7 +512,7 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         jsonObject.put("sdt", eventStartTime / 1000);
         jsonObject.put("edt", eventEndTime / 1000);
         jsonObject.put("venue", venueEditText.getText().toString());
-        jsonObject.put("seats", 50);
+        jsonObject.put("seats", 0);
         jsonObject.put("lastregtime", eventLastRegTime / 1000);
 
         if (isImageChosen) {
@@ -581,16 +591,18 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         if (spotsDialog.isShowing()) {
             spotsDialog.dismiss();
         }
-        if (errorCode.equals("NOCON")) {
-            new android.support.v7.app.AlertDialog.Builder(this)
-                    .setMessage("It seems your internet is not working working")
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .show();
-        }
+        Snackbar.make(rootView, "Internet is not working", Snackbar.LENGTH_LONG)
+                .show();
+//        if (errorCode.equals("NOCON")) {
+//            new android.support.v7.app.AlertDialog.Builder(this)
+//                    .setMessage("It seems your internet is not working working")
+//                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                        }
+//                    })
+//                    .show();
+//        }
     }
 
     public String getJsonString(Context context) throws FileNotFoundException {
@@ -647,11 +659,25 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         protected void onPostExecute(Map result) {
             super.onPostExecute(result);
             // Dismiss the progress dialog
-            if (result.containsKey("url")) {
-                Log.i("vikas", result.get("url").toString());
+            if (result != null) {
+                if (result.containsKey("url")) {
+                    Log.i("vikas", result.get("url").toString());
+                    try {
+                        RequestorPost.requestCreateEvent(requestQueue, API.EVENT_API,
+                                EventUtility.getUserEmailFromPref(CreateEventActivity.this),
+                                EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this), createJson(), CreateEventActivity.this);
+                    } catch (JSONException e) {
+                        Log.i("tag", "" + e);
+                    }
+                    Toast.makeText(CreateEventActivity.this, "Photo uploded", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                spotsDialog.dismiss();
+                Snackbar.make(rootView, "Internet is not working", Snackbar.LENGTH_LONG)
+                        .show();
             }
-            spotsDialog.dismiss();
-            Toast.makeText(CreateEventActivity.this, "Photo uploded", Toast.LENGTH_SHORT).show();
+
+
             imageResult = result;
         }
 
