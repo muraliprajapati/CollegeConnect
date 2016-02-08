@@ -15,7 +15,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,22 +24,16 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.sophomoreventure.collegeconnect.ClubListAtivity;
-import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
 import com.sophomoreventure.collegeconnect.DrawerBaseActivity;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
-import com.sophomoreventure.collegeconnect.MyEventsActivity;
 import com.sophomoreventure.collegeconnect.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
-import com.sophomoreventure.collegeconnect.NoticeBoardActivity;
 import com.sophomoreventure.collegeconnect.R;
-import com.sophomoreventure.collegeconnect.SparshEventListAtivity;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
 import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
 
@@ -56,7 +49,7 @@ import me.tatarka.support.job.JobScheduler;
  */
 
 public class SlideShowActivity extends DrawerBaseActivity implements
-        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener {
+        ViewPager.OnPageChangeListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener {
 
     private static final long POLL_FREQUENCY = 5000;//28800000;
     private static final int JOB_ID = 100;
@@ -78,18 +71,9 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_slide_show);
-        //View child = getLayoutInflater().inflate(R.layout.main_layout, null);
-        //LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //View myView = inflater.inflate(R.layout.main_layout, null);
-
-
-//        FrameLayout activityContainer = (FrameLayout) findViewById(R.id.activity_content);
-//        getLayoutInflater().inflate(R.layout.main_layout, activityContainer, true);
         toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
@@ -124,19 +108,7 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setNestedScrollingEnabled(true);
-//        setupDrawer();
 
-
-//        Resources res = this.getResources();
-//        int id = R.drawable.poster_five;
-//        Bitmap bmp = BitmapFactory.decodeResource(res, id);
-//        ImageHandler handler = new ImageHandler(this);
-//        handler.save(bmp, "poster");
-//        Log.i("vikas kumar", "written");
-
-//        setupDrawer();
-//        setupJob();
-//        mainScreen = (LinearLayout) findViewById(R.id.main_screen);
         final GestureDetector tapGestureDetector = new GestureDetector(this, new TapGestureListener());
         slideShowPager = (ViewPager) findViewById(R.id.slideShowPager);
         final SlideShowAdapter slideAdapter = new SlideShowAdapter(getSupportFragmentManager());
@@ -196,65 +168,12 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 
     }
 
-//    @Override
-//    protected boolean useToolbar() {
-//        return false;
-//    }
 
 
     @Override
     protected int getSelfNavDrawerItem() {
         return NAVDRAWER_ITEM_COLLEGE_EVENTS;
     }
-
-    private void setupDrawer() {
-
-        //mToolbar = (Toolbar) findViewById(R.id.custom_app_bar);
-        //mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
-        //set the Toolbar as ActionBar
-        //setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
-        //setup the NavigationDrawer
-        mNavView = (NavigationView) findViewById(R.id.navView);
-        mNavView.setNavigationItemSelectedListener(this);
-        mNavView.setCheckedItem(R.id.nav_events);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle dt = new ActionBarDrawerToggle(
-                this, mDrawerLayout, toolbar,
-                0, 0
-        );
-        mDrawerLayout.setDrawerListener(dt);
-        dt.syncState();
-
-        View header = mNavView.getHeaderView(0);
-
-        TextView userNameTextView = (TextView) header.findViewById(R.id.drawer_user_name);
-        userNameTextView.setText(EventUtility.getUserNameFromPref(this));
-        TextView userEmailTextView = (TextView) header.findViewById(R.id.drawer_user_email);
-        userEmailTextView.setText(EventUtility.getUserEmailFromPref(this));
-
-
-
-        /*
-        mDrawerFragment = (FragmentDrawer)
-                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-        */
-    }
-
-
-//    private void translateMainScreen(float slideOffset) {
-//        if (mainScreen != null) {
-//
-//            mainScreen.setTranslationX(slideOffset * 550);
-//        }
-//    }
-
 
     private void setupJob() {
         mJobScheduler = JobScheduler.getInstance(this);
@@ -323,93 +242,6 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     }
 
 
-/*
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        if (id == R.id.create_event_activity) {
-
-            startActivity(new Intent(this, CreateEventActivity.class));
-        }
-
-        if (id == R.id.event_view_activity) {
-
-            startActivity(new Intent(this, OtherEventView.class));
-        }
-
-        if (id == R.id.my_event_activity) {
-
-            startActivity(new Intent(this, MyEventsActivity.class));
-        }
-        if (id == R.id.logout) {
-            SharedPreferences pref = getSharedPreferences(Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, MODE_PRIVATE);
-            SharedPreferences.Editor editor = pref.edit();
-            editor.clear();
-            editor.apply();
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-        }
-
-
-        return super.onOptionsItemSelected(item);
-    }*/
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-        int id = menuItem.getItemId();
-        menuItem.setChecked(false);
-
-        switch (id) {
-
-            case R.id.nav_sparsh_events:
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(SparshEventListAtivity.class);
-                break;
-            case R.id.nav_events:
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                break;
-            case R.id.nav_clubs:
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(ClubListAtivity.class);
-                menuItem.setChecked(true);
-                break;
-
-            case R.id.nav_notice_board:
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(NoticeBoardActivity.class);
-                menuItem.setChecked(true);
-                break;
-
-            case R.id.nav_myenents:
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(MyEventsActivity.class);
-                menuItem.setChecked(true);
-                break;
-            case R.id.nav_myprofile:
-                menuItem.setChecked(true);
-                return false;
-            case R.id.nav_settings:
-                menuItem.setChecked(true);
-                return false;
-            case R.id.nav_rate:
-                menuItem.setChecked(true);
-                return false;
-
-        }
-
-        return true;
-    }
 
     @Override
     public void onClick(View v) {
@@ -449,10 +281,6 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.create_event_activity:
-                startActivity(new Intent(this, CreateEventActivity.class));
-                return true;
-
             case R.id.logout:
                 EventUtility.clearUserSharedPref(this);
                 Intent intent = new Intent(this, LoginActivity.class);

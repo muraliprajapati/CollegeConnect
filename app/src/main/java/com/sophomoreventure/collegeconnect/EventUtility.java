@@ -74,7 +74,9 @@ public class EventUtility {
             firstRun = false;
 
         } else if (savedVersionCode == DOESNT_EXIST) {
-
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(SharedPrefConstants.APP_SHARED_PREF_FIRST_RUN_KEY, true);
+            editor.apply();
             firstRun = true;
 
         } else if (currentVersionCode > savedVersionCode) {
@@ -94,6 +96,12 @@ public class EventUtility {
     public static boolean isLoggedIn(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
         return prefs.getBoolean(SharedPrefConstants.USER_SHARED_PREF_LOGGED_IN_KEY, false);
+    }
+
+    public static boolean isUserVerified(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        return prefs.getBoolean(SharedPrefConstants.USER_SHARED_PREF_USER_VERIFIED_KEY, false);
+
     }
 
     public static String getHashString(String message, String algorithm) {
@@ -246,6 +254,7 @@ public class EventUtility {
         SharedPreferences prefs = context.getSharedPreferences(SharedPrefConstants.APP_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(SharedPrefConstants.APP_SHARED_PREF_FIRST_RUN_KEY, b);
+        editor.apply();
     }
 
     public static boolean isNetworkAvailable(Context context) {
