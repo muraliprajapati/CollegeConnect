@@ -12,13 +12,24 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:background="@drawable/edit_text_bg"
+            android:ems="10"
+            android:hint="Name"
+            android:inputType="textPersonName" />
+
+        <EditText
             android:id="@+id/user_email_edit_text"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
             android:background="@drawable/edit_text_bg"
-            android:hint="Enter email address"
+            android:hint="Email address"
             android:inputType="textEmailAddress" />
 
 
@@ -30,7 +41,7 @@
             android:layout_margin="16dp"
             android:background="@drawable/edit_text_bg"
             android:ems="10"
-            android:hint="Enter password"
+            android:hint="Password"
             android:inputType="textPassword" />
 
         <EditText
@@ -41,20 +52,8 @@
             android:layout_margin="16dp"
             android:background="@drawable/edit_text_bg"
             android:ems="10"
-            android:hint="Re-type password"
+            android:hint="Confirm password"
             android:inputType="textPassword" />
-
-
-        <EditText
-            android:id="@+id/name_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="16dp"
-            android:background="@drawable/edit_text_bg"
-            android:ems="10"
-            android:hint="Full Name"
-            android:inputType="textPersonName" />
 
 
         <EditText

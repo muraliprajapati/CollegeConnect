@@ -31,11 +31,18 @@
 
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/toolbar_actionbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="?actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+            <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="?attr/actionBarSize"-->
+            <!--app:layout_collapseMode="pin"-->
+            <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />-->
 
 
         </android.support.design.widget.CollapsingToolbarLayout>

@@ -1,34 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp"
-        android:src="@drawable/logo" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="33dp"
-        android:text="College Connect"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="43dp"
+            android:src="@drawable/logo" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:text="Version"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="33dp"
+            android:text="College Connect"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/versionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/app_name"
+            android:layout_centerHorizontal="true"
+            android:text="Version"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/facebook_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_below="@id/versionTextView"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/facebook" />
+
+
+            <TextView
+                android:id="@+id/event_daytime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_toEndOf="@+id/imageView2"
+                android:layout_toRightOf="@+id/imageView2"
+                android:text="Like us on Facebook"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/email_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_below="@id/facebook_layout"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp">
+
+
+            <ImageView
+                android:id="@+id/email_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/email" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_toEndOf="@+id/email_image"
+                android:layout_toRightOf="@+id/email_image"
+                android:text="Contact us"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/about_dev_tv"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_below="@id/email_layout"
+            android:background="@color/activity_bg"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:text="About Developers"
+            android:textStyle="bold" />
+
+        <include
+            layout="@layout/developer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/about_dev_tv" />
+    </RelativeLayout>
+</ScrollView>
