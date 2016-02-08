@@ -11,16 +11,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.ModelClass.EventModel;
+import com.sophomoreventure.collegeconnect.Network.SqlDataListener;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Murali on 29/12/2015.
  */
-public class EventView extends AppCompatActivity {
+public class EventView extends AppCompatActivity implements SqlDataListener {
 
     HttpAsyncTask task = null;
     Context context;
@@ -30,11 +35,15 @@ public class EventView extends AppCompatActivity {
     String clubName;
     ImageView mEventImage;
     TextView mEventName,mEventDayTime,mEventDayLeft,mEventAddressLineOne,mEventAddressLineTwo,
-            mEventAddressLineThree,mEventOrganizerName,mEventorganizerMob;
+            mEventAddressLineThree,mEventOrganizerName,mEventorganizerMob,mEventOrganizerNameTwo,mEventorganizerMobTwo,
+            mEventTitle;
     Toolbar toolbar;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
     int position;
+    private TextView mEventDescription;
+    private VolleySingleton mVolleySingleton;
+    private ImageLoader mImageLoader;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,14 +53,22 @@ public class EventView extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
+        mVolleySingleton = new VolleySingleton(this);
+        mImageLoader = mVolleySingleton.getImageLoader();
+
         mEventImage = (ImageView) findViewById(R.id.event_image);
         mEventName = (TextView) findViewById(R.id.event_name);
+        mEventDescription = (TextView) findViewById(R.id.event_description);
         mEventDayTime = (TextView) findViewById(R.id.event_daytime);
         mEventDayLeft = (TextView) findViewById(R.id.event_dayleft);
         mEventAddressLineOne = (TextView) findViewById(R.id.event_vanue_line_one);
         mEventAddressLineTwo = (TextView) findViewById(R.id.event_vanue_line_two);
         mEventOrganizerName = (TextView) findViewById(R.id.event_organizer_name);
         mEventorganizerMob = (TextView) findViewById(R.id.event_organizer_phone);
+        mEventOrganizerNameTwo = (TextView) findViewById(R.id.event_organizer_name_two);
+        mEventorganizerMobTwo = (TextView) findViewById(R.id.event_organizer_phone_two);
+        mEventTitle = (TextView) findViewById(R.id.event_title);
+
         eventDatabase = new EventDatabase(this);
 
        // eventDatabase.insertRow("sparsh",121212,1212,1212,12,"IETE","for all","Murali Parjapati","Vikas"
@@ -63,6 +80,7 @@ public class EventView extends AppCompatActivity {
         clubName = getIntent().getStringExtra("clubName");
         position = getIntent().getIntExtra("position",0);
         context = this;
+
         eventData = getData(position);
 
         volleySingleton = new VolleySingleton(this);
@@ -78,6 +96,7 @@ public class EventView extends AppCompatActivity {
 
     public Event getData(int position){
         listData = eventDatabase.selectByClub(clubName);
+        //eventDatabase.selectByClubName(context,clubName);
         if(listData.size() == 0){
             return null;
         }
@@ -85,12 +104,51 @@ public class EventView extends AppCompatActivity {
     }
 
     private void setEventData() {
+
+        Date date = new java.util.Date(Long.parseLong(String.valueOf(eventData.getEventStarttime())));
+        String eventDateTime = new SimpleDateFormat("MMMM,dd,yyyy HH:mm a").format(date);
         mEventName.setText(eventData.getEventTitle());
-        //mEventDayTime.setText((int) eventData.getEventStarttime());
+        mEventDayTime.setText(eventDateTime);
         mEventAddressLineOne.setText(eventData.getEventVenue());
+        mEventDescription.setText(eventData.getEventDescription());
         mEventOrganizerName.setText(eventData.getEventOrganizerOne());
         mEventorganizerMob.setText(eventData.getEventOrganizerOnePhoneNo());
+        mEventOrganizerNameTwo.setText(eventData.getEventOrganizerOne());
+        mEventorganizerMobTwo.setText(eventData.getEventOrganizerOnePhoneNo());
+        mEventTitle.setText(eventData.getEventTitle());
+        String urlThumnail = eventData.getUrlThumbnail();
+        loadImages(urlThumnail, mEventImage);
+
     }
+
+    @Override
+    public void loadData(ArrayList<Event> data) {
+        listData = data;
+        eventData = listData.get(0);
+        setEventData();
+    }
+
+    @Override
+    public void loadEventById(Event event) {
+
+    }
+
+
+    private void loadImages(String urlThumbnail, final ImageView holder) {
+        if (true) {
+            mImageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    holder.setImageBitmap(response.getBitmap());
+                }
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+        }
+    }
+
 
     private class HttpAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override

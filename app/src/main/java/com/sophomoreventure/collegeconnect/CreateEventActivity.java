@@ -11,8 +11,10 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -21,6 +23,7 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -36,6 +39,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.sophomoreventure.collegeconnect.Activities.DrawerActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
@@ -55,7 +59,8 @@ import dmax.dialog.SpotsDialog;
 /**
  * Created by Murali on 24/12/2015.
  */
-public class CreateEventActivity extends AppCompatActivity implements View.OnClickListener, DataListener {
+public class CreateEventActivity extends DrawerActivity implements NavigationView.OnNavigationItemSelectedListener
+        ,View.OnClickListener, DataListener {
     public static final int RESULT_LOAD_IMAGE = 0;
     public static final int PICKER_BUTTON_ID = R.id.pickerButton;
     public static final int CREATE_EVENT_BUTTON_ID = R.id.createEventButton;
@@ -276,6 +281,65 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnCli
 
 
         }
+    }
+
+
+    private void launchActivityDelayed(final Class activity) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(CreateEventActivity.this, activity));
+            }
+        }, 260);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        int id = menuItem.getItemId();
+        menuItem.setChecked(false);
+
+        switch (id) {
+
+            case R.id.nav_sparsh_events:
+                menuItem.setChecked(true);
+                mDrawerLayout.closeDrawers();
+                launchActivityDelayed(SparshEventListAtivity.class);
+                break;
+            case R.id.nav_events:
+                menuItem.setChecked(true);
+                mDrawerLayout.closeDrawers();
+                break;
+            case R.id.nav_clubs:
+                mDrawerLayout.closeDrawers();
+                launchActivityDelayed(ClubListAtivity.class);
+                menuItem.setChecked(true);
+                break;
+
+            case R.id.nav_notice_board:
+                mDrawerLayout.closeDrawers();
+                launchActivityDelayed(NoticeBoardActivity.class);
+                menuItem.setChecked(true);
+                break;
+
+            case R.id.nav_myenents:
+                mDrawerLayout.closeDrawers();
+                launchActivityDelayed(MyEventsActivity.class);
+                menuItem.setChecked(true);
+                break;
+            case R.id.nav_myprofile:
+                menuItem.setChecked(true);
+                return false;
+            case R.id.nav_settings:
+                menuItem.setChecked(true);
+                return false;
+            case R.id.nav_rate:
+                menuItem.setChecked(true);
+                return false;
+
+        }
+
+        return true;
     }
 
     @Override

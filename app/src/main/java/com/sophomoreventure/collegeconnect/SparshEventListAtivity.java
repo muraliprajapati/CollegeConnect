@@ -8,21 +8,26 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sophomoreventure.collegeconnect.Activities.DrawerActivity;
+
 /**
  * Created by Murali on 23/01/2016.
  */
-public class SparshEventListAtivity extends AppCompatActivity {
+public class SparshEventListAtivity extends DrawerActivity implements NavigationView.OnNavigationItemSelectedListener {
     RecyclerView clubListRV;
     int[] imageResArray = new int[]{R.drawable.tech_one, R.drawable.man_one, R.drawable.info, R.drawable.workshop, R.drawable.poster_one};
     String[] sparshEventList = {"Technical", "Managerial", "Informal", "Lectures & Exhibitions", "Mega Attraction"};
@@ -138,9 +143,69 @@ public class SparshEventListAtivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SparshEventActivity.class);
+                intent.putExtra("clubName",clubList[getPosition()]);
+                intent.putExtra("position",getPosition());
                 context.startActivity(intent);
             }
         }
+    }
+
+    private void launchActivityDelayed(final Class activity) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(SparshEventListAtivity.this, activity));
+            }
+        }, 260);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        int id = menuItem.getItemId();
+        menuItem.setChecked(false);
+
+        switch (id) {
+
+            case R.id.nav_sparsh_events:
+                menuItem.setChecked(true);
+                mDrawerLayout.closeDrawers();
+                launchActivityDelayed(SparshEventListAtivity.class);
+                break;
+            case R.id.nav_events:
+                menuItem.setChecked(true);
+                mDrawerLayout.closeDrawers();
+                break;
+            case R.id.nav_clubs:
+                mDrawerLayout.closeDrawers();
+                launchActivityDelayed(ClubListAtivity.class);
+                menuItem.setChecked(true);
+                break;
+
+            case R.id.nav_notice_board:
+                mDrawerLayout.closeDrawers();
+                launchActivityDelayed(NoticeBoardActivity.class);
+                menuItem.setChecked(true);
+                break;
+
+            case R.id.nav_myenents:
+                mDrawerLayout.closeDrawers();
+                launchActivityDelayed(MyEventsActivity.class);
+                menuItem.setChecked(true);
+                break;
+            case R.id.nav_myprofile:
+                menuItem.setChecked(true);
+                return false;
+            case R.id.nav_settings:
+                menuItem.setChecked(true);
+                return false;
+            case R.id.nav_rate:
+                menuItem.setChecked(true);
+                return false;
+
+        }
+
+        return true;
     }
 
 }

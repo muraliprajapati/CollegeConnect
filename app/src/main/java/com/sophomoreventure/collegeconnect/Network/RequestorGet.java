@@ -134,62 +134,7 @@ public class RequestorGet {
     }
 
 
-    public static void attendRequest(final RequestQueue requestQueue, String url,final Context context) {
 
-        SharedPreferences prefs = context.getSharedPreferences(
-                Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
-        final String userId = prefs.getString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_NAME_KEY, "null");
-        final String userPassId = prefs.getString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_PASSWORD_KEY,"null");
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
-                new Response.Listener<JSONObject>() {
-                    DataListener listener = (DataListener) context;
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("vikas", error + "");
-
-                        DataListener listener = (DataListener) context;
-                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                            listener.setError("NOCON","");
-
-                        } else {
-                            try {
-                                NetworkResponse response = error.networkResponse;
-                                Log.i("vikas", response.statusCode + "");
-                                String string = new String(response.data);
-                                JSONObject jsonObject = new JSONObject(string);
-                                Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
-                                listener.setError(Parserer.parseResponse(jsonObject),"");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-
-                    }
-                }) {
-
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s", userId,userPassId);
-                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
-                params.put("Authorization", auth);
-                params.put("Content-Type", "application/x-www-form-urlencoded");
-                return params;
-            }
-        };
-
-        requestQueue.add(request);
-
-    }
 
     public static void requestLogin(
             final RequestQueue requestQueue, final String url, final String userEmail,

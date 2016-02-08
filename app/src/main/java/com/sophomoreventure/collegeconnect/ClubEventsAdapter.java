@@ -40,7 +40,8 @@ public class ClubEventsAdapter extends RecyclerView.Adapter<ClubEventsAdapter.Vi
     public ClubEventsAdapter(Context context,String id) {
         this.context = context;
         eventDatabase = new EventDatabase(context);
-        event = eventDatabase.selectByEventId(id);
+        listData = eventDatabase.selectByClub(id);
+
     }
 
     public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
@@ -100,16 +101,20 @@ public class ClubEventsAdapter extends RecyclerView.Adapter<ClubEventsAdapter.Vi
         holder.eventImageView.setImageBitmap(decodeSampledBitmapFromResource(context.getResources(),
                 imageResArray[position], 300, 200));
 
-        if (listData.size() != 0) {
+        if ( listData != null) {
 
-            Date date = new java.util.Date(Long.parseLong(String.valueOf(listData.get(position).getEventStarttime())));
-            String eventDateTime = new SimpleDateFormat("MM dd, yyyy hh:mm").format(date);
+            if(listData.size() != 0){
+                Date date = new java.util.Date(Long.parseLong(String.valueOf(listData.get(position).getEventStarttime())));
+                String eventDateTime = new SimpleDateFormat("MMMM,dd,yyyy HH:mm a").format(date);
 
-            holder.eventNameTextView.setText(listData.get(position).getEventTitle());
-            holder.eventClubTextView.setText(listData.get(position).getEventClub());
-            holder.dateTextView.setText(eventDateTime);
-            if(listData.get(0).getEventLiked().equals("true")){
-                holder.attendingCheckBox.setChecked(true);
+                holder.eventNameTextView.setText(listData.get(position).getEventTitle());
+                holder.eventClubTextView.setText(listData.get(position).getEventClub());
+                holder.dateTextView.setText(eventDateTime);
+                if(listData.get(0).getEventLiked().equals("true")){
+                    holder.attendingCheckBox.setChecked(true);
+                }
+            }else {
+
             }
 
         }else {
@@ -163,7 +168,16 @@ public class ClubEventsAdapter extends RecyclerView.Adapter<ClubEventsAdapter.Vi
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(context, EventView.class);
-            intent.putExtra("clubId", listData.get(getPosition()).getEventServerId());
+            if(listData != null){
+                if(listData.size() != 0){
+
+                    if(listData.get(getPosition()).getEventServerId() != null){
+                        intent.putExtra("clubId", listData.get(getPosition()).getEventServerId());
+                    }
+
+                }
+            }
+
             context.startActivity(intent);
         }
     }

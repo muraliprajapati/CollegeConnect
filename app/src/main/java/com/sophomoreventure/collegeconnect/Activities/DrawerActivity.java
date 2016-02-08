@@ -91,7 +91,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
 
     protected boolean useToolbar()
     {
-        return true;
+        return false;
     }
 
     private void setupDrawer() {

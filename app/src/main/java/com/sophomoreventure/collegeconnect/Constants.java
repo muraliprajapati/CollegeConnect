@@ -5,6 +5,8 @@ package com.sophomoreventure.collegeconnect;
  */
 public interface Constants {
 
+    String NA = "NA";
+
     interface SharedPrefConstants {
         String USER_SHARED_PREF_FILE_NAME = "com.sophomoreventure.collegeconnect.user_pref";
         String USER_SHARED_PREF_USER_NAME_KEY = "user_name";

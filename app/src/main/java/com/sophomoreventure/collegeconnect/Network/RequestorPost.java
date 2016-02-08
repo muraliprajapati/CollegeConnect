@@ -18,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.EventUtility;
 
+import org.cloudinary.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -306,6 +307,61 @@ public class RequestorPost {
 
     }
 
+
+    public static void attendRequest(final RequestQueue requestQueue, String url,final Context context) {
+
+        final String emailId = EventUtility.getUserTokenFromPref(context);
+        final String pass = EventUtility.getUserPasswordHashFromPref(context);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("vikas", error + "");
+
+                        //DataListener listener = (DataListener) context;
+                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                            //  listener.setError("NOCON","");
+
+                        } else {
+                            try {
+                                NetworkResponse response = error.networkResponse;
+                                Log.i("vikas", response.statusCode + "");
+                                String string = new String(response.data);
+                                JSONObject jsonObject = new JSONObject(string);
+                                Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
+                                //    listener.setError(Parserer.parseResponse(jsonObject),"");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+                    }
+                }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                String creds = String.format("%s:%s", emailId,pass);
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
+                params.put("Authorization", auth);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+        requestQueue.add(request);
+    }
+
     private static void parseAndSaveUserInfoToPref(Context context, String userEmail, String userPassword, String token, JSONObject jsonObject) throws JSONException {
         String rollNo, hostelName;
         long mobNo;
@@ -341,6 +397,9 @@ public class RequestorPost {
             hostelName = jsonObject.getString("hostelname");
             editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_HOSTEL_NAME_KEY, hostelName);
         }
+
+        org.json.JSONArray jsonArray = jsonObject.getJSONArray("liked");
+
 
         editor.apply();
         Log.i("tag", token);

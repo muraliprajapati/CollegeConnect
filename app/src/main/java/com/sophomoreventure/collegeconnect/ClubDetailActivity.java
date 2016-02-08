@@ -1,5 +1,6 @@
 package com.sophomoreventure.collegeconnect;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,23 +8,38 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
+import com.sophomoreventure.collegeconnect.ModelClass.ClubModel;
+import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
+import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+
+import java.util.ArrayList;
 
 /**
  * Created by Murali on 23/01/2016.
  */
 public class ClubDetailActivity extends BaseActivity implements ObservableScrollViewCallbacks {
-    TextView titleTextView;
+    TextView titleTextView,mClubDescription,mOrganizerName,mOrganizerMob,mOrganizerMobTwo,mOrganizerNameTwo,mClubName;
     private View mImageView;
     private View mToolbarView;
     private ObservableScrollView mScrollView;
     private int mParallaxImageHeight;
+    private VolleySingleton mVolleySingleton;
+    private ImageLoader mImageLoader;
+    private int position;
+    ClubsDataBase database;
+    ArrayList<String> titles;
+    ImageView imageView;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,30 +47,61 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
         setContentView(R.layout.club_detail_layout);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getSupportActionBar().setTitle(null);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        mVolleySingleton = new VolleySingleton(this);
+        mImageLoader = mVolleySingleton.getImageLoader();
+
+        position = getIntent().getIntExtra("position", 0);
+        database = new ClubsDataBase(this);
+        titles = database.getClubTitles();
 
         mImageView = findViewById(R.id.club_image);
         mToolbarView = findViewById(R.id.toolbar);
         mToolbarView.setBackgroundColor(ScrollUtils.getColorWithAlpha(0, getResources().getColor(R.color.colorPrimary)));
         titleTextView = (TextView) findViewById(R.id.title);
-        titleTextView.setText("Drishti");
         titleTextView.setTextColor(ScrollUtils.getColorWithAlpha(0, getResources().getColor(R.color.colorWhite)));
-
+        mClubDescription = (TextView) findViewById(R.id.club_description);
+        mOrganizerName = (TextView) findViewById(R.id.event_organizer_name);
+        mOrganizerMob = (TextView) findViewById(R.id.event_organizer_phone);
+        mOrganizerMobTwo = (TextView) findViewById(R.id.tv4);
+        mOrganizerNameTwo = (TextView) findViewById(R.id.tv3);
+        imageView = (ImageView) findViewById(R.id.club_image);
+        mClubName = (TextView) findViewById(R.id.club_name);
         mScrollView = (ObservableScrollView) findViewById(R.id.scroll);
         mScrollView.setScrollViewCallbacks(this);
         mParallaxImageHeight = getResources().getDimensionPixelSize(R.dimen.parallax_image_height);
+
+        setData(position,this);
 
         Button button = (Button) findViewById(R.id.eventsByClubButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ClubDetailActivity.this, MyEventsActivity.class));
-
+                Intent i = new Intent(ClubDetailActivity.this, MyEventsActivity.class);
+                i.putExtra("clubName",mClubName.getText().toString());
+                i.putExtra("position",position);
+                startActivity(i);
             }
         });
     }
+
+
+    public void setData(int position,Context context){
+        ClubModel club = database.viewAllData(titles.get(position));
+        titleTextView.setText(club.getClubName());
+        getSupportActionBar().setTitle(club.getClubName());
+        mClubName.setText(club.getClubName());
+        mClubDescription.setText(club.getClubDescription());
+        mOrganizerName.setText(club.getClubHead());
+        mOrganizerMob.setText(club.getClubHeadMob());
+        mOrganizerNameTwo.setText(club.getClubHead());
+        mOrganizerMobTwo.setText(club.getClubHeadMob());
+        loadImages(club.getImageUrl(),imageView);
+    }
+
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -73,6 +120,23 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
 
     @Override
     public void onDownMotionEvent() {
+    }
+
+    private void loadImages(String urlThumbnail, final ImageView holder) {
+        if (true) {
+            mImageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+
+                    holder.setImageBitmap(response.getBitmap());
+
+                }
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+        }
     }
 
     @Override

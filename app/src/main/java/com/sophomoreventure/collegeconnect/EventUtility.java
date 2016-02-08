@@ -24,9 +24,11 @@ public class EventUtility {
     public static String getFriendlyDayString(long dateInMillis) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(dateInMillis);
-        if (calendar.equals(new GregorianCalendar(1970, 0, 1))) {
-            return "Notification";
-        }
+
+        //if (calendar.equals(new GregorianCalendar(1970, 0, 1))) {
+        //    return "Notification";
+        //}
+
         SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("MMMM,dd,yyyy HH:mm a");
         return shortenedDateFormat.format(dateInMillis);
     }

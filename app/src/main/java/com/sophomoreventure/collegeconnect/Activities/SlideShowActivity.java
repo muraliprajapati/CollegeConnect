@@ -1,7 +1,10 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
+import android.app.LoaderManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -15,6 +18,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -31,6 +35,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,12 +44,15 @@ import com.sophomoreventure.collegeconnect.ClubListAtivity;
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
+import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.ImageHandler;
+import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.MyEventsActivity;
 import com.sophomoreventure.collegeconnect.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
+import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.NoticeBoardActivity;
 import com.sophomoreventure.collegeconnect.OtherEventView;
 import com.sophomoreventure.collegeconnect.R;
@@ -51,6 +60,7 @@ import com.sophomoreventure.collegeconnect.SparshEventListAtivity;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
 import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -63,9 +73,10 @@ import me.tatarka.support.job.JobScheduler;
  */
 
 public class SlideShowActivity extends DrawerActivity implements
-        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener,
+        View.OnClickListener {
 
-    private static final long POLL_FREQUENCY =  5000 ;//28800000;
+    private static final long POLL_FREQUENCY =  28800000;
     private static final int JOB_ID = 100;
     ViewPager slideShowPager;
     Toolbar toolbar;
@@ -79,7 +90,7 @@ public class SlideShowActivity extends DrawerActivity implements
     private RecyclerView horizonatalRV;
     private RecyclerView aRV;
     private GoogleApiClient client;
-
+    EventDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,19 +130,12 @@ public class SlideShowActivity extends DrawerActivity implements
         });
 
 
-        Resources res = this.getResources();
-        int id = R.drawable.poster_five;
-        Bitmap bmp = BitmapFactory.decodeResource(res, id);
-        ImageHandler handler = new ImageHandler(this);
-        handler.save(bmp, "poster");
-        Log.i("vikas kumar", "written");
-
         //setupDrawer();
 //        setupJob();
 //        mainScreen = (LinearLayout) findViewById(R.id.main_screen);
 
         slideShowPager = (ViewPager) findViewById(R.id.slideShowPager);
-        slideShowPager.setAdapter(new SlideShowAdapter(getSupportFragmentManager()));
+        slideShowPager.setAdapter(new SlideShowAdapter(getSupportFragmentManager(),SlideShowActivity.this));
 
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(slideShowPager);
@@ -172,7 +176,7 @@ public class SlideShowActivity extends DrawerActivity implements
 //        aRV.setLayoutManager(new LinearLayoutManager(this));
         aRV.setHasFixedSize(true);
 
-        aRV.setAdapter(new MyEventsAdapter(SlideShowActivity.this, "",0));
+        aRV.setAdapter(new MyEventsAdapter(SlideShowActivity.this, "SlideShowView",0));
 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -435,19 +439,29 @@ public class SlideShowActivity extends DrawerActivity implements
     }
 
     class SlideShowAdapter extends FragmentStatePagerAdapter {
+        Context context;
 
-        public SlideShowAdapter(FragmentManager fm) {
+
+
+        public SlideShowAdapter(FragmentManager fm,Context context) {
             super(fm);
+            this.context = context;
+
+
         }
 
         @Override
         public Fragment getItem(int position) {
-            return SlideShowFragment.newInstance(imageResArray[position]);
+
+            return SlideShowFragment.newInstance(position,context);
         }
 
         @Override
         public int getCount() {
-            return imageResArray.length;
+            return 4;
         }
+
     }
+
+
 }

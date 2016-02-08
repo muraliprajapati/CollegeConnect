@@ -22,8 +22,13 @@ public class MyEventsActivity extends AppCompatActivity {
         eventDatabase = new EventDatabase(this);
         myEventsRV = (RecyclerView) findViewById(R.id.myEventRecyclerView);
         myEventsRV.setLayoutManager(new LinearLayoutManager(this));
-        myEventsRV.setAdapter(new ClubEventsAdapter(this, ""));
+        String clubName = getIntent().getStringExtra("clubName");
+        int position = getIntent().getIntExtra("position",0);
+        if(clubName == null){
+            clubName = "null";
+        }
 
+        myEventsRV.setAdapter(new MyEventsAdapter(this, clubName,0));
 
     }
 }

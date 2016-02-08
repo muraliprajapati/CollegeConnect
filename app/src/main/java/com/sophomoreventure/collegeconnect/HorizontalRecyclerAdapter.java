@@ -29,17 +29,7 @@ public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRe
         this.context = context;
         database = new ClubsDataBase(context);
         eventDatabase = new EventDatabase(context);
-
-        //database.insertRow("300","cosmos","about space","vikas","8390180497","vrnvikas@gmail.com");
-        //database.insertRow("400","space","cosmos","vikas kumar","8390180497","vrnvikas1994@gmail.com");
-        //eventDatabase.insertRow("fuckthegirl","today","now","now","true","space","asdasd","sadasd","asdasd",
-        //"asdasd","asdasd","asdasd","asdad","asdad","asdads","asdads","1200","asdasd");
         listClubs = database.getClubTitles();
-        //String name = database.getClubByID(String.valueOf(100));
-        //events = eventDatabase.selectByClub("IETE");
-        //Event event = eventDatabase.selectByEventId(1);
-        //Log.i("vikas", listClubs.size() + "  "  + name + listClubs.get(0));
-
     }
 
     @Override
@@ -116,9 +106,12 @@ public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRe
         @Override
         public void onClick(View v) {
             Intent i = new Intent(v.getContext(), EventsByClubActivity.class);
-            i.putExtra("position",getPosition());
-            i.putExtra("clubName",clubNameTextView.getText().toString());
-            context.startActivity(i);
+            i.putExtra("position", getPosition());
+            if(clubNameTextView != null){
+                i.putExtra("clubName",clubNameTextView.getText().toString());
+                context.startActivity(i);
+            }
+
 
         }
     }

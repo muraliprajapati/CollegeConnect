@@ -52,6 +52,7 @@ dependencies {
     compile 'com.romainpiel.shimmer:library:1.4.0@aar'
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.github.alamkanak:android-week-view:1.2.6'
+    compile 'com.github.paolorotolo:appintro:3.4.0'
 }
 
 

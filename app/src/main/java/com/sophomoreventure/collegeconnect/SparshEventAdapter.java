@@ -30,8 +30,10 @@ public class SparshEventAdapter extends RecyclerView.Adapter<SparshEventAdapter.
     ArrayList<Event> listData;
 
 
+
     public SparshEventAdapter(Context context, String clubName) {
         this.context = context;
+        this.clubName = clubName;
         eventDatabase = new EventDatabase(context);
     }
 
@@ -90,6 +92,7 @@ public class SparshEventAdapter extends RecyclerView.Adapter<SparshEventAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.eventImageView.setImageBitmap(decodeSampledBitmapFromResource(context.getResources(),
                 imageResArray[position], 300, 200));
+
         holder.eventNameTextView.setText(eventList[position]);
         holder.eventClubTextView.setText(clubList[position]);
         holder.dateTextView.setText("Today at 10:00 AM");

@@ -1,5 +1,6 @@
 package com.sophomoreventure.collegeconnect.fragments;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,9 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.cloudinary.Url;
+import com.sophomoreventure.collegeconnect.Event;
+import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
+import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.R;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 /**
  * Created by Murali on 08/12/2015.
@@ -21,15 +29,24 @@ import java.lang.ref.WeakReference;
 public class SlideShowFragment extends Fragment {
     public static final String IMAGE_RES_KEY = "res_id";
     static int imageResId = 0;
-    private WeakReference<ImageView> imageViewReference;
+    static ImageLoader mImageLoader;
+    static VolleySingleton mVolleySingleton;
+    static EventDatabase database;
+    static ArrayList<Event> listData;
+    static int Position;
 
-    public static Fragment newInstance(int id) {
+    public static Fragment newInstance(int position,Context context) {
         Bundle bundle = new Bundle();
         SlideShowFragment fragment = new SlideShowFragment();
-        bundle.putInt(IMAGE_RES_KEY, id);
         fragment.setArguments(bundle);
+        database = new EventDatabase(context);
+        listData = database.viewSlideShowData();
+        mVolleySingleton = new VolleySingleton(context);
+        mImageLoader = mVolleySingleton.getImageLoader();
+        Position = position;
         return fragment;
     }
+
 
     public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
                                                          int reqWidth, int reqHeight) {
@@ -75,17 +92,38 @@ public class SlideShowFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_slideshow,container,false);
         ImageView slideShowImage = (ImageView) view.findViewById(R.id.slideShowImageView);
-        imageViewReference = new WeakReference<ImageView>(slideShowImage);
-        Bitmap bitmap = decodeSampledBitmapFromResource(getResources(),
-                getArguments().getInt(IMAGE_RES_KEY, R.drawable.poster_four), 300, 200);
-        if (imageViewReference != null && bitmap != null) {
-            if (imageViewReference.get() != null) {
-                imageViewReference.get().setImageBitmap(bitmap);
+
+        if(listData != null){
+            if(listData.size() != 0){
+                loadImages(listData.get(Position).getUrlThumbnail(),slideShowImage);
             }
         }
+        //Bitmap bitmap = decodeSampledBitmapFromResource(getResources(),
+      //          getArguments().getInt(IMAGE_RES_KEY, R.drawable.poster_four), 300, 200);
+       // if (imageViewReference != null && bitmap != null) {
+       //     if (imageViewReference.get() != null) {
+       //         imageViewReference.get().setImageBitmap(bitmap);
+       //     }
+       // }
 //        slideShowImage.setImageBitmap();
 
         return view;
+    }
+
+
+    private void loadImages(String urlThumbnail, final ImageView holder) {
+        if (true) {
+            mImageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    holder.setImageBitmap(response.getBitmap());
+                }
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+        }
     }
 
 
