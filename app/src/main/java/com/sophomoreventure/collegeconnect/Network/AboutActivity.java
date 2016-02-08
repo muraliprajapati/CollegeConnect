@@ -22,6 +22,7 @@ import com.sophomoreventure.collegeconnect.R;
 public class AboutActivity extends DrawerBaseActivity implements View.OnClickListener {
     TextView versionCodeTextView;
     RelativeLayout facebookLayout, emailLayout;
+    String facebookPageUrl = "https://www.facebook.com/College-Connect-1038784402811242/timeline";
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -64,7 +65,7 @@ public class AboutActivity extends DrawerBaseActivity implements View.OnClickLis
 
         switch (v.getId()) {
             case R.id.facebook_layout:
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookPageUrl));
                 startActivity(browserIntent);
                 break;
             case R.id.email_layout:
