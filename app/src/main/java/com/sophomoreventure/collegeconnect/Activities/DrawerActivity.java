@@ -1,12 +1,7 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,17 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.sophomoreventure.collegeconnect.Constants;
-import com.sophomoreventure.collegeconnect.CreateEventActivity;
+
 import com.sophomoreventure.collegeconnect.EventUtility;
-import com.sophomoreventure.collegeconnect.MyEventsActivity;
-import com.sophomoreventure.collegeconnect.OtherEventView;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
-import me.tatarka.support.job.JobScheduler;
 
 /**
  * Created by Vikas Kumar on 31-01-2016.
@@ -33,6 +22,7 @@ import me.tatarka.support.job.JobScheduler;
 public class DrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
+    public DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
     private DrawerLayout fullLayout;
     private Toolbar toolbar;
@@ -40,20 +30,15 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
     private int selectedNavItemId;
     private FragmentDrawer mDrawerFragment;
     private NavigationView mNavView;
-    public DrawerLayout mDrawerLayout;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (useToolbar())
-        {
+        if (useToolbar()) {
             setSupportActionBar(toolbar);
-        }
-        else
-        {
+        } else {
             toolbar.setVisibility(View.GONE);
         }
         setupDrawer();
@@ -89,8 +74,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
     */
 
 
-    protected boolean useToolbar()
-    {
+    protected boolean useToolbar() {
         return true;
     }
 
@@ -131,18 +115,17 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         */
     }
 
-    protected void setUpNavView()
-    {
+    protected void setUpNavView() {
         navigationView.setNavigationItemSelectedListener(this);
 
-        if( useDrawerToggle()) { // use the hamburger menu
+        if (useDrawerToggle()) { // use the hamburger menu
             drawerToggle = new ActionBarDrawerToggle(this, fullLayout, toolbar,
                     0,
                     0);
 
             fullLayout.setDrawerListener(drawerToggle);
             drawerToggle.syncState();
-        } else if(useToolbar() && getSupportActionBar() != null) {
+        } else if (useToolbar() && getSupportActionBar() != null) {
             // Use home/back button instead
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(getResources()
@@ -150,8 +133,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         }
     }
 
-    protected boolean useDrawerToggle()
-    {
+    protected boolean useDrawerToggle() {
         return true;
     }
 
@@ -167,7 +149,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
     }
 
 
-    public void drawerClose(){
+    public void drawerClose() {
         mDrawerLayout.closeDrawer(Gravity.LEFT);
     }
 
