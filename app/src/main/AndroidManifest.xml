@@ -33,13 +33,15 @@
 
         <activity
             android:name=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.DrawerActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CreateEventActivity"
-            android:label="Create Event" />
+            android:label="Create Event"
+            android:parentActivityName=".Activities.SlideShowActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".EventView"
             android:label="Event"
@@ -54,7 +56,7 @@
 
         <activity
             android:name=".MyEventsActivity"
-            android:label="Events by Drishti"></activity>
+            android:label="Events by Drishti" />
 
         <service
             android:name=".Network.ServiceClass"
@@ -73,7 +75,8 @@
 
         <activity
             android:name=".ClubListAtivity"
-            android:label="Clubs" />
+            android:parentActivityName=".Activities.SlideShowActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ClubDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -97,12 +100,15 @@
         <activity
             android:name=".Activities.EventCalendar"
             android:label="@string/title_activity_event_calendar"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NoticeBoardActivity"
             android:label="Notice board" />
 
-
+        <activity
+            android:name=".Network.AboutActivity"
+            android:parentActivityName=".Activities.SlideShowActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
