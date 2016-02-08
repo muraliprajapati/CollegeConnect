@@ -19,12 +19,17 @@ import com.android.volley.toolbox.RequestFuture;
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventUtility;
+import com.sophomoreventure.collegeconnect.HttpsTrustManager;
 import com.sophomoreventure.collegeconnect.JsonHandler.ClubParserer;
 import com.sophomoreventure.collegeconnect.ParserEventResponse;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -106,7 +111,7 @@ public class RequestorGet {
 
     }
 
-    public static  void requestEventData(
+    public static void requestEventData(
             final RequestQueue requestQueue, String url, final Context context) {
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
@@ -116,7 +121,7 @@ public class RequestorGet {
                     public void onResponse(JSONObject response) {
 
                         Log.i("vikas", response.toString());
-                        ArrayList<Event> listEvents = ParserEventResponse.parseEventsJSON(response,context);
+                        ArrayList<Event> listEvents = ParserEventResponse.parseEventsJSON(response, context);
 
                     }
                 },
@@ -134,16 +139,17 @@ public class RequestorGet {
     }
 
 
-    public static void attendRequest(final RequestQueue requestQueue, String url,final Context context) {
+    public static void attendRequest(final RequestQueue requestQueue, String url, final Context context) {
 
         SharedPreferences prefs = context.getSharedPreferences(
                 Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
         final String userId = prefs.getString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_NAME_KEY, "null");
-        final String userPassId = prefs.getString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_PASSWORD_KEY,"null");
+        final String userPassId = prefs.getString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_PASSWORD_KEY, "null");
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
                 new Response.Listener<JSONObject>() {
                     DataListener listener = (DataListener) context;
+
                     @Override
                     public void onResponse(JSONObject response) {
 
@@ -156,7 +162,7 @@ public class RequestorGet {
 
                         DataListener listener = (DataListener) context;
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                            listener.setError("NOCON","");
+                            listener.setError("NOCON", "");
 
                         } else {
                             try {
@@ -165,7 +171,7 @@ public class RequestorGet {
                                 String string = new String(response.data);
                                 JSONObject jsonObject = new JSONObject(string);
                                 Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
-                                listener.setError(Parserer.parseResponse(jsonObject),"");
+                                listener.setError(Parserer.parseResponse(jsonObject), "");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -179,7 +185,7 @@ public class RequestorGet {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s", userId,userPassId);
+                String creds = String.format("%s:%s", userId, userPassId);
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
                 params.put("Authorization", auth);
                 params.put("Content-Type", "application/x-www-form-urlencoded");
@@ -195,10 +201,11 @@ public class RequestorGet {
             final RequestQueue requestQueue, final String url, final String userEmail,
             final String userPassword, final Context context) {
         Log.i("vikas", "in Login Request");
-
+        HttpsTrustManager.allowAllSSL();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
                 new Response.Listener<JSONObject>() {
                     DataListener listener = (DataListener) context;
+
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("vikas", response.toString());
@@ -264,7 +271,7 @@ public class RequestorGet {
             final String userPassword, final Context context) {
         Log.i("vikas", "in user info Request");
 
-
+        HttpsTrustManager.allowAllSSL();
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
                 new Response.Listener<JSONObject>() {
                     DataListener listener = (DataListener) context;
@@ -274,9 +281,13 @@ public class RequestorGet {
                         Log.i("vikas", response.toString());
                         try {
                             parseAndSaveUserInfoToPref(context, response);
+                            parseAndSaveClubAdmin(context, response);
+                            parseAndSaveEvents(context, response);
                             listener.onDataLoaded(url);
                         } catch (JSONException e) {
                             Log.i("vikas", "" + e);
+                            e.printStackTrace();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
 
@@ -322,6 +333,35 @@ public class RequestorGet {
         };
 
         requestQueue.add(request);
+    }
+
+    private static void parseAndSaveEvents(Context context, JSONObject response) throws JSONException, IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        JSONArray eventIdArray = response.getJSONArray("my_events");
+
+//        for (int i = 0; i < eventIdArray.length(); i++) {
+//            int eventID = eventIdArray.getInt(i);
+//            String eventsIDString = String.valueOf(eventID) + "\n";
+//            stringBuilder.append(eventsIDString);
+//        }
+        FileOutputStream fileout = context.openFileOutput("events.txt", Context.MODE_PRIVATE);
+        OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+        outputWriter.write(eventIdArray.toString());
+        outputWriter.close();
+    }
+
+    private static void parseAndSaveClubAdmin(Context context, JSONObject response) throws JSONException, IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        JSONArray clubAdminArray = response.getJSONArray("club_admin");
+//        for (int i = 0; i < clubAdminArray.length(); i++) {
+//            int clubID = clubAdminArray.getInt(i);
+//            String clubIDString = String.valueOf(clubID) + "\n";
+//            stringBuilder.append(clubIDString);
+//        }
+        FileOutputStream fileout = context.openFileOutput("clubs.txt", Context.MODE_PRIVATE);
+        OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+        outputWriter.write(clubAdminArray.toString());
+        outputWriter.close();
     }
 
     private static void parseAndSaveToPref(Context context, String userEmail, String userPassword,
@@ -383,7 +423,7 @@ public class RequestorGet {
 
 
                         Log.i("vikas", response.toString());
-                        ClubParserer.parseClubJSON(response,context);
+                        ClubParserer.parseClubJSON(response, context);
 
                     }
                 },
