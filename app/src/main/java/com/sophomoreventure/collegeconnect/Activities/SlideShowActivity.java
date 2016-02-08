@@ -19,8 +19,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -135,9 +137,18 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 //        setupDrawer();
 //        setupJob();
 //        mainScreen = (LinearLayout) findViewById(R.id.main_screen);
-
+        final GestureDetector tapGestureDetector = new GestureDetector(this, new TapGestureListener());
         slideShowPager = (ViewPager) findViewById(R.id.slideShowPager);
-        slideShowPager.setAdapter(new SlideShowAdapter(getSupportFragmentManager()));
+        final SlideShowAdapter slideAdapter = new SlideShowAdapter(getSupportFragmentManager());
+        slideShowPager.setAdapter(slideAdapter);
+
+        slideShowPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                tapGestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
 
 
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
@@ -474,6 +485,17 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         @Override
         public int getCount() {
             return imageResArray.length;
+        }
+    }
+
+    class TapGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            // Your Code here
+            Toast.makeText(SlideShowActivity.this, "" + currentPage, Toast.LENGTH_SHORT).show();
+            return true;
+
         }
     }
 }
