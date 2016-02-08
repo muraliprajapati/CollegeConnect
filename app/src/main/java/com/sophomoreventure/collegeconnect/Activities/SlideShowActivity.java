@@ -28,10 +28,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -159,13 +161,23 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 //        setupDrawer();
 //        setupJob();
 //        mainScreen = (LinearLayout) findViewById(R.id.main_screen);
-
+        final GestureDetector tapGestureDetector = new GestureDetector(this, new TapGestureListener());
         slideShowPager = (ViewPager) findViewById(R.id.slideShowPager);
-        slideShowPager.setAdapter(new SlideShowAdapter(getSupportFragmentManager(),SlideShowActivity.this));
+        slideShowPager.setAdapter(new SlideShowAdapter(getSupportFragmentManager()));
+
+        slideShowPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                tapGestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
+
 
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(slideShowPager);
         slideShowPager.addOnPageChangeListener(this);
+
 
         new Timer().schedule(new TimerTask() {
             @Override
@@ -205,9 +217,6 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         aRV.setAdapter(new MyEventsAdapter(SlideShowActivity.this, "SlideShowView",0));
 
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 //    @Override
@@ -506,6 +515,18 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         @Override
         public int getCount() {
             return 4;
+            
+        }
+    }
+
+    class TapGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            // Your Code here
+            Toast.makeText(SlideShowActivity.this, "" + currentPage, Toast.LENGTH_SHORT).show();
+            return true;
+
         }
 
     }
