@@ -18,9 +18,11 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +36,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -44,7 +47,7 @@ import com.sophomoreventure.collegeconnect.ClubListAtivity;
 import com.sophomoreventure.collegeconnect.Constants;
 import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
-import com.sophomoreventure.collegeconnect.Event;
+import com.sophomoreventure.collegeconnect.DrawerBaseActivity;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.ImageHandler;
@@ -72,11 +75,11 @@ import me.tatarka.support.job.JobScheduler;
  * Created by Murali on 08/12/2015.
  */
 
-public class SlideShowActivity extends DrawerActivity implements
-        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener,
-        View.OnClickListener {
+public class SlideShowActivity extends DrawerBaseActivity implements
+        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener {
 
     private static final long POLL_FREQUENCY =  28800000;
+    private static final long POLL_FREQUENCY = 5000;//28800000;
     private static final int JOB_ID = 100;
     ViewPager slideShowPager;
     Toolbar toolbar;
@@ -87,10 +90,13 @@ public class SlideShowActivity extends DrawerActivity implements
     private JobScheduler mJobScheduler;
     private NavigationView mNavView;
     private LinearLayout mainScreen;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView horizonatalRV;
     private RecyclerView aRV;
     private GoogleApiClient client;
+    private DrawerLayout mDrawerLayout;
     EventDatabase database;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,16 +104,16 @@ public class SlideShowActivity extends DrawerActivity implements
 
         super.onCreate(savedInstanceState);
 
-        //setContentView(R.layout.activity_slide_show);
+        setContentView(R.layout.activity_slide_show);
         //View child = getLayoutInflater().inflate(R.layout.main_layout, null);
         //LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //View myView = inflater.inflate(R.layout.main_layout, null);
 
 
-        FrameLayout activityContainer = (FrameLayout) findViewById(R.id.activity_content);
-        getLayoutInflater().inflate(R.layout.main_layout, activityContainer, true);
-
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+//        FrameLayout activityContainer = (FrameLayout) findViewById(R.id.activity_content);
+//        getLayoutInflater().inflate(R.layout.main_layout, activityContainer, true);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         ((AppBarLayout) findViewById(R.id.app_bar)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -120,17 +126,37 @@ public class SlideShowActivity extends DrawerActivity implements
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
+                    swipeRefreshLayout.setEnabled(false);
                     collapsingToolbarLayout.setTitle("College Connect");
                     isShow = true;
                 } else if (isShow) {
+                    swipeRefreshLayout.setEnabled(false);
                     collapsingToolbarLayout.setTitle("");
                     isShow = false;
                 }
+
+                if (collapsingToolbarLayout.getHeight() + verticalOffset < 4 * ViewCompat.getMinimumHeight(collapsingToolbarLayout)) {
+                    swipeRefreshLayout.setEnabled(false);
+                } else {
+                    swipeRefreshLayout.setEnabled(true);
+                }
             }
         });
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setNestedScrollingEnabled(true);
+//        setupDrawer();
 
 
-        //setupDrawer();
+//        Resources res = this.getResources();
+//        int id = R.drawable.poster_five;
+//        Bitmap bmp = BitmapFactory.decodeResource(res, id);
+//        ImageHandler handler = new ImageHandler(this);
+//        handler.save(bmp, "poster");
+//        Log.i("vikas kumar", "written");
+
+//        setupDrawer();
 //        setupJob();
 //        mainScreen = (LinearLayout) findViewById(R.id.main_screen);
 
@@ -184,9 +210,15 @@ public class SlideShowActivity extends DrawerActivity implements
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+//    @Override
+//    protected boolean useToolbar() {
+//        return false;
+//    }
+
+
     @Override
-    protected boolean useToolbar() {
-        return false;
+    protected int getSelfNavDrawerItem() {
+        return NAVDRAWER_ITEM_COLLEGE_EVENTS;
     }
 
     private void setupDrawer() {
@@ -195,7 +227,7 @@ public class SlideShowActivity extends DrawerActivity implements
         //mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
         //set the Toolbar as ActionBar
         //setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
         //setup the NavigationDrawer
         mNavView = (NavigationView) findViewById(R.id.navView);
         mNavView.setNavigationItemSelectedListener(this);
@@ -260,6 +292,7 @@ public class SlideShowActivity extends DrawerActivity implements
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        swipeRefreshLayout.setEnabled(false);
         // Toast.makeText(getApplicationContext(),position + " page scrolled",Toast.LENGTH_SHORT).show();
     }
 
@@ -276,18 +309,35 @@ public class SlideShowActivity extends DrawerActivity implements
 
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
+//            mDrawerLayout.closeDrawer(Gravity.LEFT);
+//        } else {
+//            finish();
+//
+//        }
+//    }
+
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return super.onPrepareOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        Toolbar toolbar = getSupportActionBar();
+        toolbar.inflateMenu(R.menu.menu_main);
+        toolbar.setOnMenuItemClickListener(this);
         return true;
+
     }
 
+
+/*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -325,7 +375,7 @@ public class SlideShowActivity extends DrawerActivity implements
 
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -384,6 +434,7 @@ public class SlideShowActivity extends DrawerActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+//        mNavView.setCheckedItem(R.id.nav_events);
     }
 
     private void launchActivityDelayed(final Class activity) {
@@ -397,45 +448,41 @@ public class SlideShowActivity extends DrawerActivity implements
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        /*
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "SlideShow Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.sophomoreventure.collegeconnect.Activities/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-        */
+    public void onRefresh() {
+        Toast.makeText(SlideShowActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 2000);
+
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        /*
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "SlideShow Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.sophomoreventure.collegeconnect.Activities/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
-        */
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.create_event_activity:
+                startActivity(new Intent(this, CreateEventActivity.class));
+                return true;
+
+            case R.id.logout:
+                EventUtility.clearUserSharedPref(this);
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                break;
+        }
+        return false;
+    }
+
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
     }
 
     class SlideShowAdapter extends FragmentStatePagerAdapter {

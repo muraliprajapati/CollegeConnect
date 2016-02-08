@@ -12,6 +12,11 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <permission
+        android:name="com.sophomoreventure.collegeconnect.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.sophomoreventure.collegeconnect.permission.C2D_MESSAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -34,13 +39,15 @@
 
         <activity
             android:name=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.DrawerActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CreateEventActivity"
-            android:label="Create Event" />
+            android:label="Create Event"
+            android:parentActivityName=".Activities.SlideShowActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".EventView"
             android:label="Event"
@@ -55,7 +62,7 @@
 
         <activity
             android:name=".MyEventsActivity"
-            android:label="Events by Drishti"></activity>
+            android:label="Events by Drishti" />
 
         <service
             android:name=".Network.ServiceClass"
@@ -74,7 +81,8 @@
 
         <activity
             android:name=".ClubListAtivity"
-            android:label="Clubs" />
+            android:parentActivityName=".Activities.SlideShowActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ClubDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -98,7 +106,7 @@
         <activity
             android:name=".Activities.EventCalendar"
             android:label="@string/title_activity_event_calendar"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NoticeBoardActivity"
             android:label="Notice board" />
@@ -106,7 +114,39 @@
         <activity android:name=".Activities.MyIntro"
             android:label="IntroClass" />
 
+        <activity
+            android:name=".Network.AboutActivity"
+            android:parentActivityName=".Activities.SlideShowActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.sophomoreventure.collegeconnect" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".GCM.MyGcmListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".GCM.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".GCM.RegistrationService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

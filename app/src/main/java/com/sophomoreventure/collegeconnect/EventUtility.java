@@ -5,14 +5,26 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
 import android.util.TypedValue;
 
 import com.sophomoreventure.collegeconnect.Constants.SharedPrefConstants;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -25,11 +37,10 @@ public class EventUtility {
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(dateInMillis);
 
-        //if (calendar.equals(new GregorianCalendar(1970, 0, 1))) {
-        //    return "Notification";
-        //}
-
-        SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("MMMM,dd,yyyy HH:mm a");
+        if (calendar.equals(new GregorianCalendar(1970, 0, 1))) {
+            return "Notification";
+        }
+        SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("MMMM,dd,yyyy hh:mm a");
         return shortenedDateFormat.format(dateInMillis);
     }
 
@@ -132,6 +143,12 @@ public class EventUtility {
 
     }
 
+    public static String getUserRollNoFromPref(Context context) {
+        SharedPreferences user_pref = context.getSharedPreferences(SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        return user_pref.getString(SharedPrefConstants.USER_SHARED_PREF_ROLL_NO_KEY, null);
+
+    }
+
     public static void removeUserLoginFromPref(Context context) {
         SharedPreferences user_pref = context.getSharedPreferences(SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = user_pref.edit();
@@ -173,6 +190,13 @@ public class EventUtility {
         return getErrorHashMap().get(errorCode);
     }
 
+    public static void clearUserSharedPref(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.clear();
+        editor.apply();
+
+    }
     public static int dpToPx(float dp, Resources resources) {
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics());
         return (int) px;
@@ -216,6 +240,62 @@ public class EventUtility {
         }
 
         return inSampleSize;
+    }
+
+    public static void markFirstRunDone(Context context, boolean b) {
+        SharedPreferences prefs = context.getSharedPreferences(SharedPrefConstants.APP_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(SharedPrefConstants.APP_SHARED_PREF_FIRST_RUN_KEY, b);
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    private static HashMap<String, String> getColorHashMap() {
+        HashMap<String, String> colorMap = new HashMap<>();
+        colorMap.put("Blue", "#2196f3");
+        colorMap.put("Purple", "#9c27b0");
+        colorMap.put("Blue Grey", "#607d8b");
+        colorMap.put("Teal", "#009688");
+
+        return colorMap;
+    }
+
+    public static String getColorCode(String colorString) {
+
+        return getColorHashMap().get(colorString);
+    }
+
+    private String getJsonString(Context context) throws FileNotFoundException {
+        FileInputStream fis = context.openFileInput("events.txt");
+        InputStreamReader isr = new InputStreamReader(fis);
+        String line = null;
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(isr);
+            while ((line = br.readLine()) != null) {
+                stringBuilder.append(line).append("\n");
+
+            }
+            br.close();
+        } catch (IOException e) {
+            Log.i("tag", "" + e);
+        }
+        return stringBuilder.toString();
+    }
+
+    public ArrayList<Integer> getEventIdList(Context context) throws JSONException, FileNotFoundException {
+        JSONArray jsonArray = new JSONArray(getJsonString(context));
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            list.add(jsonArray.getInt(i));
+            Log.i("vikas", "" + jsonArray.getInt(i));
+        }
+        return list;
     }
 }
 

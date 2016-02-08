@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <include
+            android:id="@+id/main_content"
             layout="@layout/main_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
     <!-- OLD DRAWER
@@ -25,12 +30,13 @@
         tools:layout="@layout/fragment_navigation_drawer" />
         -->
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/navView"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/nav_menu" />
+    <!--<android.support.design.widget.NavigationView-->
+    <!--android:id="@+id/navView"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_gravity="start"-->
+    <!--app:headerLayout="@layout/drawer_header"-->
+    <!--app:menu="@menu/nav_menu" />-->
+    <include layout="@layout/navdrawer" />
 
 </android.support.v4.widget.DrawerLayout>

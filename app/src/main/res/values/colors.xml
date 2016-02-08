@@ -14,4 +14,5 @@
     <color name="grey_300">#E0E0E0</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="activity_bg">#ecf0f1</color>
+    <color name="navdrawer_selected_item_background">#1a000000</color>
 </resources>
