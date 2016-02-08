@@ -9,13 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.Activities.LoginActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
-import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.RequestorGet;
+import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+
 import me.tatarka.support.job.JobInfo;
 import me.tatarka.support.job.JobScheduler;
 
@@ -23,12 +25,11 @@ import me.tatarka.support.job.JobScheduler;
  * Created by Murali on 01/02/2016.
  */
 public class SplashActivity extends AppCompatActivity implements DataListener {
+    private static final long POLL_FREQUENCY = 50000;//28800000;
+    private static final int JOB_ID = 100;
     ProgressBar progressBar;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-
-    private static final long POLL_FREQUENCY = 50000;//28800000;
-    private static final int JOB_ID = 100;
     private JobScheduler mJobScheduler;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,23 +41,32 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
         setContentView(R.layout.activity_splash);
         progressBar = (ProgressBar) findViewById(R.id.loadingProgress);
         progressBar.setIndeterminate(true);
-        setupJob();
+//        setupJob();
+        final boolean isInternetOn = EventUtility.isNetworkAvailable(this);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (EventUtility.isFirstRun(SplashActivity.this) || !EventUtility.isLoggedIn(SplashActivity.this)) {
-                    //Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 
-                    Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
+//                    Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    //startActivity(intent);
-                    //finish();
+                    startActivity(intent);
+                    finish();
                 } else {
-                    RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
-                            EventUtility.getUserTokenFromPref(SplashActivity.this), "None", SplashActivity.this);
+                    if (isInternetOn) {
+                        RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
+                                EventUtility.getUserTokenFromPref(SplashActivity.this), "None", SplashActivity.this);
+                    } else {
+                        Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+
                 }
             }
         }, 1500);
@@ -78,9 +88,8 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
 
             case API.USER_LOGIN_API:
                 Log.i("vikas", "case user login api");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
+                        EventUtility.getUserTokenFromPref(SplashActivity.this), "None", SplashActivity.this);
                 break;
         }
 
@@ -119,6 +128,13 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
                             EventUtility.getUserPasswordHashFromPref(this), this);
 
 
+                }
+                if (errorCode.equalsIgnoreCase("NOCON")) {
+                    Toast.makeText(SplashActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }
 
 

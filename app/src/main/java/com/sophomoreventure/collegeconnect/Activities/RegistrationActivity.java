@@ -40,6 +40,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import dmax.dialog.SpotsDialog;
 
@@ -50,7 +52,9 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     Dialog dialog;
     Spinner hostelListSpinner;
     boolean isHostelETVisible = false, isSVNITIanLayoutVisible = false, isCollegeSelected = false, isHostelLocalSelected = false, isSVNITIan = false, isHostelite = false;
-    boolean[] missingFields = new boolean[10];
+    boolean[] missingFields = new boolean[12];
+    String rollNoPattern = "[UuPpIi][0-9][0-9][A-Za-z][A-Za-z][0123][0-9]|[UuPpIi][0-9][0-9][A-Za-z][A-Za-z][0123][0-9][0-9]";
+    Pattern p = Pattern.compile(rollNoPattern);
     private EditText userEmail, password, rePassword, fullName, rollNo, mobileNo;
     private RadioGroup hostelLocalRadioGroup, collegeRadioGroup;
     private RadioButton hostelLocalRadioButton, collegeRadioButton, svnitianRadioButton, nonSvnitianRadioButton, hosteliteRadioButton, localiteRadioButton;
@@ -201,7 +205,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                         dialog.show();
                         RequestorPost.requestRegistration(requestQueue, API.USER_REG_API,
                                 userEmailData, userPasswordData,
-                                getJsonBody(fullName.getText().toString(), rollNo.getText().toString(),
+                                getJsonBody(fullName.getText().toString(), rollNo.getText().toString().toLowerCase(),
                                         mobileNo.getText().toString(), hostelName, isSVNITIan, isHostelite),
                                 this);
                     } catch (JSONException e) {
@@ -211,7 +215,6 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
                 } else {
                     Snackbar.make(mRoot, "Password Does Not Match", Snackbar.LENGTH_LONG)
-                            .setAction("Dismiss", mSnackBarClickListener)
                             .show();
                 }
             }
@@ -225,28 +228,28 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         if (isSVNITian) {
             if (isHostelite) {
                 if (isEmpty(mobNo)) {
-                    jsonObject.put("name", name).put("rollno", rollNo).put("hostel_or_local", isHostelite).put("hostelname", hostelName);
+                    jsonObject.put("name", name).put("rollno", rollNo).put("svnit", String.valueOf(isSVNITian)).put("hostelname", hostelName);
                     Log.i("vikas", jsonObject.toString());
                 } else {
-                    jsonObject.put("name", name).put("rollno", rollNo).put("mobno", Long.parseLong(mobNo)).put("hostel_or_local", isHostelite).put("hostelname", hostelName);
+                    jsonObject.put("name", name).put("rollno", rollNo).put("mobno", Long.parseLong(mobNo)).put("svnit", String.valueOf(isSVNITian)).put("hostelname", hostelName);
                     Log.i("vikas", jsonObject.toString());
                 }
             } else {
                 if (isEmpty(mobNo)) {
-                    jsonObject.put("name", name).put("rollno", rollNo).put("hostel_or_local", isHostelite);
+                    jsonObject.put("name", name).put("rollno", rollNo).put("svnit", String.valueOf(isSVNITian));
                     Log.i("vikas", jsonObject.toString());
                 } else {
-                    jsonObject.put("name", name).put("rollno", rollNo).put("mobno", Long.parseLong(mobNo)).put("hostel_or_local", isHostelite);
+                    jsonObject.put("name", name).put("rollno", rollNo).put("mobno", Long.parseLong(mobNo)).put("svnit", String.valueOf(isSVNITian));
                     Log.i("vikas", jsonObject.toString());
                 }
             }
 
         } else {
             if (isEmpty(mobNo)) {
-                jsonObject.put("name", name);
+                jsonObject.put("name", name).put("svnit", String.valueOf(isSVNITian));
                 Log.i("vikas", jsonObject.toString());
             } else {
-                jsonObject.put("name", name).put("mobno", Long.parseLong(mobNo));
+                jsonObject.put("name", name).put("mobno", Long.parseLong(mobNo)).put("svnit", String.valueOf(isSVNITian));
                 Log.i("vikas", jsonObject.toString());
             }
 
@@ -267,15 +270,15 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onDataLoaded(String apiUrl) {
-        if (dialog.isShowing()) {
-            dialog.dismiss();
-        }
+
         switch (apiUrl) {
             case API.USER_REG_API:
+                dialog.show();
                 RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
                         EventUtility.getUserTokenFromPref(this), "None", this);
                 break;
             case API.USER_PROFILE_API:
+                dialog.dismiss();
                 Intent intent = new Intent(context, SlideShowActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -351,29 +354,38 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         mobileNo.setError(null);
         fullName.setError(null);
         mobileNo.setError(null);
+
+        Matcher m = p.matcher(rollNo.getText().toString());
+
         if (isEmpty(userEmail.getText().toString())) {
             userEmail.setError("Cannot be empty");
+            userEmail.requestFocus();
             missingFields[0] = true;
         }
         if (isEmpty(password.getText().toString())) {
             password.setError("Cannot be empty");
+            password.requestFocus();
             missingFields[1] = true;
         }
         if (isEmpty(rePassword.getText().toString())) {
             rePassword.setError("Cannot be empty");
+            rePassword.requestFocus();
             missingFields[2] = true;
         }
         if (isEmpty(fullName.getText().toString())) {
             fullName.setError("Cannot be empty");
+            fullName.requestFocus();
             missingFields[3] = true;
         }
         if (isSVNITIanLayoutVisible && isEmpty(rollNo.getText().toString())) {
             rollNo.setError("Cannot be empty");
+            rollNo.requestFocus();
             missingFields[4] = true;
         }
 
         if (!isEmpty(userEmail.getText().toString()) && !isEmailValid(userEmail.getText())) {
             userEmail.setError("Email id is not valid");
+            userEmail.requestFocus();
             missingFields[5] = true;
         }
 
@@ -398,7 +410,15 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             mobileNo.setError("Phone number is not valid");
             missingFields[9] = true;
         }
-
+        if (isSVNITIan && !m.matches() && !isEmpty(mobileNo.getText().toString())) {
+            rollNo.setError("Roll number format didn't match");
+            rollNo.requestFocus();
+            missingFields[10] = true;
+        }
+        if (!isEmpty(password.getText().toString()) && password.getText().length() < 6) {
+            password.setError("Password must be at least six character long");
+            missingFields[11] = true;
+        }
         return areAllFalse(missingFields);
     }
 

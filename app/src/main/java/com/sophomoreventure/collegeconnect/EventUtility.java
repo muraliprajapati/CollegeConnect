@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.TypedValue;
 
 import com.sophomoreventure.collegeconnect.Constants.SharedPrefConstants;
@@ -130,6 +132,12 @@ public class EventUtility {
 
     }
 
+    public static String getUserRollNoFromPref(Context context) {
+        SharedPreferences user_pref = context.getSharedPreferences(SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        return user_pref.getString(SharedPrefConstants.USER_SHARED_PREF_ROLL_NO_KEY, null);
+
+    }
+
     public static void removeUserLoginFromPref(Context context) {
         SharedPreferences user_pref = context.getSharedPreferences(SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = user_pref.edit();
@@ -171,6 +179,13 @@ public class EventUtility {
         return getErrorHashMap().get(errorCode);
     }
 
+    public static void clearUserSharedPref(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.clear();
+        editor.apply();
+
+    }
     public static int dpToPx(float dp, Resources resources) {
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics());
         return (int) px;
@@ -214,6 +229,34 @@ public class EventUtility {
         }
 
         return inSampleSize;
+    }
+
+    public static void markFirstRunDone(Context context, boolean b) {
+        SharedPreferences prefs = context.getSharedPreferences(SharedPrefConstants.APP_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(SharedPrefConstants.APP_SHARED_PREF_FIRST_RUN_KEY, b);
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    private static HashMap<String, String> getColorHashMap() {
+        HashMap<String, String> colorMap = new HashMap<>();
+        colorMap.put("Blue", "#2196f3");
+        colorMap.put("Purple", "#9c27b0");
+        colorMap.put("Blue Grey", "#607d8b");
+        colorMap.put("Teal", "#009688");
+
+        return colorMap;
+    }
+
+    public static String getColorCode(String colorString) {
+
+        return getColorHashMap().get(colorString);
     }
 }
 
