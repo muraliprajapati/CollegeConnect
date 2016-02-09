@@ -110,7 +110,7 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
      * activity then don't define one and this method will use back button functionality. If "Up"
      * functionality is still desired for activities without parents then use
      * {@code syntheticParentActivity} to define one dynamically.
-     * <p>
+     * <p/>
      * Note: Up navigation intents are represented by a back arrow in the top left of the Toolbar
      * in Material Design guidelines.
      *
@@ -242,7 +242,7 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
         // navigation drawer open. But just the first time.
         if (EventUtility.isFirstRun(DrawerBaseActivity.this)) {
             // first run of the app starts with the nav drawer open
-//            EventUtility.markFirstRunDone(this, false);
+            EventUtility.markFirstRunDone(this, false);
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
     }
@@ -256,27 +256,29 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
         mNavDrawerItems.clear();
 
         // decide which items will appear in the nav drawer
-
+        mNavDrawerItems.add(NAVDRAWER_ITEM_SPARSH_EVENTS);
+        mNavDrawerItems.add(NAVDRAWER_ITEM_SEPARATOR);
         // Explore is always shown.
         mNavDrawerItems.add(NAVDRAWER_ITEM_COLLEGE_EVENTS);
 
-        // If the attendee is on-site, show Map on the nav drawer
-//        if (attendeeAtVenue) {
-//            mNavDrawerItems.add(NAVDRAWER_ITEM_MAP);
-//        }
 
-        // Other items that are always in the nav drawer.
+
 
 //        mNavDrawerItems.add(NAVDRAWER_ITEM_NOTICE_BOARD);
         mNavDrawerItems.add(NAVDRAWER_ITEM_COLLEGE_CLUBS);
         mNavDrawerItems.add(NAVDRAWER_ITEM_SEPARATOR);
-
-        mNavDrawerItems.add(NAVDRAWER_ITEM_CREATE_EVENT);
+        if (EventUtility.isUserVerified(this)) {
+            mNavDrawerItems.add(NAVDRAWER_ITEM_CREATE_EVENT);
+            mNavDrawerItems.add(NAVDRAWER_ITEM_SEPARATOR);
+        }
 //        mNavDrawerItems.add(NAVDRAWER_ITEM_CREATE_NOTICE);
-        mNavDrawerItems.add(NAVDRAWER_ITEM_SEPARATOR);
+
         mNavDrawerItems.add(NAVDRAWER_ITEM_FOLLOWED_EVENTS);
-        mNavDrawerItems.add(NAVDRAWER_ITEM_MY_EVENTS);
-        mNavDrawerItems.add(NAVDRAWER_ITEM_SEPARATOR);
+        if (EventUtility.isUserVerified(this)) {
+            mNavDrawerItems.add(NAVDRAWER_ITEM_MY_EVENTS);
+            mNavDrawerItems.add(NAVDRAWER_ITEM_SEPARATOR);
+        }
+
         mNavDrawerItems.add(NAVDRAWER_ITEM_ABOUT);
 
         createNavDrawerItems();
@@ -366,26 +368,23 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
             return;
         }
 
-        if (isSpecialItem(itemId)) {
-            goToNavDrawerItem(itemId);
-        } else {
 //             launch the target Activity after a short delay, to allow the close animation to play
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    goToNavDrawerItem(itemId);
-                }
-            }, NAVDRAWER_LAUNCH_DELAY);
-
-
-            // change the active item on the list so the user can see the item changed
-            setSelectedNavDrawerItem(itemId);
-            // fade out the main content
-            View mainContent = findViewById(R.id.main_content);
-            if (mainContent != null) {
-                mainContent.animate().alpha(0).setDuration(MAIN_CONTENT_FADEOUT_DURATION);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                goToNavDrawerItem(itemId);
             }
+        }, NAVDRAWER_LAUNCH_DELAY);
+
+
+        // change the active item on the list so the user can see the item changed
+        setSelectedNavDrawerItem(itemId);
+        // fade out the main content
+        View mainContent = findViewById(R.id.main_content);
+        if (mainContent != null) {
+            mainContent.animate().alpha(0).setDuration(MAIN_CONTENT_FADEOUT_DURATION);
         }
+
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
@@ -393,7 +392,7 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
     private void goToNavDrawerItem(int item) {
         switch (item) {
             case NAVDRAWER_ITEM_SPARSH_EVENTS:
-                createBackStack(new Intent(this, SparshEventActivity.class));
+                createBackStack(new Intent(this, SparshEventListAtivity.class));
                 break;
             case NAVDRAWER_ITEM_COLLEGE_EVENTS:
                 startActivity(new Intent(this, SlideShowActivity.class));

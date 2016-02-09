@@ -12,8 +12,11 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,10 +30,11 @@ import com.sophomoreventure.collegeconnect.Activities.DrawerActivity;
 /**
  * Created by Murali on 23/01/2016.
  */
-public class SparshEventListAtivity extends DrawerActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class SparshEventListAtivity extends DrawerBaseActivity {
     RecyclerView clubListRV;
     int[] imageResArray = new int[]{R.drawable.tech_one, R.drawable.man_one, R.drawable.info, R.drawable.workshop, R.drawable.poster_one};
     String[] sparshEventList = {"Technical", "Managerial", "Informal", "Lectures & Exhibitions", "Mega Attraction"};
+    private DrawerLayout mDrawerLayout;
 
     public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
                                                          int reqWidth, int reqHeight) {
@@ -75,11 +79,33 @@ public class SparshEventListAtivity extends DrawerActivity implements Navigation
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club_list);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar_actionbar));
+        getSupportActionBar().setTitle("Sparsh Events");
         clubListRV = (RecyclerView) findViewById(R.id.clubListRecyclerView);
         clubListRV.setLayoutManager(new LinearLayoutManager(this));
         clubListRV.setAdapter(new SparshEventListAdapter(this, sparshEventList, imageResArray));
         clubListRV.setHasFixedSize(true);
 
+    }
+
+    @Override
+    protected int getSelfNavDrawerItem() {
+        return NAVDRAWER_ITEM_SPARSH_EVENTS;
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+            mDrawerLayout.closeDrawer(GravityCompat.END);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     class SparshEventListAdapter extends RecyclerView.Adapter<SparshEventListAdapter.ViewHolder> {

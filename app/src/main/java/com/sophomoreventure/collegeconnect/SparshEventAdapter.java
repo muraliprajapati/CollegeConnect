@@ -96,7 +96,7 @@ public class SparshEventAdapter extends RecyclerView.Adapter<SparshEventAdapter.
         holder.eventNameTextView.setText(eventList[position]);
         holder.eventClubTextView.setText(clubList[position]);
         holder.dateTextView.setText("Today at 10:00 AM");
-        listData = eventDatabase.selectByClub(clubName);
+//        listData = eventDatabase.selectByClub(clubName);
 //        if (listData.size() != 0) {
 //            holder.eventNameTextView.setText(listData.get(position).getEventTitle());
 //            holder.eventClubTextView.setText(listData.get(position).getEventClub());

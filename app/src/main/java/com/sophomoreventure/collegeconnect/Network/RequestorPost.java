@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -11,6 +12,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -248,7 +250,7 @@ public class RequestorPost {
 
     public static void requestGcmToken(
             final RequestQueue requestQueue, final String url, final JSONObject jsonBody, final Context context) {
-        Log.i("vikas", "in requestCreateEvent");
+        Log.i("vikas", "in requestGCMToken");
 
         HttpsTrustManager.allowAllSSL();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
@@ -269,7 +271,8 @@ public class RequestorPost {
                         DataListener listener = (DataListener) context;
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
                             listener.setError(url, "NOCON");
-
+                        } else if (error instanceof ServerError) {
+                            Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show();
                         } else {
                             try {
                                 NetworkResponse response = error.networkResponse;
@@ -306,7 +309,7 @@ public class RequestorPost {
     public static void requestForgotPassword(
             final RequestQueue requestQueue, final String url, final JSONObject jsonBody, final Context context) {
 
-
+        HttpsTrustManager.allowAllSSL();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
                 new Response.Listener<JSONObject>() {
                     DataListener listener = (DataListener) context;

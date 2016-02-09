@@ -204,34 +204,35 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
                 color = parent.getItemAtPosition(position).toString();
 
                 if (color.equalsIgnoreCase("Blue")) {
-                    colorCode = colorList[1];
+                    colorCode = "blue";
                     eventImageView.setImageResource(R.drawable.blue_gradient);
                     nameEditText.setVisibility(View.VISIBLE);
                     isThemeSelected = true;
                     isImageChosen = false;
 
                 } else if ((color.equalsIgnoreCase("Purple"))) {
-                    colorCode = colorList[2];
+                    colorCode = "purple";
                     eventImageView.setImageResource(R.drawable.purple_gradient);
                     nameEditText.setVisibility(View.VISIBLE);
                     isThemeSelected = true;
                     isImageChosen = false;
 
                 } else if ((color.equalsIgnoreCase("Blue Grey"))) {
-                    colorCode = colorList[3];
+                    colorCode = "bluegrey";
                     eventImageView.setImageResource(R.drawable.blue_grey_gradient);
                     nameEditText.setVisibility(View.VISIBLE);
                     isThemeSelected = true;
                     isImageChosen = false;
 
                 } else if ((color.equalsIgnoreCase("Teal"))) {
-                    colorCode = colorList[4];
+                    colorCode = "teal";
                     eventImageView.setImageResource(R.drawable.teal_gradient);
                     nameEditText.setVisibility(View.VISIBLE);
                     isThemeSelected = true;
                     isImageChosen = false;
 
                 } else if ((color.equalsIgnoreCase("Choose theme"))) {
+                    colorCode = "null";
 
                     if (isThemeSelected) {
                         isThemeSelected = false;

@@ -332,6 +332,8 @@ public class RequestorGet {
         String name = response.getString("name");
         String mobNo = response.getString("mobno");
         String rollNo = response.getString("rollno");
+        String varified = response.getString("verified");
+        boolean verified = varified.equalsIgnoreCase("true");
 
         Log.i("vikas", "user info:" + email);
         Log.i("vikas", "user info:" + name);
@@ -343,6 +345,7 @@ public class RequestorGet {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_EMAIL_KEY, email);
         editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_NAME_KEY, name);
+        editor.putBoolean(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_VERIFIED_KEY, verified);
         if (!mobNo.equalsIgnoreCase("null") && !mobNo.isEmpty()) {
 
             editor.putLong(Constants.SharedPrefConstants.USER_SHARED_PREF_MOB_NO_KEY, Long.parseLong(mobNo));

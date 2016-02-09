@@ -3,38 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sophomoreventure.collegeconnect.Activities.SlideShowActivity">
 
-
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/create_event_activity"
-        android:orderInCategory="500"
-        android:title="Create Event"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/event_view_activity"
-        android:orderInCategory="600"
-        android:title="Event"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/my_event_activity"
-        android:orderInCategory="700"
-        android:title="My Events"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/club_list_activity"
-        android:orderInCategory="800"
-        android:title="Clubs"
-        app:showAsAction="never" />
-
     <item
         android:id="@+id/logout"
-        android:orderInCategory="900"
+        android:orderInCategory="100"
         android:title="Logout"
         app:showAsAction="never" />
 
