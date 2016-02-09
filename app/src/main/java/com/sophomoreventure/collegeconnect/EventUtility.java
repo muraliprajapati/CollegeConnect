@@ -11,6 +11,7 @@ import android.util.Log;
 import android.util.TypedValue;
 
 import com.sophomoreventure.collegeconnect.Constants.SharedPrefConstants;
+import com.sophomoreventure.collegeconnect.GCM.RegistrationConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,6 +102,12 @@ public class EventUtility {
     public static boolean isUserVerified(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
         return prefs.getBoolean(SharedPrefConstants.USER_SHARED_PREF_USER_VERIFIED_KEY, false);
+
+    }
+
+    public static String getGCMToken(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(SharedPrefConstants.GCM_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(RegistrationConstants.TOKEN, null);
 
     }
 
@@ -306,5 +313,7 @@ public class EventUtility {
         }
         return list;
     }
+
+
 }
 

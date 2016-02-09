@@ -55,11 +55,12 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
             public void run() {
                 if (EventUtility.isFirstRun(SplashActivity.this) || !EventUtility.isLoggedIn(SplashActivity.this)) {
                     Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                    if (checkPlayServices()) {
+                    if (checkPlayServices() || EventUtility.getGCMToken(SplashActivity.this) == null) {
                         // Start IntentService to register this application with GCM.
                         Intent gcmIntent = new Intent(SplashActivity.this, RegistrationService.class);
                         startService(gcmIntent);
                     } else {
+                        Toast.makeText(SplashActivity.this, "You will not receive notification as you don't have Google play services installed", Toast.LENGTH_SHORT).show();
                         Log.i("tag", "No valid Google Play Services APK found.");
 
                     }

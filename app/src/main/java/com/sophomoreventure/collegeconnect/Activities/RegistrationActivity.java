@@ -410,7 +410,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             mobileNo.setError("Phone number is not valid");
             missingFields[9] = true;
         }
-        if (isSVNITIan && !m.matches() && !isEmpty(mobileNo.getText().toString())) {
+        if (isSVNITIan && !m.matches() && !isEmpty(rollNo.getText().toString())) {
             rollNo.setError("Roll number format didn't match");
             rollNo.requestFocus();
             missingFields[10] = true;

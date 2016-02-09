@@ -320,7 +320,6 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            // Your Code here
             Toast.makeText(SlideShowActivity.this, "" + currentPage, Toast.LENGTH_SHORT).show();
             return true;
 
