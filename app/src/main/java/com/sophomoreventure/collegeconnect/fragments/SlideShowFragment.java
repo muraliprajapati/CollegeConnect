@@ -34,6 +34,7 @@ public class SlideShowFragment extends Fragment {
     static EventDatabase database;
     static ArrayList<Event> listData;
     static int Position;
+    private WeakReference<ImageView> imageViewReference;
 
     public static Fragment newInstance(int position,Context context) {
         Bundle bundle = new Bundle();
@@ -92,10 +93,14 @@ public class SlideShowFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_slideshow,container,false);
         ImageView slideShowImage = (ImageView) view.findViewById(R.id.slideShowImageView);
+        imageViewReference = new WeakReference<ImageView>(slideShowImage);
 
         if(listData != null){
             if(listData.size() != 0){
-                loadImages(listData.get(Position).getUrlThumbnail(),slideShowImage);
+                if(Position < listData.size()){
+                    loadImages(listData.get(Position).getUrlThumbnail(),slideShowImage);
+                }
+
             }
         }
         //Bitmap bitmap = decodeSampledBitmapFromResource(getResources(),
@@ -116,7 +121,11 @@ public class SlideShowFragment extends Fragment {
             mImageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    holder.setImageBitmap(response.getBitmap());
+                    if (imageViewReference != null && response.getBitmap() != null) {
+                        if (imageViewReference.get() != null) {
+                            imageViewReference.get().setImageBitmap(response.getBitmap());
+                        }
+                    }
                 }
                 @Override
                 public void onErrorResponse(VolleyError error) {

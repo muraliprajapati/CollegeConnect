@@ -19,21 +19,23 @@ public class MyIntro extends AppIntro2 {
     @Override
     public void init(Bundle savedInstanceState) {
 
-        addSlide(AppIntroFragment.newInstance("Intro by vikas", "this is so cool app",
-                R.drawable.poster_five, Color.parseColor("#FFA1C8F1")));
-        addSlide(AppIntroFragment.newInstance("Intro continued", "this is it",
-                R.drawable.poster_five, Color.parseColor("#FFA1C8F1")));
+        addSlide(AppIntroFragment.newInstance("College Connect", "Get Started",
+                R.drawable.image_intro_one, Color.parseColor("#FF9800")));
+        addSlide(AppIntroFragment.newInstance("College Connect", "Upcoming Events",
+                R.drawable.image_intro_two, Color.parseColor("#FF9800")));
+        addSlide(AppIntroFragment.newInstance("College Connect", "Create Event",
+                R.drawable.image_intro_three, Color.parseColor("#FF9800")));
+        addSlide(AppIntroFragment.newInstance("College Connect", "Know Your Clubs",
+                R.drawable.image_intro_four, Color.parseColor("#FF9800")));
 
         //setBarColor(Color.parseColor("#3F51B5"));
         //setSeparatorColor(Color.parseColor("#2196F3"));
 
         showDoneButton(true);
-
         setProgressButtonEnabled(true);
 
         setVibrate(true);
         setVibrateIntensity(30);
-
 
     }
 

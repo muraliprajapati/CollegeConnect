@@ -25,7 +25,7 @@ public class ClubsDataBase {
     }
 
     public void insertRow(String clubId, String clubName,String clubDescription,String clubHeadName ,String mobno, String email
-                            ,String imageUrl) {
+            ,String imageUrl) {
 
         if(isInDatabase(clubId)){
             deleteRow(clubId);
@@ -88,6 +88,46 @@ public class ClubsDataBase {
         while (cursor.moveToNext()) {
 
             list.add(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubName)));
+        }
+        cursor.close();
+        return list;
+    }
+
+
+    public ArrayList<String> getClubTitlesNormal() {
+
+        ArrayList<String> list = new ArrayList<>();
+        String[] columns = {ClubDataBaseHelper.ClubName,ClubDataBaseHelper.ClubID};
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Cursor cursor = db.query(ClubDataBaseHelper.Tablename, columns, null, null, null, null, null);
+
+        while (cursor.moveToNext()) {
+            int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubID)));
+
+            if( id < 151) {
+                list.add(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubName)));
+            }
+
+        }
+        cursor.close();
+        return list;
+    }
+
+
+    public ArrayList<String> getClubTitlesSparsh() {
+
+        ArrayList<String> list = new ArrayList<>();
+        String[] columns = {ClubDataBaseHelper.ClubName,ClubDataBaseHelper.ClubID};
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Cursor cursor = db.query(ClubDataBaseHelper.Tablename, columns, null, null, null, null, null);
+
+        while (cursor.moveToNext()) {
+            int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubID)));
+
+            if( id > 150) {
+                list.add(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubName)));
+            }
+
         }
         cursor.close();
         return list;

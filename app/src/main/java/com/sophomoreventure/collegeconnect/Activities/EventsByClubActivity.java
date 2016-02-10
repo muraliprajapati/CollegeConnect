@@ -1,4 +1,4 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,23 +7,30 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
+import com.sophomoreventure.collegeconnect.CustomLayoutManager;
 import com.sophomoreventure.collegeconnect.adapters.MyEventsAdapter;
+import com.sophomoreventure.collegeconnect.R;
 
 /**
- * Created by Murali on 02/02/2016.
+ * Created by Murali on 18/01/2016.
  */
-public class SparshEventActivity extends AppCompatActivity {
+public class EventsByClubActivity extends AppCompatActivity {
+    RecyclerView eventsByClubRV;
+    View hover;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_events);
-        RecyclerView SparshEventsRV = (RecyclerView) findViewById(R.id.myEventRecyclerView);
-        SparshEventsRV.setLayoutManager(new LinearLayoutManager(this));
+        setContentView(R.layout.activity_events_by_club);
+        eventsByClubRV = (RecyclerView) findViewById(R.id.eventsByClubRecyclerView);
+        CustomLayoutManager layoutManager = new CustomLayoutManager(this);
+        eventsByClubRV.setLayoutManager(new LinearLayoutManager(this));
         String clubName = getIntent().getStringExtra("clubName");
         int position = getIntent().getIntExtra("position",0);
-        SparshEventsRV.setAdapter(new MyEventsAdapter(this,clubName,position));
+        eventsByClubRV.setAdapter(new MyEventsAdapter(this, clubName,position));
+        eventsByClubRV.setNestedScrollingEnabled(false);
 
     }
 
@@ -32,7 +39,7 @@ public class SparshEventActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SparshEventActivity.this, activity));
+                startActivity(new Intent(EventsByClubActivity.this, activity));
             }
         }, 260);
     }

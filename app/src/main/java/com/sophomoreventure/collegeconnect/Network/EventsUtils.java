@@ -4,15 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.android.volley.RequestQueue;
-import com.sophomoreventure.collegeconnect.API;
-import com.sophomoreventure.collegeconnect.Constants;
+import com.sophomoreventure.collegeconnect.extras.API;
+import com.sophomoreventure.collegeconnect.extras.Constants;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubModel;
-import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
-import com.sophomoreventure.collegeconnect.ModelClass.EventModel;
-import com.sophomoreventure.collegeconnect.ParserEventResponse;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 

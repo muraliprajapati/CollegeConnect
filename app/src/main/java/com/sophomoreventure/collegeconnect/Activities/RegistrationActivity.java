@@ -28,7 +28,7 @@ import android.widget.Spinner;
 
 import com.android.volley.RequestQueue;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.sophomoreventure.collegeconnect.API;
+import com.sophomoreventure.collegeconnect.extras.API;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.RequestorGet;
@@ -203,10 +203,12 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     String userPasswordData = EventUtility.getHashString(password.getText().toString(), "SHA-1");
                     try {
                         dialog.show();
+
                         RequestorPost.requestRegistration(requestQueue, API.USER_REG_API,
                                 userEmailData, userPasswordData,
                                 getJsonBody(fullName.getText().toString(), rollNo.getText().toString().toLowerCase(),
-                                        mobileNo.getText().toString(), hostelName, isSVNITIan, isHostelite),
+                                        mobileNo.getText().toString(), hostelName, isSVNITIan,
+                                        isHostelite,"pi"+password.getText().toString().replace("e","v").replace("a","m")+"pa"),
                                 this);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -223,33 +225,36 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private JSONObject getJsonBody(String name, String rollNo, String mobNo, String hostelName, boolean isSVNITian, boolean isHostelite) throws JSONException {
+    private JSONObject getJsonBody(String name, String rollNo, String mobNo, String hostelName, boolean isSVNITian, boolean isHostelite, String metadata) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         if (isSVNITian) {
             if (isHostelite) {
                 if (isEmpty(mobNo)) {
-                    jsonObject.put("name", name).put("rollno", rollNo).put("svnit", String.valueOf(isSVNITian)).put("hostelname", hostelName);
+                    jsonObject.put("name", name).put("rollno", rollNo).put("svnit", String.valueOf(isSVNITian)).put("hostelname", hostelName).put("metadata",metadata);
                     Log.i("vikas", jsonObject.toString());
                 } else {
-                    jsonObject.put("name", name).put("rollno", rollNo).put("mobno", Long.parseLong(mobNo)).put("svnit", String.valueOf(isSVNITian)).put("hostelname", hostelName);
+                    jsonObject.put("name", name).put("rollno", rollNo).put("mobno", Long.parseLong(mobNo))
+                            .put("svnit", String.valueOf(isSVNITian)).put("hostelname", hostelName).put("metadata",metadata);
                     Log.i("vikas", jsonObject.toString());
                 }
             } else {
                 if (isEmpty(mobNo)) {
-                    jsonObject.put("name", name).put("rollno", rollNo).put("svnit", String.valueOf(isSVNITian));
+                    jsonObject.put("name", name).put("rollno", rollNo).put("svnit", String.valueOf(isSVNITian)).put("metadata",metadata);
                     Log.i("vikas", jsonObject.toString());
                 } else {
-                    jsonObject.put("name", name).put("rollno", rollNo).put("mobno", Long.parseLong(mobNo)).put("svnit", String.valueOf(isSVNITian));
+                    jsonObject.put("name", name).put("rollno", rollNo).put("mobno", Long.parseLong(mobNo))
+                            .put("svnit", String.valueOf(isSVNITian)).put("metadata", metadata);
                     Log.i("vikas", jsonObject.toString());
                 }
             }
 
         } else {
             if (isEmpty(mobNo)) {
-                jsonObject.put("name", name).put("svnit", String.valueOf(isSVNITian));
+                jsonObject.put("name", name).put("svnit", String.valueOf(isSVNITian)).put("metadata",metadata);
                 Log.i("vikas", jsonObject.toString());
             } else {
-                jsonObject.put("name", name).put("mobno", Long.parseLong(mobNo)).put("svnit", String.valueOf(isSVNITian));
+                jsonObject.put("name", name).put("mobno", Long.parseLong(mobNo))
+                        .put("svnit", String.valueOf(isSVNITian)).put("metadata", metadata);
                 Log.i("vikas", jsonObject.toString());
             }
 

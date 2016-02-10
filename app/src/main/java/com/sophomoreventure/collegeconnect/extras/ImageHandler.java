@@ -1,4 +1,4 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.extras;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -92,7 +92,7 @@ public class ImageHandler {
         Bitmap bmp = null;
         try {
             fIn = context.openFileInput(name);
-             bmp = BitmapFactory.decodeStream(fIn);
+            bmp = BitmapFactory.decodeStream(fIn);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

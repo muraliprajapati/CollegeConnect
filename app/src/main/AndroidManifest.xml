@@ -61,9 +61,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".MyEventsActivity"
-            android:parentActivityName=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".Activities.MyEventsActivity"
+            android:label="Events" />
 
         <service
             android:name=".Network.ServiceClass"
@@ -71,7 +70,7 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
 
-        <activity android:name=".EventsByClubActivity" />
+        <activity android:name=".Activities.EventsByClubActivity" />
         <activity
             android:name=".OtherEventView"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -81,11 +80,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".ClubListAtivity"
+            android:name=".Activities.ClubListAtivity"
             android:parentActivityName=".Activities.SlideShowActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ClubDetailActivity"
+            android:name=".Activities.ClubDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SparshEventListAtivity"
@@ -114,7 +113,8 @@
             android:label="Notice board" />
 
         <activity android:name=".Activities.MyIntro"
-            android:label="IntroClass" />
+            android:label="Intro"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".Network.AboutActivity"

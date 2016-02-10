@@ -5,13 +5,13 @@ import android.util.Log;
 
 import com.sophomoreventure.collegeconnect.JsonHandler.Utils;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
-import com.sophomoreventure.collegeconnect.ModelClass.EventModel;
+import com.sophomoreventure.collegeconnect.extras.Constants;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 
-import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointClub.KEY_CLUB_NAME;
 import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.*;
 
 /**
@@ -88,7 +88,7 @@ public class ParserEventResponse {
                 }
 
                 if (Utils.contains(currentEvent, KEY_CREATEDBY)) {
-                    createdby = String.valueOf(currentEvent.getInt(KEY_CREATEDBY));
+                    createdby = String.valueOf(currentEvent.getLong(KEY_CREATEDBY));
                 }
 
                 if (Utils.contains(currentEvent, KEY_TOTAL_SEATS)) {
@@ -146,7 +146,7 @@ public class ParserEventResponse {
               //  event.setEventOrganizerTwoPhoneNo(String.valueOf(mobNumbers[1]));
               //  listEvents.add(event);
                 eventDatabase.insertRow(eventName, eventColor, startDateTime, eventEndTime, occupiedSeats, clubName, about, names[0], names[1]
-                        , venue, String.valueOf(mobNumbers[0]), String.valueOf(mobNumbers[1]), "null", verified, clubID, eventId,
+                        , venue, String.valueOf(mobNumbers[0]), String.valueOf(mobNumbers[1]), "false", verified, clubID, eventId,
                         String.valueOf(lastRegistrationTime), createdby,ImageURL);
                 Log.i("vikas", "Event parsing done  "+ eventName);
             }

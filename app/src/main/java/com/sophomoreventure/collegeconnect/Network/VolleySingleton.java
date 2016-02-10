@@ -23,9 +23,6 @@ public class VolleySingleton {
     private static VolleySingleton sInstance = null;
     private ImageLoader mImageLoader;
     private RequestQueue mRequestQueue;
-    public VolleySingleton(Context context){
-        mRequestQueue = Volley.newRequestQueue(context, new HurlStack());
-        mImageLoader=new ImageLoader(mRequestQueue,new ImageLoader.ImageCache() {
 
     public VolleySingleton(Context context) {
 

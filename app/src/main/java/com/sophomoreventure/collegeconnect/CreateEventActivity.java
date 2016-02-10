@@ -8,25 +8,21 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.MenuItem;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +38,15 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.sophomoreventure.collegeconnect.Activities.DrawerActivity;
+import com.sophomoreventure.collegeconnect.Activities.DrawerBaseActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+import com.sophomoreventure.collegeconnect.adapters.ColorSpinnerAdapter;
+import com.sophomoreventure.collegeconnect.extras.API;
+import com.sophomoreventure.collegeconnect.extras.CloudinaryConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -137,15 +136,14 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         eventImageView = (ImageView) findViewById(R.id.eventImageView);
         eventImageView.setImageResource(R.drawable.placeholder);
         imagePickerButton = (Button) findViewById(R.id.pickerButton);
-        clearImageButton = (Button) findViewById(R.id.clearImageButton);
-        clearImageButton.setVisibility(View.GONE);
+
+
         titleEditText = (EditText) findViewById(R.id.titleEditText);
         titleEditText.clearFocus();
         descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
         venueEditText = (EditText) findViewById(R.id.venueEditText);
-        clubNameTextView = (AutoCompleteTextView) findViewById(R.id.clubNameAutoCompleteTextView);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, clubNames);
-        clubNameTextView.setAdapter(adapter);
+        clubNameTextView = (EditText) findViewById(R.id.clubNameAutoCompleteTextView);
+
 
         eventStartDateAndTimeTextView = (TextView) findViewById(R.id.eventDateAndTime);
         startDatePickButton = (Button) findViewById(R.id.eventPickDateButton);
@@ -172,7 +170,6 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         dialog.setCanceledOnTouchOutside(false);
 
         imagePickerButton.setOnClickListener(this);
-        clearImageButton.setOnClickListener(this);
         createEventButton.setOnClickListener(this);
 
         titleEditText.addTextChangedListener(new TextWatcher() {
@@ -256,7 +253,11 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         try {
 
             if (!getClubIdList().isEmpty()) {
-                clubNameTextView.setText(getClubIdList().get(0).toString());
+                Event event = database.selectByEventId(getClubIdList().get(0).toString());
+                clubNameTextView.setText(event.getEventClub());
+                if(event != null){
+                    event = null;
+                }
             } else {
                 clubNameTextView.setText("Individual");
             }
@@ -334,54 +335,6 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
                 startActivity(new Intent(CreateEventActivity.this, activity));
             }
         }, 260);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-        int id = menuItem.getItemId();
-        menuItem.setChecked(false);
-
-        switch (id) {
-
-            case R.id.nav_sparsh_events:
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(SparshEventListAtivity.class);
-                break;
-            case R.id.nav_events:
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                break;
-            case R.id.nav_clubs:
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(ClubListAtivity.class);
-                menuItem.setChecked(true);
-                break;
-
-            case R.id.nav_notice_board:
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(NoticeBoardActivity.class);
-                menuItem.setChecked(true);
-                break;
-
-            case R.id.nav_myenents:
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(MyEventsActivity.class);
-                menuItem.setChecked(true);
-                break;
-            case R.id.nav_myprofile:
-                menuItem.setChecked(true);
-                return false;
-            case R.id.nav_settings:
-                menuItem.setChecked(true);
-                return false;
-            case R.id.nav_rate:
-                menuItem.setChecked(true);
-                return false;
-
-        }
-
-        return true;
     }
 
     @Override

@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.sophomoreventure.collegeconnect.Activities.ClubListAtivity;
 import com.sophomoreventure.collegeconnect.Activities.DrawerActivity;
+import com.sophomoreventure.collegeconnect.Activities.MyEventsActivity;
 
 /**
  * Created by Murali on 02/02/2016.

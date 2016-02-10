@@ -1,16 +1,11 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.adapters;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,34 +17,42 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.sophomoreventure.collegeconnect.Event;
+import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
-import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.SqlDataListener;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+import com.sophomoreventure.collegeconnect.OtherEventView;
+import com.sophomoreventure.collegeconnect.R;
+import com.sophomoreventure.collegeconnect.extras.API;
 
+import org.json.JSONException;
+
+import java.io.FileNotFoundException;
 import java.lang.ref.WeakReference;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Murali on 10/01/2016.
  */
-public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHolder> implements SqlDataListener {
+public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHolder>
+        implements SqlDataListener {
 
     private final int mPosition;
     Context context;
     String clubName;
+    private ImageLoader mImageLoader;
     EventDatabase eventDatabase;
     ArrayList<String> listClubs;
+    private VolleySingleton mVolleySingleton;
     ClubsDataBase database;
     ArrayList<Event> listData;
-    private ImageLoader mImageLoader;
-    private VolleySingleton mVolleySingleton;
     private WeakReference<ImageView> imageViewReference;
-    private ArrayList<String> likedEventList;
+    private ArrayList<String> specialEventList;
 
 
 
@@ -61,13 +64,55 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
         eventDatabase = new EventDatabase(context);
         mVolleySingleton = new VolleySingleton(context);
         mImageLoader = mVolleySingleton.getImageLoader();
-        likedEventList = null;
-
         listClubs = database.getClubTitles();
-        Log.i("vikas",listClubs.size() + "");
+
 
         if(clubName.equals("SlideShowView")){
+
             listData = eventDatabase.viewAllData();
+
+        }else if(clubName.equals("eventLiked") || clubName.equals("eventCreated") ) {
+            specialEventList = new ArrayList<>();
+            ArrayList<Event> tempEventLiked = null;
+            try {
+                if(clubName.equals("eventLiked")){
+                    tempEventLiked = eventDatabase.getlikedEvents();
+                    specialEventList = EventUtility.getEventAttendingIdList(context);
+
+                }
+
+                if(clubName.equals("eventCreated")){
+                    specialEventList = EventUtility.getEventIdList(context);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+            listData = new ArrayList<>();
+            if(tempEventLiked != null){
+                if(tempEventLiked.size() != 0){
+                    for(int i =0;i<tempEventLiked.size();i++){
+                        listData.add(tempEventLiked.get(i));
+
+                    }
+                }
+            }
+            if(specialEventList != null){
+                if(specialEventList.size() != 0){
+                    for(int i = 0;i< specialEventList.size();i++){
+                        Event event = eventDatabase.selectByEventId(specialEventList.get(i));
+                        if(event != null){
+                            listData.add(event);
+                        }
+
+                    }
+                }
+            }
+
         }else{
             if(listClubs != null){
                 if(listClubs.size() != 0){
@@ -139,7 +184,7 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //Bitmap bitmap = decodeSampledBitmapFromResource(context.getResources(),
-          //      imageResArray[position], 300, 200);
+        //      imageResArray[position], 300, 200);
 
         if(listData != null){
             if (listData.size() != 0) {
@@ -149,12 +194,16 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
                 holder.eventNameTextView.setText(listData.get(position).getEventTitle());
                 holder.eventClubTextView.setText(listData.get(position).getEventClub());
                 holder.dateTextView.setText(eventDateTime);
+                if(listData.get(position).getEventLiked().equals("true")){
+                    holder.attendingCheckBox.setChecked(true);
+                }
 
-                if(likedEventList != null){
-                    if(likedEventList.size() != 0){
-                        for(int i = 0;i<likedEventList.size();i++){
 
-                            if(likedEventList.get(i) == listData.get(position).getEventServerId()){
+                if(specialEventList != null){
+                    if(specialEventList.size() != 0){
+                        for(int i = 0;i< specialEventList.size();i++){
+
+                            if(specialEventList.get(i) == listData.get(position).getEventServerId()){
 
                                 holder.attendingCheckBox.setChecked(true);
                             }
@@ -163,18 +212,37 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
 
                     }
                 }
-                String urlThumnail = listData.get(position).getUrlThumbnail();
-                loadImages(urlThumnail, holder);
+                if(listData.get(position).getEventTime().equals("null")){
+                    String urlThumnail = listData.get(position).getUrlThumbnail();
+                    loadImages(urlThumnail, holder);
+                    holder.middleTextView.setVisibility(View.GONE);
+
+                }else{
+                    holder.middleTextView.setVisibility(View.VISIBLE);
+                    holder.middleTextView.setText(listData.get(position).getEventTitle());
+                    String colorName = listData.get(position).getEventTime();
+                    if(colorName.equals("blue")){
+                        holder.eventImageView.setImageResource(R.drawable.blue_gradient);
+                    }if(colorName.equals("purple")){
+                        holder.eventImageView.setImageResource(R.drawable.purple_gradient);
+                    }if(colorName.equals("bluegray")){
+                        holder.eventImageView.setImageResource(R.drawable.blue_grey_gradient);
+                    }if(colorName.equals("teal")){
+                        holder.eventImageView.setImageResource(R.drawable.teal_gradient);
+                    }
+
+                }
+
 
             }else {
-                holder.wrongTextView.setText("No Event by " + clubName+ " Yet");
-                    holder.eventImageView.setVisibility(View.GONE);
+                holder.wrongTextView.setText("No Event Yet");
+                holder.eventImageView.setVisibility(View.GONE);
                 holder.wrongTextView.setVisibility(View.VISIBLE);
                 holder.container.setVisibility(View.GONE);
                 holder.eventClubTextView.setVisibility(View.GONE);
             }
         }else {
-            holder.wrongTextView.setText("No Event by " + clubName+ " Yet");
+            holder.wrongTextView.setText("No Event Yet");
             holder.container.setVisibility(View.GONE);
             holder.eventClubTextView.setVisibility(View.GONE);
             holder.eventImageView.setVisibility(View.GONE);
@@ -209,7 +277,12 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
             mImageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    holder.eventImageView.setImageBitmap(response.getBitmap());
+
+                    if (imageViewReference != null && response.getBitmap() != null) {
+                        if (imageViewReference.get() != null) {
+                            imageViewReference.get().setImageBitmap(response.getBitmap());
+                        }
+                    }
                 }
                 @Override
                 public void onErrorResponse(VolleyError error) {
@@ -238,6 +311,7 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
         CheckBox attendingCheckBox;
         TextView wrongTextView;
         LinearLayout container;
+        TextView middleTextView;
 
 
         public ViewHolder(View itemView) {
@@ -250,6 +324,7 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
             attendingCheckBox = (CheckBox) itemView.findViewById(R.id.attendingCheckBox);
             wrongTextView = (TextView) itemView.findViewById(R.id.nodata);
             container = (LinearLayout) itemView.findViewById(R.id.container);
+            middleTextView = (TextView) itemView.findViewById(R.id.name_middle);
             if(attendingCheckBox != null){
                 attendingCheckBox.setOnClickListener(this);
             }
@@ -263,13 +338,7 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
                 Event event = listData.get(getPosition());
                 String id = event.getEventServerId();
                 boolean attending = attendingCheckBox.isChecked();
-                try {
-                    sendAttendRequest(id, attending);
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (KeyManagementException e) {
-                    e.printStackTrace();
-                }
+                sendAttendRequest(id,attending);
                 if(attending){
                     attendingCheckBox.setChecked(true);
                 }else {
@@ -291,13 +360,15 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
             }
         }
 
-        private void sendAttendRequest(String eventID, boolean attend) throws NoSuchAlgorithmException, KeyManagementException {
+        private void sendAttendRequest(String eventID ,boolean attend) {
             VolleySingleton volleySingleton =  new VolleySingleton(context);
             RequestQueue requestQueue = volleySingleton.getRequestQueue();
             if(attend){
                 RequestorPost.attendRequest(requestQueue, API.FOLLOW_EVENT_API + eventID + "/follow", context);
+                eventDatabase.setAttendEvent(listData.get(getPosition()).getEventServerId());
             }else {
                 RequestorPost.attendRequest(requestQueue,API.FOLLOW_EVENT_API+eventID+"/unfollow",context);
+                eventDatabase.setNotAttendEvent(listData.get(getPosition()).getEventServerId());
             }
 
         }

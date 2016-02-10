@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.text.format.Time;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,14 +18,13 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCal
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
+import com.sophomoreventure.collegeconnect.Activities.BaseActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -53,6 +51,7 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
     private TextView mEventDescription;
     private VolleySingleton mVolleySingleton;
     private ImageLoader mImageLoader;
+    private TextView middleText;
 
 
     @Override
@@ -98,6 +97,7 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
         mEventorganizerMob = (TextView) findViewById(R.id.event_organizer_phone);
         mEventOrganizerNameTwo = (TextView) findViewById(R.id.event_organizer_name_two);
         mEventorganizerMobTwo = (TextView) findViewById(R.id.event_organizer_phone_two);
+        middleText = (TextView) findViewById(R.id.name_middle);
         mEventTitle = (TextView) findViewById(R.id.event_title);
         eventDatabase = new EventDatabase(this);
         mEventTitle.setTextColor(ScrollUtils.getColorWithAlpha(0, getResources().getColor(R.color.colorWhite)));
@@ -150,8 +150,28 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
         mEventOrganizerNameTwo.setText(eventData.getEventOrganizerTwo());
         mEventorganizerMobTwo.setText(eventData.getEventOrganizerTwoPhoneNo());
         mEventTitle.setText(eventData.getEventTitle());
-        String urlThumnail = eventData.getUrlThumbnail();
-        loadImages(urlThumnail, mEventImage);
+
+        if(eventData.getEventTime().equals("null")){
+            String url = eventData.getUrlThumbnail();
+            loadImages(url, mEventImage);
+            middleText.setVisibility(View.GONE);
+
+        }else{
+            middleText.setVisibility(View.VISIBLE);
+            middleText.setText(eventData.getEventTitle());
+            String colorName = eventData.getEventTime();
+            if(colorName.equals("blue")){
+                mEventImage.setImageResource(R.drawable.blue_gradient);
+            }if(colorName.equals("purple")){
+                mEventImage.setImageResource(R.drawable.purple_gradient);
+            }if(colorName.equals("bluegray")){
+                mEventImage.setImageResource(R.drawable.blue_grey_gradient);
+            }if(colorName.equals("teal")){
+                mEventImage.setImageResource(R.drawable.teal_gradient);
+            }
+
+        }
+
 
     }
 

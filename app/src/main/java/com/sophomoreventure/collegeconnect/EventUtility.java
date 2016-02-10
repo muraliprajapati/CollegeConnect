@@ -10,7 +10,8 @@ import android.net.NetworkInfo;
 import android.util.Log;
 import android.util.TypedValue;
 
-import com.sophomoreventure.collegeconnect.Constants.SharedPrefConstants;
+import com.sophomoreventure.collegeconnect.extras.Constants;
+import com.sophomoreventure.collegeconnect.extras.Constants.SharedPrefConstants;
 import com.sophomoreventure.collegeconnect.GCM.RegistrationConstants;
 
 import org.json.JSONArray;
@@ -286,8 +287,8 @@ public class EventUtility {
         return getColorHashMap().get(colorString);
     }
 
-    private String getJsonString(Context context) throws FileNotFoundException {
-        FileInputStream fis = context.openFileInput("events.txt");
+    private static String getJsonString(Context context,String fileName) throws FileNotFoundException {
+        FileInputStream fis = context.openFileInput(fileName);
         InputStreamReader isr = new InputStreamReader(fis);
         String line = null;
         StringBuilder stringBuilder = new StringBuilder();
@@ -304,16 +305,25 @@ public class EventUtility {
         return stringBuilder.toString();
     }
 
-    public ArrayList<Integer> getEventIdList(Context context) throws JSONException, FileNotFoundException {
-        JSONArray jsonArray = new JSONArray(getJsonString(context));
-        ArrayList<Integer> list = new ArrayList<>();
+    public static ArrayList<String> getEventIdList(Context context) throws JSONException, FileNotFoundException {
+        JSONArray jsonArray = new JSONArray(getJsonString(context,"events.txt"));
+        ArrayList<String> list = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
-            list.add(jsonArray.getInt(i));
+            list.add(String.valueOf(jsonArray.getInt(i)));
             Log.i("vikas", "" + jsonArray.getInt(i));
         }
         return list;
     }
 
+    public static ArrayList<String> getEventAttendingIdList(Context context) throws JSONException, FileNotFoundException {
+        JSONArray jsonArray = new JSONArray(getJsonString(context,"attending.txt"));
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            list.add(String.valueOf(jsonArray.getInt(i)));
+            Log.i("vikas", "" + jsonArray.getInt(i));
+        }
+        return list;
+    }
 
 }
 

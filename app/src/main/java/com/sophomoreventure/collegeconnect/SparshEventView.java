@@ -14,6 +14,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCal
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
+import com.sophomoreventure.collegeconnect.Activities.BaseActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 
 /**

@@ -29,8 +29,6 @@ public class SparshEventAdapter extends RecyclerView.Adapter<SparshEventAdapter.
     EventDatabase eventDatabase;
     ArrayList<Event> listData;
 
-
-
     public SparshEventAdapter(Context context, String clubName) {
         this.context = context;
         this.clubName = clubName;

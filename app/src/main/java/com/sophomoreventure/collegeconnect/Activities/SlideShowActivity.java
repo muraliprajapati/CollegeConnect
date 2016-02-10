@@ -1,15 +1,8 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
-import android.app.LoaderManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
@@ -19,53 +12,31 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.sophomoreventure.collegeconnect.ClubListAtivity;
-import com.sophomoreventure.collegeconnect.Constants;
-import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
-import com.sophomoreventure.collegeconnect.DrawerBaseActivity;
 import com.sophomoreventure.collegeconnect.EventUtility;
-import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
-import com.sophomoreventure.collegeconnect.ImageHandler;
+import com.sophomoreventure.collegeconnect.adapters.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
-import com.sophomoreventure.collegeconnect.MyEventsActivity;
-import com.sophomoreventure.collegeconnect.MyEventsAdapter;
+import com.sophomoreventure.collegeconnect.adapters.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
-import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
-import com.sophomoreventure.collegeconnect.NoticeBoardActivity;
-import com.sophomoreventure.collegeconnect.OtherEventView;
 import com.sophomoreventure.collegeconnect.R;
-import com.sophomoreventure.collegeconnect.SparshEventListAtivity;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
 import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -78,7 +49,8 @@ import me.tatarka.support.job.JobScheduler;
  */
 
 public class SlideShowActivity extends DrawerBaseActivity implements
-        ViewPager.OnPageChangeListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener {
+        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener,
+        View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener {
 
     private static final long POLL_FREQUENCY = 5000;//28800000;
     private static final int JOB_ID = 100;
@@ -141,7 +113,7 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 
         final GestureDetector tapGestureDetector = new GestureDetector(this, new TapGestureListener());
         slideShowPager = (ViewPager) findViewById(R.id.slideShowPager);
-        slideShowPager.setAdapter(new SlideShowAdapter(getSupportFragmentManager()));
+        slideShowPager.setAdapter(new SlideShowAdapter(getSupportFragmentManager(),this));
 
         slideShowPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -243,15 +215,10 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
-//            mDrawerLayout.closeDrawer(Gravity.LEFT);
-//        } else {
-//            finish();
-//
-//        }
-//    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
 //    @Override
 //    public boolean onPrepareOptionsMenu(Menu menu) {
@@ -328,6 +295,11 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         super.onPostCreate(savedInstanceState);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        return false;
+    }
+
     class SlideShowAdapter extends FragmentStatePagerAdapter {
         Context context;
 
@@ -349,7 +321,7 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         @Override
         public int getCount() {
             return 4;
-            
+
         }
     }
 
@@ -357,12 +329,11 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
+            // Your Code here
             Toast.makeText(SlideShowActivity.this, "" + currentPage, Toast.LENGTH_SHORT).show();
             return true;
 
         }
 
     }
-
-
 }

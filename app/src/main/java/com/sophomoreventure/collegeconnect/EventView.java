@@ -41,7 +41,6 @@ public class EventView extends AppCompatActivity implements SqlDataListener {
     int position;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-    int position;
     private TextView mEventDescription;
     private VolleySingleton mVolleySingleton;
     private ImageLoader mImageLoader;
@@ -55,7 +54,7 @@ public class EventView extends AppCompatActivity implements SqlDataListener {
         getSupportActionBar().setTitle("");
 
         mVolleySingleton = new VolleySingleton(this);
-        mImageLoader = mVolleySingleton.getImageLoader();
+        //mImageLoader = mVolleySingleton.getImageLoader();
 
         mEventImage = (ImageView) findViewById(R.id.event_image);
         mEventName = (TextView) findViewById(R.id.event_name);
@@ -85,7 +84,7 @@ public class EventView extends AppCompatActivity implements SqlDataListener {
         eventData = getData(position);
 
         volleySingleton = new VolleySingleton(this);
-        requestQueue = volleySingleton.getRequestQueue();
+        //requestQueue = volleySingleton.getRequestQueue();
 
         task = new HttpAsyncTask();
         task.execute();

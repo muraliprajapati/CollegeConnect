@@ -1,4 +1,4 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,8 +13,11 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sophomoreventure.collegeconnect.Event;
+import com.sophomoreventure.collegeconnect.EventView;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
+import com.sophomoreventure.collegeconnect.R;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -86,11 +89,11 @@ public class ClubEventsAdapter extends RecyclerView.Adapter<ClubEventsAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId;
-            if (parent instanceof RecyclerView) {
-                layoutId = R.layout.event_card_view;
-            } else {
-                throw new RuntimeException("Not bound to RecyclerView");
-            }
+        if (parent instanceof RecyclerView) {
+            layoutId = R.layout.event_card_view;
+        } else {
+            throw new RuntimeException("Not bound to RecyclerView");
+        }
 
         View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
         return new ViewHolder(view);

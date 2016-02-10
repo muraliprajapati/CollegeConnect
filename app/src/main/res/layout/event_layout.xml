@@ -15,12 +15,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/event_image"
+            <RelativeLayout
+                android:id="@+id/container_imageview"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/parallax_image_height"
-                android:scaleType="centerCrop"
-                android:src="@drawable/poster_four" />
+                android:layout_height="240dp">
+
+
+                <ImageView
+                    android:id="@+id/event_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/parallax_image_height"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder" />
+
+                <TextView
+                    android:id="@+id/name_middle"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:visibility="gone"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:textColor="#fff"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+
 
             <View
                 android:id="@+id/event_anchor"

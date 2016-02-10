@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.Activities;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.MenuItem;
@@ -30,7 +29,11 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
 
-import com.sophomoreventure.collegeconnect.Activities.DrawerActivity;
+import com.sophomoreventure.collegeconnect.NoticeBoardActivity;
+import com.sophomoreventure.collegeconnect.R;
+import com.sophomoreventure.collegeconnect.SimpleHeaderRecyclerAdapter;
+import com.sophomoreventure.collegeconnect.SimpleRecyclerAdapter;
+import com.sophomoreventure.collegeconnect.SparshEventListAtivity;
 
 import java.util.ArrayList;
 

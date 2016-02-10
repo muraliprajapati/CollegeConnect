@@ -24,7 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.sophomoreventure.collegeconnect.API;
+import com.sophomoreventure.collegeconnect.extras.API;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.ForgotPasswordActivity;
 import com.sophomoreventure.collegeconnect.Network.DataListener;

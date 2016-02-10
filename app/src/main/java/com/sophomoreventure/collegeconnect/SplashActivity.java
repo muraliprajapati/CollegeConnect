@@ -22,6 +22,7 @@ import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+import com.sophomoreventure.collegeconnect.extras.API;
 
 import me.tatarka.support.job.JobInfo;
 import me.tatarka.support.job.JobScheduler;
@@ -30,7 +31,7 @@ import me.tatarka.support.job.JobScheduler;
  * Created by Murali on 01/02/2016.
  */
 public class SplashActivity extends AppCompatActivity implements DataListener {
-    private static final long POLL_FREQUENCY = 50000;//28800000;
+    private static final long POLL_FREQUENCY = 5000;//28800000;
     private static final int JOB_ID = 100;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String SENDER_ID = "35113555015";
@@ -51,42 +52,7 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
         progressBar = (ProgressBar) findViewById(R.id.loadingProgress);
         progressBar.setIndeterminate(true);
 //        setupJob();
-        final boolean isInternetOn = EventUtility.isNetworkAvailable(this);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (EventUtility.isFirstRun(SplashActivity.this) || !EventUtility.isLoggedIn(SplashActivity.this)) {
-                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                    if (checkPlayServices() || EventUtility.getGCMToken(SplashActivity.this) == null) {
-                        // Start IntentService to register this application with GCM.
-                        Intent gcmIntent = new Intent(SplashActivity.this, RegistrationService.class);
-                        startService(gcmIntent);
-                    } else {
-                        Toast.makeText(SplashActivity.this, "You will not receive notification as you don't have Google play services installed", Toast.LENGTH_SHORT).show();
-                        Log.i("tag", "No valid Google Play Services APK found.");
 
-                    }
-//                    Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    if (isInternetOn) {
-                        RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
-                                EventUtility.getUserTokenFromPref(SplashActivity.this), "None", SplashActivity.this);
-                    } else {
-                        Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
-
-                }
-            }
-        }, 1500);
 
         SharedPreferences getPrefs = PreferenceManager
                 .getDefaultSharedPreferences(getBaseContext());
@@ -100,25 +66,43 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
             e.apply();
         }else{
             setupJob();
+            final boolean isInternetOn = EventUtility.isNetworkAvailable(this);
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (EventUtility.isFirstRun(SplashActivity.this) || !EventUtility.isLoggedIn(SplashActivity.this)) {
-                        //Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                        if (checkPlayServices() || EventUtility.getGCMToken(SplashActivity.this) == null) {
+                            // Start IntentService to register this application with GCM.
+                            Intent gcmIntent = new Intent(SplashActivity.this, RegistrationService.class);
+                            startService(gcmIntent);
+                        } else {
+                            Toast.makeText(SplashActivity.this, "You will not receive notification as you don't have Google play services installed", Toast.LENGTH_SHORT).show();
+                            Log.i("tag", "No valid Google Play Services APK found.");
 
-                        Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
+                        }
+//                    Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                        //startActivity(intent);
-                        //finish();
+                        startActivity(intent);
+                        finish();
                     } else {
-                        RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
-                                EventUtility.getUserTokenFromPref(SplashActivity.this), "None", SplashActivity.this);
+                        if (isInternetOn) {
+                            RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
+                                    EventUtility.getUserTokenFromPref(SplashActivity.this), "None", SplashActivity.this);
+                        } else {
+                            Intent intent = new Intent(SplashActivity.this, SlideShowActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
+
                     }
                 }
             }, 1500);
+
         }
 
     }

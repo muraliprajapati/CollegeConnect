@@ -1,10 +1,11 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.Activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,7 @@ import com.nineoldandroids.view.ViewHelper;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubModel;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+import com.sophomoreventure.collegeconnect.R;
 
 import java.util.ArrayList;
 
@@ -95,10 +97,24 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
         getSupportActionBar().setTitle(club.getClubName());
         mClubName.setText(club.getClubName());
         mClubDescription.setText(club.getClubDescription());
-        mOrganizerName.setText(club.getClubHead());
-        mOrganizerMob.setText(club.getClubHeadMob());
-        mOrganizerNameTwo.setText(club.getClubHead());
-        mOrganizerMobTwo.setText(club.getClubHeadMob());
+
+        String clubHeadName = club.getClubHead();
+        String clubHeadMob = club.getClubHeadMob();
+
+        mOrganizerName.setText(clubHeadName.substring(1));
+        mOrganizerMob.setText(clubHeadMob.substring(1));
+        Log.i("expose", clubHeadName + " " + clubHeadName.lastIndexOf("?"));
+
+        if(clubHeadName.lastIndexOf("?") != -1 && clubHeadName.lastIndexOf("?") != clubHeadName.indexOf("?")){
+            mOrganizerName.setText(clubHeadName.substring(1, clubHeadName.lastIndexOf("?") - 1));
+            mOrganizerMob.setText(clubHeadMob.substring(1, clubHeadMob.lastIndexOf("?") - 1));
+        }
+        if(clubHeadName.lastIndexOf("?") != -1 && clubHeadName.lastIndexOf("?") != clubHeadName.indexOf("?")){
+            mOrganizerNameTwo.setText(clubHeadName.substring(clubHeadName.lastIndexOf("?") + 1));
+            mOrganizerMobTwo.setText(clubHeadMob.substring(clubHeadMob.lastIndexOf("?") + 1));
+        }
+
+
         loadImages(club.getImageUrl(),imageView);
     }
 

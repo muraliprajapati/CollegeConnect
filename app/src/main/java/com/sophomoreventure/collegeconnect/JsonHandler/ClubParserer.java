@@ -1,9 +1,8 @@
 package com.sophomoreventure.collegeconnect.JsonHandler;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.sophomoreventure.collegeconnect.Constants;
+import com.sophomoreventure.collegeconnect.extras.Constants;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubModel;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
 

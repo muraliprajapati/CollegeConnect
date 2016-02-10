@@ -8,18 +8,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/nodata"
-        android:text="Somethig Wrong"
+        android:paddingTop="50dp"
+        android:text="Something Wrong"
         android:gravity="center_horizontal|center_vertical"
         android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="gone"/>
 
-    <ImageView
-        android:id="@+id/eventImageView"
+    <RelativeLayout
+        android:id="@+id/container_imageview"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/poster_four" />
+        android:layout_height="240dp">
+
+
+        <ImageView
+            android:id="@+id/eventImageView"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder" />
+
+
+        <TextView
+            android:id="@+id/name_middle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+
 
     <TextView
         android:id="@+id/eventClubTextView"
@@ -41,7 +64,7 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/eventImageView"
+        android:layout_alignBottom="@+id/container_imageview"
         android:background="@drawable/gradient_bg_event"
         android:baselineAligned="false"
         android:orientation="horizontal">

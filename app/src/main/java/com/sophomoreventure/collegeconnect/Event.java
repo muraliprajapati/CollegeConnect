@@ -31,6 +31,14 @@ public class Event {
     private String organizerEmailTwo;
     private String UrlThumbnail;
 
+    public void setIsAdmin(String isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public void setEventLiked(String eventLiked) {
+        this.eventLiked = eventLiked;
+    }
+
     public String getOrganizerEmailOne() {
         return organizerEmailOne;
     }

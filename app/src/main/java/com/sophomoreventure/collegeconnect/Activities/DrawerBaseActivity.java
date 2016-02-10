@@ -1,4 +1,4 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.Activities;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -19,8 +19,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
+import com.sophomoreventure.collegeconnect.CreateEventActivity;
+import com.sophomoreventure.collegeconnect.EventUtility;
+import com.sophomoreventure.collegeconnect.NavDrawerItemView;
 import com.sophomoreventure.collegeconnect.Network.AboutActivity;
+import com.sophomoreventure.collegeconnect.NoticeBoardActivity;
+import com.sophomoreventure.collegeconnect.R;
+import com.sophomoreventure.collegeconnect.ScrimInsetsScrollView;
+import com.sophomoreventure.collegeconnect.SparshEventListAtivity;
 
 import java.util.ArrayList;
 
@@ -392,7 +398,7 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
     private void goToNavDrawerItem(int item) {
         switch (item) {
             case NAVDRAWER_ITEM_SPARSH_EVENTS:
-                createBackStack(new Intent(this, SparshEventListAtivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                createBackStack(new Intent(this, SparshEventListAtivity.class));
                 break;
             case NAVDRAWER_ITEM_COLLEGE_EVENTS:
                 startActivity(new Intent(this, SlideShowActivity.class));
@@ -411,10 +417,14 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
                 createBackStack(new Intent(this, CreateEventActivity.class));
                 break;
             case NAVDRAWER_ITEM_FOLLOWED_EVENTS:
-                createBackStack(new Intent(this, MyEventsActivity.class));
+                Intent i = new Intent(this, MyEventsActivity.class);
+                i.putExtra("clubName","eventLiked");
+                createBackStack(i);
                 break;
             case NAVDRAWER_ITEM_MY_EVENTS:
-                createBackStack(new Intent(this, MyEventsActivity.class));
+                i = new Intent(this, MyEventsActivity.class);
+                i.putExtra("clubName","eventCreated");
+                createBackStack(i);
                 break;
             case NAVDRAWER_ITEM_ABOUT:
                 createBackStack(new Intent(this, AboutActivity.class));

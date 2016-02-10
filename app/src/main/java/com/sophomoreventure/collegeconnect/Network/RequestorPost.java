@@ -17,11 +17,10 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.sophomoreventure.collegeconnect.Constants;
+import com.sophomoreventure.collegeconnect.extras.Constants;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HttpsTrustManager;
 
-import org.cloudinary.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -137,7 +136,9 @@ public class RequestorPost {
                         Log.i("vikas", response.toString());
                         jsonObject = response;
                         try {
+
                             parseAndSaveUserInfoToPref(context, email, userPassword, Parserer.parseToken(response), jsonBody);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -365,7 +366,7 @@ public class RequestorPost {
         final String emailId = EventUtility.getUserTokenFromPref(context);
         final String pass = EventUtility.getUserPasswordHashFromPref(context);
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url,
                 new Response.Listener<JSONObject>() {
 
                     @Override

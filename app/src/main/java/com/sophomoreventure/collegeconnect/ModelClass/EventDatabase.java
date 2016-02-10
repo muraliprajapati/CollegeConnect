@@ -23,6 +23,8 @@ public class EventDatabase {
     SqlLoaderEvent eventListLoader;
     SqlLoaderEventSelector eventSelector;
 
+
+
     public EventDatabase(Context context) {
         helper = new EventDataBaseHelper(context);
         this.context = context;
@@ -55,7 +57,7 @@ public class EventDatabase {
             contentValues.put(EventDataBaseHelper.LastRegistrationTime, event.getLastRegistrationTime());
             contentValues.put(EventDataBaseHelper.EventVarified, event.getEventvarified());
             contentValues.put(EventDataBaseHelper.ClubId, event.getIsAdmin());
-            contentValues.put(EventDataBaseHelper.OrganizerEmail, event.getOrganizerEmailOne());
+            contentValues.put(EventDataBaseHelper.EventLiked, event.getOrganizerEmailOne());
             db.insert(EventDataBaseHelper.Tablename, null, contentValues);
         }
 
@@ -64,9 +66,9 @@ public class EventDatabase {
     public void insertRow(String eventname, String eventColor, String eventstarttime,
                           String eventendtime, String eventattend, String eventclub,
                           String eventdescription, String eventfirstorganizer, String eventsecondorganizer,
-                          String eventVanue, String organiizermobfirst, String organiizermobsecond, String organizeremail,
+                          String eventVanue, String organiizermobfirst, String organiizermobsecond, String eventLiked,
                           String eventvarified, String clubId, String serverID, String lastRegistrationTime,String eventCreatedBy
-                          ,String url) {
+            ,String url) {
 
         if(isInDatabase(serverID)){
             deleteRow(serverID);
@@ -88,32 +90,34 @@ public class EventDatabase {
         contentValues.put(EventDataBaseHelper.EventVanue, eventVanue);
         contentValues.put(EventDataBaseHelper.OrganizerMobFirst, organiizermobfirst);
         contentValues.put(EventDataBaseHelper.OrganizerMobSecond, organiizermobsecond);
-        contentValues.put(EventDataBaseHelper.OrganizerEmail, organizeremail);
+        contentValues.put(EventDataBaseHelper.EventLiked, eventLiked);
         contentValues.put(EventDataBaseHelper.EventVarified, eventvarified);
         contentValues.put(EventDataBaseHelper.ClubId, clubId);
         contentValues.put(EventDataBaseHelper.EventServerID, serverID);
         contentValues.put(EventDataBaseHelper.ImageURL,url);
         contentValues.put(EventDataBaseHelper.LastRegistrationTime, lastRegistrationTime);
+
         db.insert(EventDataBaseHelper.Tablename, null, contentValues);
+
 
     }
 
     public void setAttendEvent(String id) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(EventDataBaseHelper.EventCreatedBy, "true");
+        contentValues.put(EventDataBaseHelper.EventLiked, "true");
         String[] selecArgs = {id};
         db.update(EventDataBaseHelper.Tablename, contentValues,
-                EventDataBaseHelper.EventAttend + " =?", selecArgs);
+                EventDataBaseHelper.EventServerID + " =?", selecArgs);
     }
 
     public void setNotAttendEvent(String id) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(EventDataBaseHelper.EventAttend, "false");
+        contentValues.put(EventDataBaseHelper.EventLiked, "false");
         String[] selecArgs = {id};
         db.update(EventDataBaseHelper.Tablename, contentValues,
-                EventDataBaseHelper.EventAttend + " =?", selecArgs);
+                EventDataBaseHelper.EventServerID + " =?", selecArgs);
     }
 
     public void selectEventClubById(Context conn,String eventID){
@@ -147,7 +151,7 @@ public class EventDatabase {
             event.setEventVenue(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVanue)));
             event.setEventOrganizerOne(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventoganizernameFirst)));
             event.setEventOrganizerTwo(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventoganizernameSecond)));
-            event.setOrganizerEmailOne(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerEmail)));
+            event.setEventLiked(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventLiked)));
             event.setEventOrganizerOnePhoneNo(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerMobFirst)));
             event.setEventOrganizerTwoPhoneNo(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerMobSecond)));
             event.setEventvarified((cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVarified))));
@@ -186,7 +190,7 @@ public class EventDatabase {
             event.setEventVenue(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVanue)));
             event.setEventOrganizerOne(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventoganizernameFirst)));
             event.setEventOrganizerTwo(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventoganizernameSecond)));
-            event.setOrganizerEmailOne(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerEmail)));
+            event.setEventLiked(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventLiked)));
             event.setEventOrganizerOnePhoneNo(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerMobFirst)));
             event.setEventOrganizerTwoPhoneNo(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerMobSecond)));
             event.setEventvarified(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVarified)));
@@ -205,7 +209,9 @@ public class EventDatabase {
         ArrayList<Event> eventList = new ArrayList<>();
 
         SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = db.query(EventDataBaseHelper.Tablename, null, null, null, null, null, null);
+        Cursor cursor = db.query(EventDataBaseHelper.Tablename, null, null, null, null,null,
+                EventDataBaseHelper.EventServerID +" DESC",null);
+
         while (cursor.moveToNext()) {
             Event event = new Event();
 
@@ -220,7 +226,7 @@ public class EventDatabase {
             event.setEventVenue(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVanue)));
             event.setEventOrganizerOne(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventoganizernameFirst)));
             event.setEventOrganizerTwo(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventoganizernameSecond)));
-            event.setOrganizerEmailOne(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerEmail)));
+            event.setEventLiked(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventLiked)));
             event.setEventOrganizerOnePhoneNo(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerMobFirst)));
             event.setEventOrganizerTwoPhoneNo(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerMobSecond)));
             event.setEventvarified(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVarified)));
@@ -235,15 +241,57 @@ public class EventDatabase {
         return eventList;
     }
 
+
+    public ArrayList<Event> getlikedEvents(){
+
+        ArrayList<Event> eventList = new ArrayList<>();
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] whereArgs = {"true"};
+        Cursor cursor = db.query(EventDataBaseHelper.Tablename, null, EventDataBaseHelper.EventLiked+" =?",whereArgs,
+                null, null,null,null);
+
+        while (cursor.moveToNext()) {
+            Event event = new Event();
+            event.setEventTitle(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventName)));
+            event.setEventDescription(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventDescription)));
+            event.setEventAttend(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventAttend)));
+            event.setEventCreatedBy(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventCreatedBy)));
+            event.setEventClub(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventClub)));
+            event.setEventEndTime(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventEndTime)));
+            event.setEventStarttime(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventStarttime)));
+            event.setEventTime(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventColor)));
+            event.setEventVenue(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVanue)));
+            event.setEventOrganizerOne(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventoganizernameFirst)));
+            event.setEventOrganizerTwo(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventoganizernameSecond)));
+            event.setEventLiked(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventLiked)));
+            event.setEventOrganizerOnePhoneNo(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerMobFirst)));
+            event.setEventOrganizerTwoPhoneNo(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.OrganizerMobSecond)));
+            event.setEventvarified(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventVarified)));
+            event.setClubId(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.ClubId)));
+            event.setUrlThumbnail(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.ImageURL)));
+            event.setEventServerId(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventServerID)));
+            event.setLastRegistrationTime(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.LastRegistrationTime)));
+            eventList.add(event);
+        }
+        cursor.close();
+        return eventList;
+    }
+
     public ArrayList<Event> viewSlideShowData() {
         ArrayList<Event> eventList = new ArrayList<>();
-        String[] columns = {helper.ImageURL};
+        String[] columns = {helper.ImageURL,helper.EventColor,helper.EventCreatedBy};
         SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = db.query(EventDataBaseHelper.Tablename,columns , null, null, null, null, null);
+        Cursor cursor = db.query(EventDataBaseHelper.Tablename,columns , null, null, null, null,
+                EventDataBaseHelper.EventServerID +" ASC",null);
         while(cursor.moveToNext()){
             Event event = new Event();
-            event.setUrlThumbnail(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.ImageURL)));
-            eventList.add(event);
+            String color = cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventColor));
+            if(color.equals("null")){
+                event.setUrlThumbnail(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.ImageURL)));
+                eventList.add(event);
+            }
+
+
         }
         return eventList;
     }
@@ -293,7 +341,7 @@ public class EventDatabase {
         private static final String EventAttend = "eventattend";
         private static final String EventoganizernameFirst = "eventorganizerfirst";
         private static final String OrganizerMobFirst = "organizermobliefirst";
-        private static final String OrganizerEmail = "organizeremail";
+        private static final String EventLiked = "organizeremail";
         private static final String EventVanue = "vanue";
         private static final String EventDescription = "eventdiscription";
         private static final String EventVarified = "verified";
@@ -311,7 +359,7 @@ public class EventDatabase {
                 + EventClub + " VARCHAR(250), " + EventDescription + " VARCHAR(250), "
                 + EventVanue + " VARCHAR(250), " + EventVarified + " VARCHAR(250), "
                 + EventoganizernameFirst + " VARCHAR(250), " + EventoganizernameSecond + " VARCHAR(250), "
-                + OrganizerEmail + " VARCHAR(250), " + EventCreatedBy + " VARCHAR(250), "
+                + EventLiked + " VARCHAR(250), " + EventCreatedBy + " VARCHAR(250), "
                 + OrganizerMobFirst + " VARCHAR(250), " + OrganizerMobSecond + " VARCHAR(250), "
                 + ClubId + " VARCHAR(250), " + EventServerID + " VARCHAR(250), "
                 + ImageURL + " VARCHAR(250), "

@@ -11,11 +11,12 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
-import com.sophomoreventure.collegeconnect.Constants;
+import com.sophomoreventure.collegeconnect.extras.Constants;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HttpsTrustManager;
@@ -171,9 +172,9 @@ public class RequestorGet {
                         DataListener listener = (DataListener) context;
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
                             listener.setError(url, "NOCON");
-//                            NetworkResponse response = error.networkResponse;
-//                            String string = new String(response.data);
-//                            Log.i("vikas",string);
+
+                        } else if (error instanceof ServerError) {
+                            listener.setError(url, "SERVERERR");
 
                         } else {
                             try {
@@ -226,6 +227,7 @@ public class RequestorGet {
                             parseAndSaveUserInfoToPref(context, response);
                             parseAndSaveClubAdmin(context, response);
                             parseAndSaveEvents(context, response);
+                            parseAndSaveEventFollowed(context,response);
                             listener.onDataLoaded(url);
                         } catch (JSONException e) {
                             Log.i("vikas", "" + e);
@@ -252,9 +254,6 @@ public class RequestorGet {
                                 String string = new String(response.data);
                                 JSONObject jsonObject = new JSONObject(string);
                                 Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
-                                if (response.statusCode == 500) {
-                                    listener.setError(url, "");
-                                }
                                 listener.setError(url, Parserer.parseResponse(jsonObject));
 
                             } catch (JSONException e) {
@@ -305,6 +304,20 @@ public class RequestorGet {
 //            stringBuilder.append(clubIDString);
 //        }
         FileOutputStream fileout = context.openFileOutput("clubs.txt", Context.MODE_PRIVATE);
+        OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+        outputWriter.write(clubAdminArray.toString());
+        outputWriter.close();
+    }
+
+    private static void parseAndSaveEventFollowed(Context context, JSONObject response) throws JSONException, IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        JSONArray clubAdminArray = response.getJSONArray("events_attending");
+//        for (int i = 0; i < clubAdminArray.length(); i++) {
+//            int clubID = clubAdminArray.getInt(i);
+//            String clubIDString = String.valueOf(clubID) + "\n";
+//            stringBuilder.append(clubIDString);
+//        }
+        FileOutputStream fileout = context.openFileOutput("attending.txt", Context.MODE_PRIVATE);
         OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
         outputWriter.write(clubAdminArray.toString());
         outputWriter.close();

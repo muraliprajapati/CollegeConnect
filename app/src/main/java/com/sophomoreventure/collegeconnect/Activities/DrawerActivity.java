@@ -1,12 +1,7 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,17 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.sophomoreventure.collegeconnect.Constants;
-import com.sophomoreventure.collegeconnect.CreateEventActivity;
+
 import com.sophomoreventure.collegeconnect.EventUtility;
-import com.sophomoreventure.collegeconnect.MyEventsActivity;
-import com.sophomoreventure.collegeconnect.OtherEventView;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
-import me.tatarka.support.job.JobScheduler;
 
 /**
  * Created by Vikas Kumar on 31-01-2016.

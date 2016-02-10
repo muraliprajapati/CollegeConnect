@@ -1,4 +1,4 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.extras;
 
 import java.util.HashMap;
 import java.util.Map;

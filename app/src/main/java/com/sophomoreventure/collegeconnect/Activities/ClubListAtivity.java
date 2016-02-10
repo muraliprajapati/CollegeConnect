@@ -1,29 +1,23 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.Activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.sophomoreventure.collegeconnect.Activities.DrawerActivity;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
-import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+import com.sophomoreventure.collegeconnect.R;
 
 import java.util.ArrayList;
 
@@ -159,51 +153,4 @@ public class ClubListAtivity extends DrawerBaseActivity {
         }, 260);
     }
 
-    @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-        int id = menuItem.getItemId();
-        menuItem.setChecked(false);
-
-        switch (id) {
-
-            case R.id.nav_sparsh_events:
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(SparshEventListAtivity.class);
-                break;
-            case R.id.nav_events:
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                break;
-            case R.id.nav_clubs:
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(ClubListAtivity.class);
-                menuItem.setChecked(true);
-                break;
-
-            case R.id.nav_notice_board:
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(NoticeBoardActivity.class);
-                menuItem.setChecked(true);
-                break;
-
-            case R.id.nav_myenents:
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(MyEventsActivity.class);
-                menuItem.setChecked(true);
-                break;
-            case R.id.nav_myprofile:
-                menuItem.setChecked(true);
-                return false;
-            case R.id.nav_settings:
-                menuItem.setChecked(true);
-                return false;
-            case R.id.nav_rate:
-                menuItem.setChecked(true);
-                return false;
-
-        }
-
-        return true;
-    }
 }

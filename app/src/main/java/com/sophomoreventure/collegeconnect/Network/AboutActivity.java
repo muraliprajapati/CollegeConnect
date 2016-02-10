@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sophomoreventure.collegeconnect.BuildConfig;
-import com.sophomoreventure.collegeconnect.DrawerBaseActivity;
+import com.sophomoreventure.collegeconnect.Activities.DrawerBaseActivity;
 import com.sophomoreventure.collegeconnect.R;
 
 /**

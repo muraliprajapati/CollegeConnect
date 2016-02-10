@@ -1,4 +1,4 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.extras;
 
 /**
  * Created by Murali on 31/12/2015.

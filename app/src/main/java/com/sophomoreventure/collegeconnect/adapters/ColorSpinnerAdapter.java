@@ -1,4 +1,4 @@
-package com.sophomoreventure.collegeconnect;
+package com.sophomoreventure.collegeconnect.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.sophomoreventure.collegeconnect.R;
 
 /**
  * Created by Murali on 31/01/2016.
