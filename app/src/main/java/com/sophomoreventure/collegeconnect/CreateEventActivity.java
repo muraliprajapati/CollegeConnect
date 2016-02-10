@@ -259,6 +259,8 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        overridePendingTransition(0, android.R.anim.fade_out);
     }
 
     @Override

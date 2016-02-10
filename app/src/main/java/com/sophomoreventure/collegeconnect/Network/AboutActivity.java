@@ -39,6 +39,7 @@ public class AboutActivity extends DrawerBaseActivity implements View.OnClickLis
 
         facebookLayout.setOnClickListener(this);
         emailLayout.setOnClickListener(this);
+        overridePendingTransition(0, 0);
     }
 
     @Override

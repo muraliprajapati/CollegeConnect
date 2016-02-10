@@ -36,6 +36,7 @@ public class ClubListAtivity extends DrawerBaseActivity {
         clubListRV.setLayoutManager(new LinearLayoutManager(this));
         clubListRV.setAdapter(new ClubListAdapter(this, clubNameList, imageResArray));
         clubListRV.setHasFixedSize(true);
+        overridePendingTransition(0, android.R.anim.fade_out);
 
     }
 
