@@ -11,7 +11,6 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -172,9 +171,9 @@ public class RequestorGet {
                         DataListener listener = (DataListener) context;
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
                             listener.setError(url, "NOCON");
-
-                        } else if (error instanceof ServerError) {
-                            listener.setError(url, "SERVERERR");
+//                            NetworkResponse response = error.networkResponse;
+//                            String string = new String(response.data);
+//                            Log.i("vikas",string);
 
                         } else {
                             try {
@@ -253,6 +252,9 @@ public class RequestorGet {
                                 String string = new String(response.data);
                                 JSONObject jsonObject = new JSONObject(string);
                                 Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
+                                if (response.statusCode == 500) {
+                                    listener.setError(url, "");
+                                }
                                 listener.setError(url, Parserer.parseResponse(jsonObject));
 
                             } catch (JSONException e) {

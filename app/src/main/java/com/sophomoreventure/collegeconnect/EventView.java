@@ -38,6 +38,7 @@ public class EventView extends AppCompatActivity implements SqlDataListener {
             mEventAddressLineThree,mEventOrganizerName,mEventorganizerMob,mEventOrganizerNameTwo,mEventorganizerMobTwo,
             mEventTitle;
     Toolbar toolbar;
+    int position;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
     int position;

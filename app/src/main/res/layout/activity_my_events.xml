@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res/android"
-    app:id="@+id/myEventRecyclerView"
-    app:layout_width="match_parent"
-    app:layout_height="wrap_content"
-    app:background="@color/grey_300"
-    app:scrollbars="vertical">
 
-</android.support.v7.widget.RecyclerView>
+
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <include layout="@layout/toolbar_actionbar" />
+
+        <android.support.v7.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res/android"
+            app:id="@+id/myEventRecyclerView"
+            app:layout_width="match_parent"
+            app:layout_height="wrap_content"
+            app:background="@color/grey_300"
+            app:scrollbars="vertical">
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
+
+    <include layout="@layout/navdrawer" />
+
+</android.support.v4.widget.DrawerLayout>

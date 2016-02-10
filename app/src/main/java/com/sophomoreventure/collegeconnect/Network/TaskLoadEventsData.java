@@ -7,10 +7,9 @@ import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventsLoadedListener;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubModel;
-import com.sophomoreventure.collegeconnect.ModelClass.EventModel;
 
-import org.json.JSONObject;
-
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 /**
@@ -24,7 +23,7 @@ public class TaskLoadEventsData extends AsyncTask<Void, Void, ArrayList<Event>> 
     private Context context;
 
 
-    public TaskLoadEventsData(Context context){
+    public TaskLoadEventsData(Context context) throws NoSuchAlgorithmException, KeyManagementException {
         this.myListener = (EventsLoadedListener) context;
         volleySingleton = new VolleySingleton(context);
         requestQueue = volleySingleton.getRequestQueue();

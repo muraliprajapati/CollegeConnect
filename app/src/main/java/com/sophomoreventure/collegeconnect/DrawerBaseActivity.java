@@ -392,7 +392,7 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
     private void goToNavDrawerItem(int item) {
         switch (item) {
             case NAVDRAWER_ITEM_SPARSH_EVENTS:
-                createBackStack(new Intent(this, SparshEventListAtivity.class));
+                createBackStack(new Intent(this, SparshEventListAtivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 break;
             case NAVDRAWER_ITEM_COLLEGE_EVENTS:
                 startActivity(new Intent(this, SlideShowActivity.class));
