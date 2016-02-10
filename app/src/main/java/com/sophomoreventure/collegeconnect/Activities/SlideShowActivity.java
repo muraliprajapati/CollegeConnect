@@ -166,7 +166,7 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 
         aRV.setAdapter(new MyEventsAdapter(SlideShowActivity.this, "SlideShowView",0));
 
-
+//        overridePendingTransition(0, 0);
     }
 
 

@@ -79,10 +79,10 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
             R.drawable.ic_info_blue_grey_300_24dp, // About
     };
     // delay to launch nav drawer item, to allow close animation to play
-    private static final int NAVDRAWER_LAUNCH_DELAY = 250;
+    private static final int NAVDRAWER_LAUNCH_DELAY = 350;
     // fade in and fade out durations for the main content when switching between
     // different Activities of the app through the Nav Drawer
-    private static final int MAIN_CONTENT_FADEOUT_DURATION = 150;
+    private static final int MAIN_CONTENT_FADEOUT_DURATION = 350;
     private static final int MAIN_CONTENT_FADEIN_DURATION = 250;
     private DrawerLayout mDrawerLayout;
     private ObjectAnimator mStatusBarColorAnimator;
@@ -382,7 +382,6 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
             }
         }, NAVDRAWER_LAUNCH_DELAY);
 
-
         // change the active item on the list so the user can see the item changed
         setSelectedNavDrawerItem(itemId);
         // fade out the main content
@@ -437,6 +436,7 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             TaskStackBuilder builder = TaskStackBuilder.create(this);
             builder.addNextIntentWithParentStack(intent);
+//            builder.addNextIntent(intent);
             builder.startActivities();
 
         } else {
