@@ -23,9 +23,9 @@ import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by Murali on 10/01/2016.
@@ -36,12 +36,12 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
     Context context;
     int[] imageResArray = new int[]{R.drawable.poster_one, R.drawable.poster_two, R.drawable.poster_three, R.drawable.poster_four, R.drawable.poster_five, R.drawable.poster_five};
     String clubName;
-    private ImageLoader mImageLoader;
     EventDatabase eventDatabase;
     ArrayList<String> listClubs;
-    private VolleySingleton mVolleySingleton;
     ClubsDataBase database;
     ArrayList<Event> listData;
+    private ImageLoader mImageLoader;
+    private VolleySingleton mVolleySingleton;
     private WeakReference<ImageView> imageViewReference;
 
     public MyEventsAdapter(Context context, String clubName,int position) {
@@ -216,7 +216,13 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
                 Event event = listData.get(getPosition());
                 String id = event.getEventServerId();
                 boolean attending = attendingCheckBox.isChecked();
-                sendAttendRequest(id,attending);
+                try {
+                    sendAttendRequest(id, attending);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (KeyManagementException e) {
+                    e.printStackTrace();
+                }
                 if(attending){
                     attendingCheckBox.setChecked(true);
                 }else {
@@ -231,7 +237,7 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
             }
         }
 
-        private void sendAttendRequest(String eventID ,boolean attend) {
+        private void sendAttendRequest(String eventID, boolean attend) throws NoSuchAlgorithmException, KeyManagementException {
             VolleySingleton volleySingleton =  new VolleySingleton(context);
             RequestQueue requestQueue = volleySingleton.getRequestQueue();
             if(attend){

@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
-import com.sophomoreventure.collegeconnect.ModelClass.EventModel;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 
 import java.util.ArrayList;
@@ -32,9 +31,9 @@ public class EventView extends AppCompatActivity {
     TextView mEventName,mEventDayTime,mEventDayLeft,mEventAddressLineOne,mEventAddressLineTwo,
             mEventAddressLineThree,mEventOrganizerName,mEventorganizerMob;
     Toolbar toolbar;
+    int position;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-    int position;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
