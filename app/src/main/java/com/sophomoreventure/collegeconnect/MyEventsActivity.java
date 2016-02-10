@@ -20,6 +20,7 @@ public class MyEventsActivity extends DrawerBaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        //new line added
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_events);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
