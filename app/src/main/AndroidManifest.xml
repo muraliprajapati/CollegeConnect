@@ -61,7 +61,8 @@
 
         <activity
             android:name=".MyEventsActivity"
-            android:label="Events by Drishti" />
+            android:parentActivityName=".Activities.SlideShowActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".Network.ServiceClass"
