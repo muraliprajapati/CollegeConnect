@@ -5,6 +5,8 @@ import android.content.Context;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventsLoadedListener;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import me.tatarka.support.job.JobParameters;
@@ -23,7 +25,11 @@ public class ServiceClass extends JobService implements EventsLoadedListener{
         context = this;
 //        L.T(this, "jobDone");
         //jobFinished(jobParameters, false);
-        new TaskLoadEventsData(context).execute();
+        try {
+            new TaskLoadEventsData(context).execute();
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
