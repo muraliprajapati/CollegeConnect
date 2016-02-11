@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
@@ -190,10 +192,15 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
             if (listData.size() != 0) {
 
                 Date date = new java.util.Date(Long.parseLong(String.valueOf(listData.get(position).getEventStarttime())));
-                String eventDateTime = new SimpleDateFormat("MMMM,dd,yyyy HH:mm a").format(date);
+                String eventDateTime = new SimpleDateFormat("MMMM,dd,yyyy hh:mm a").format(date);
                 holder.eventNameTextView.setText(listData.get(position).getEventTitle());
                 holder.eventClubTextView.setText(listData.get(position).getEventClub());
                 holder.dateTextView.setText(eventDateTime);
+
+                if(clubName.equals("eventCreated")){
+                    holder.editEventButton.setVisibility(View.VISIBLE);
+                }
+
                 if(listData.get(position).getEventLiked().equals("true")){
                     holder.attendingCheckBox.setChecked(true);
                 }
@@ -235,14 +242,14 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
 
 
             }else {
-                holder.wrongTextView.setText("No Event Yet");
+                holder.wrongTextView.setText("No Events Yet");
                 holder.eventImageView.setVisibility(View.GONE);
                 holder.wrongTextView.setVisibility(View.VISIBLE);
                 holder.container.setVisibility(View.GONE);
                 holder.eventClubTextView.setVisibility(View.GONE);
             }
         }else {
-            holder.wrongTextView.setText("No Event Yet");
+            holder.wrongTextView.setText("No Events Yet");
             holder.container.setVisibility(View.GONE);
             holder.eventClubTextView.setVisibility(View.GONE);
             holder.eventImageView.setVisibility(View.GONE);
@@ -277,12 +284,13 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
             mImageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    holder.eventImageView.setImageBitmap(response.getBitmap());
 
-                    if (imageViewReference != null && response.getBitmap() != null) {
-                        if (imageViewReference.get() != null) {
-                            imageViewReference.get().setImageBitmap(response.getBitmap());
-                        }
-                    }
+//                    if (imageViewReference != null && response.getBitmap() != null) {
+//                        if (imageViewReference.get() != null) {
+//                            imageViewReference.get().setImageBitmap(Bitmap.createScaledBitmap(response.getBitmap(), 400, 240, false));
+//                        }
+//                    }
                 }
                 @Override
                 public void onErrorResponse(VolleyError error) {
@@ -312,6 +320,7 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
         TextView wrongTextView;
         LinearLayout container;
         TextView middleTextView;
+        Button editEventButton;
 
 
         public ViewHolder(View itemView) {
@@ -320,11 +329,17 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
             eventNameTextView = (TextView) itemView.findViewById(R.id.eventNameTextView);
             eventClubTextView = (TextView) itemView.findViewById(R.id.eventClubTextView);
             dateTextView = (TextView) itemView.findViewById(R.id.eventDateTextView);
-            imageViewReference = new WeakReference<ImageView>(eventImageView);
+//            imageViewReference = new WeakReference<ImageView>(eventImageView);
             attendingCheckBox = (CheckBox) itemView.findViewById(R.id.attendingCheckBox);
             wrongTextView = (TextView) itemView.findViewById(R.id.nodata);
             container = (LinearLayout) itemView.findViewById(R.id.container);
             middleTextView = (TextView) itemView.findViewById(R.id.name_middle);
+            editEventButton = (Button) itemView.findViewById(R.id.editEventButton);
+            editEventButton.setVisibility(View.GONE);
+
+            if(editEventButton != null){
+                editEventButton.setOnClickListener(this);
+            }
             if(attendingCheckBox != null){
                 attendingCheckBox.setOnClickListener(this);
             }
@@ -344,6 +359,13 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
                 }else {
                     attendingCheckBox.setChecked(false);
                 }
+
+            }else if(view.getId() == editEventButton.getId()){
+
+                Intent i = new Intent(context, CreateEventActivity.class);
+                i.putExtra("eventId",listData.get(getPosition()).getEventServerId());
+                i.putExtra("editEvent",true);
+                context.startActivity(i);
 
             }else {
 

@@ -31,7 +31,7 @@ import me.tatarka.support.job.JobScheduler;
  * Created by Murali on 01/02/2016.
  */
 public class SplashActivity extends AppCompatActivity implements DataListener {
-    private static final long POLL_FREQUENCY = 5000;//28800000;
+    private static final long POLL_FREQUENCY = 28800000;
     private static final int JOB_ID = 100;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String SENDER_ID = "35113555015";
@@ -51,8 +51,8 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
         setContentView(R.layout.activity_splash);
         progressBar = (ProgressBar) findViewById(R.id.loadingProgress);
         progressBar.setIndeterminate(true);
-//        setupJob();
-
+       // setupJob();
+        setupJob();
 
         SharedPreferences getPrefs = PreferenceManager
                 .getDefaultSharedPreferences(getBaseContext());
@@ -65,7 +65,7 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
             e.putBoolean("firstStart", false);
             e.apply();
         }else{
-            setupJob();
+
             final boolean isInternetOn = EventUtility.isNetworkAvailable(this);
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -73,12 +73,11 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
                 public void run() {
                     if (EventUtility.isFirstRun(SplashActivity.this) || !EventUtility.isLoggedIn(SplashActivity.this)) {
                         Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                        if (checkPlayServices() || EventUtility.getGCMToken(SplashActivity.this) == null) {
+                        if (isInternetOn || checkPlayServices() && EventUtility.getGCMToken(SplashActivity.this) == null) {
                             // Start IntentService to register this application with GCM.
                             Intent gcmIntent = new Intent(SplashActivity.this, RegistrationService.class);
                             startService(gcmIntent);
                         } else {
-                            Toast.makeText(SplashActivity.this, "You will not receive notification as you don't have Google play services installed", Toast.LENGTH_SHORT).show();
                             Log.i("tag", "No valid Google Play Services APK found.");
 
                         }
@@ -90,6 +89,10 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
                         finish();
                     } else {
                         if (isInternetOn) {
+                            if(EventUtility.getGCMToken(SplashActivity.this) == null){
+                                Intent gcmIntent = new Intent(SplashActivity.this, RegistrationService.class);
+                                startService(gcmIntent);
+                            }
                             RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
                                     EventUtility.getUserTokenFromPref(SplashActivity.this), "None", SplashActivity.this);
                         } else {
@@ -193,6 +196,13 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
                     EventUtility.removeUserLoginFromPref(this);
                     finish();
                 }
+                if (errorCode.equalsIgnoreCase("NOCON")) {
+                    Toast.makeText(SplashActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
         }
 
 }
@@ -219,14 +229,14 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
 
                 buildJob();
             }
-        }, 3000);
+        }, 2000);
     }
 
     private void buildJob() {
 
         JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, new ComponentName(this, ServiceClass.class));
         builder.setPeriodic(POLL_FREQUENCY)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true);
         mJobScheduler.schedule(builder.build());
     }

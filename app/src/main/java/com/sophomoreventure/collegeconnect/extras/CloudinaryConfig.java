@@ -12,9 +12,9 @@ public class CloudinaryConfig {
     public static Map getConfig() {
         if (config == null) {
             config = new HashMap();
-            config.put("cloud_name", "dxnadjd73");
-            config.put("api_key", "763849438312341");
-            config.put("api_secret", "8ueMqS8HtE4tw5dNoHSuC1aJspU");
+            config.put("cloud_name", "college-connect11");
+            config.put("api_key", "161613715213917");
+            config.put("api_secret", "T53LI6d-JSuFNOMny4llvzGhCJU");
         }
         return config;
     }

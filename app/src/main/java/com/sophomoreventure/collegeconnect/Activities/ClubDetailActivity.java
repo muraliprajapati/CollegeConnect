@@ -19,6 +19,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCal
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
+import com.sophomoreventure.collegeconnect.BaseActivity;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubModel;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
@@ -101,18 +102,35 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
         String clubHeadName = club.getClubHead();
         String clubHeadMob = club.getClubHeadMob();
 
-        mOrganizerName.setText(clubHeadName.substring(1));
-        mOrganizerMob.setText(clubHeadMob.substring(1));
-        Log.i("expose", clubHeadName + " " + clubHeadName.lastIndexOf("?"));
+        //Log.i("expose", club.getClubName().toString() + clubHeadName + " " + " " + clubHeadMob + clubHeadName.lastIndexOf("?"));
+
+
+        if(clubHeadName.toString().length() > 1 && clubHeadMob.toString().length() > 1){
+            mOrganizerName.setText(clubHeadName.substring(1));
+            mOrganizerMob.setText(clubHeadMob.substring(1));
+        }else {
+            mOrganizerName.setText("N/A");
+            mOrganizerMob.setText("N/A");
+        }
+
+
 
         if(clubHeadName.lastIndexOf("?") != -1 && clubHeadName.lastIndexOf("?") != clubHeadName.indexOf("?")){
             mOrganizerName.setText(clubHeadName.substring(1, clubHeadName.lastIndexOf("?") - 1));
             mOrganizerMob.setText(clubHeadMob.substring(1, clubHeadMob.lastIndexOf("?") - 1));
         }
+
+        mOrganizerMobTwo.setText("None");
+        mOrganizerNameTwo.setText("None");
+
         if(clubHeadName.lastIndexOf("?") != -1 && clubHeadName.lastIndexOf("?") != clubHeadName.indexOf("?")){
             mOrganizerNameTwo.setText(clubHeadName.substring(clubHeadName.lastIndexOf("?") + 1));
             mOrganizerMobTwo.setText(clubHeadMob.substring(clubHeadMob.lastIndexOf("?") + 1));
+        }else {
+            mOrganizerNameTwo.setText("N/A");
+            mOrganizerMobTwo.setText("N/A");
         }
+
 
 
         loadImages(club.getImageUrl(),imageView);

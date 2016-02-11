@@ -7,9 +7,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_gravity="center_horizontal|center_vertical"
         android:layout_weight="1"
         android:textSize="14sp"
-        android:text="Something Wrong" />
+        android:text="No Club To Display" />
 
 </LinearLayout>

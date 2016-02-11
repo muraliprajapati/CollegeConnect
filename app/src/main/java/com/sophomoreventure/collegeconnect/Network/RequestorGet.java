@@ -173,10 +173,7 @@ public class RequestorGet {
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
                             listener.setError(url, "NOCON");
 
-                        } else if (error instanceof ServerError) {
-                            listener.setError(url, "SERVERERR");
-
-                        } else {
+                        }else {
                             try {
                                 NetworkResponse response = error.networkResponse;
                                 Log.i("vikas", response.statusCode + "");
@@ -382,7 +379,6 @@ public class RequestorGet {
 
                     @Override
                     public void onResponse(JSONObject response) {
-
 
                         Log.i("vikas", response.toString());
                         ClubParserer.parseClubJSON(response, context);

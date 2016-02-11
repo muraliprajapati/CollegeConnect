@@ -23,20 +23,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
+import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventUtility;
+import com.sophomoreventure.collegeconnect.Network.RequestorGet;
+import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+import com.sophomoreventure.collegeconnect.OtherEventView;
 import com.sophomoreventure.collegeconnect.adapters.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.adapters.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.R;
-import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
+import com.sophomoreventure.collegeconnect.extras.API;
 import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -57,9 +65,9 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     ViewPager slideShowPager;
     Toolbar toolbar;
     int currentPage = 0;
-    int[] imageResArray = new int[]{R.drawable.poster_five, R.drawable.poster_four, R.drawable.poster_three, R.drawable.poster_two, R.drawable.poster_three};    //a layout grouping the toolbar and the tabs together
+        //a layout grouping the toolbar and the tabs together
     //private ViewGroup mContainerToolbar;
-    private FragmentDrawer mDrawerFragment;
+
     private JobScheduler mJobScheduler;
     private NavigationView mNavView;
     private LinearLayout mainScreen;
@@ -69,6 +77,9 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     private GoogleApiClient client;
     private DrawerLayout mDrawerLayout;
     EventDatabase database;
+    ArrayList<Event> listDataSlideShow;
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
 
 
     @Override
@@ -79,6 +90,8 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
+        database = new EventDatabase(this);
+        listDataSlideShow = database.viewSlideShowData();
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         ((AppBarLayout) findViewById(R.id.app_bar)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
@@ -90,11 +103,11 @@ public class SlideShowActivity extends DrawerBaseActivity implements
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    swipeRefreshLayout.setEnabled(false);
+//                    swipeRefreshLayout.setEnabled(false);
                     collapsingToolbarLayout.setTitle("College Connect");
                     isShow = true;
                 } else if (isShow) {
-                    swipeRefreshLayout.setEnabled(false);
+//                    swipeRefreshLayout.setEnabled(false);
                     collapsingToolbarLayout.setTitle("");
                     isShow = false;
                 }
@@ -111,9 +124,12 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setNestedScrollingEnabled(true);
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
         final GestureDetector tapGestureDetector = new GestureDetector(this, new TapGestureListener());
         slideShowPager = (ViewPager) findViewById(R.id.slideShowPager);
-        slideShowPager.setAdapter(new SlideShowAdapter(getSupportFragmentManager(),this));
+        slideShowPager.setAdapter(new SlideShowAdapter(getSupportFragmentManager(), this));
 
         slideShowPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -149,26 +165,37 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         horizonatalRV.setLayoutManager(new LinearLayoutManager(SlideShowActivity.this, LinearLayoutManager.HORIZONTAL, false));
         horizonatalRV.setAdapter(new HorizontalRecyclerAdapter(SlideShowActivity.this));
 
-//        RelativeLayout.LayoutParams params = new
-//                RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.MATCH_PARENT);
-//
-//        params.height=EventUtility.dpToPx(256,getResources())*6;
+
+        MyEventsAdapter adapter = new MyEventsAdapter(SlideShowActivity.this, "SlideShowView", 0);
+        RelativeLayout.LayoutParams params = new
+                RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+
+        params.height = EventUtility.dpToPx(256, getResources()) * adapter.getItemCount();
 
         aRV = (RecyclerView) findViewById(R.id.browseEventsRecyclerView);
         aRV.setNestedScrollingEnabled(false);
-//        aRV.setLayoutParams(params);
+        aRV.setLayoutParams(params);
         CustomLayoutManager layoutManager = new CustomLayoutManager(aRV);
-        layoutManager.setChildSize(EventUtility.dpToPx(256, getResources()));
-        aRV.setLayoutManager(layoutManager);
-//        aRV.setLayoutManager(new LinearLayoutManager(this));
+//        layoutManager.setChildSize(EventUtility.dpToPx(256, getResources()));
+//        aRV.setLayoutManager(layoutManager);
+        aRV.setLayoutManager(new LinearLayoutManager(this));
         aRV.setHasFixedSize(true);
 
-        aRV.setAdapter(new MyEventsAdapter(SlideShowActivity.this, "SlideShowView",0));
 
-//        overridePendingTransition(0, 0);
+        aRV.setAdapter(adapter);
+
+        overridePendingTransition(0, 0);
+        volleySingleton = new VolleySingleton(this);
+        requestQueue = volleySingleton.getRequestQueue();
     }
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
 
 
     @Override
@@ -238,7 +265,6 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     }
 
 
-
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -264,14 +290,9 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     @Override
     public void onRefresh() {
         Toast.makeText(SlideShowActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 2000);
 
+        RequestorGet.requestEventData(requestQueue, API.EVENT_API,this);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -304,8 +325,7 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         Context context;
 
 
-
-        public SlideShowAdapter(FragmentManager fm,Context context) {
+        public SlideShowAdapter(FragmentManager fm, Context context) {
             super(fm);
             this.context = context;
 
@@ -315,7 +335,7 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         @Override
         public Fragment getItem(int position) {
 
-            return SlideShowFragment.newInstance(position,context);
+            return SlideShowFragment.newInstance(position, context);
         }
 
         @Override
@@ -327,9 +347,16 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 
     class TapGestureListener extends GestureDetector.SimpleOnGestureListener {
 
+
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             // Your Code here
+
+            Intent intent = new Intent(SlideShowActivity.this, OtherEventView.class);
+            intent.putExtra("clubName", listDataSlideShow.get(currentPage).getEventClub());
+            intent.putExtra("eventId", listDataSlideShow.get(currentPage).getEventServerId());
+            intent.putExtra("position", currentPage);
+            SlideShowActivity.this.startActivity(intent);
             Toast.makeText(SlideShowActivity.this, "" + currentPage, Toast.LENGTH_SHORT).show();
             return true;
 

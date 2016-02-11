@@ -2,18 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/RootView"
     android:layout_marginBottom="16dp">
 
     <TextView
+        android:id="@+id/nodata"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/nodata"
+        android:gravity="center_horizontal|center_vertical"
         android:paddingTop="50dp"
         android:text="Something Wrong"
-        android:gravity="center_horizontal|center_vertical"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/container_imageview"
@@ -40,8 +41,17 @@
             android:textColor="#fff"
             android:textSize="32sp"
             android:textStyle="bold" />
-    </RelativeLayout>
 
+        <Button
+            android:id="@+id/editEventButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="8dp"
+            android:background="@drawable/ic_create_white_24dp" />
+    </RelativeLayout>
 
 
     <TextView

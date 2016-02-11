@@ -18,15 +18,16 @@ public class MyIntro extends AppIntro2 {
 
     @Override
     public void init(Bundle savedInstanceState) {
+        int color = Color.parseColor("#2196F3");
 
         addSlide(AppIntroFragment.newInstance("College Connect", "Get Started",
-                R.drawable.image_intro_one, Color.parseColor("#FF9800")));
-        addSlide(AppIntroFragment.newInstance("College Connect", "Upcoming Events",
-                R.drawable.image_intro_two, Color.parseColor("#FF9800")));
+                R.drawable.image_intro_one,color));
+                addSlide(AppIntroFragment.newInstance("College Connect", "Upcoming Events",
+                        R.drawable.image_intro_two, color));
         addSlide(AppIntroFragment.newInstance("College Connect", "Create Event",
-                R.drawable.image_intro_three, Color.parseColor("#FF9800")));
+                R.drawable.image_intro_three, color));
         addSlide(AppIntroFragment.newInstance("College Connect", "Know Your Clubs",
-                R.drawable.image_intro_four, Color.parseColor("#FF9800")));
+                R.drawable.image_intro_four, color));
 
         //setBarColor(Color.parseColor("#3F51B5"));
         //setSeparatorColor(Color.parseColor("#2196F3"));

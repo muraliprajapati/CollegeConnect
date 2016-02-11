@@ -16,8 +16,7 @@
             android:id="@+id/heart"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/heart" />
+            android:layout_marginRight="20dp" />
 
         <ImageView
             android:id="@+id/share"

@@ -31,7 +31,6 @@
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash_bg</item>
     </style>
 
     <style name="Login_dialog" parent="Theme.AppCompat.Dialog.Alert">
@@ -48,6 +47,18 @@
         <item name="DialogSpotColor">@android:color/holo_orange_dark</item>
         <item name="DialogSpotCount">4</item>
 
+    </style>
+
+    <style name="Registration_dialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="DialogTitleText">Creating account...</item>
+        <item name="DialogSpotColor">@android:color/holo_orange_dark</item>
+        <item name="DialogSpotCount">4</item>
+
+    </style>
+
+    <style name="MyDialogTheme" parent="AlertDialog.AppCompat.Light">
+        <item name="android:buttonStyle">@style/BorderlessButtonStyle</item>
     </style>
 
 

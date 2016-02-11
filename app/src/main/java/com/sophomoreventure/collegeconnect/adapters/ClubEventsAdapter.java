@@ -30,7 +30,6 @@ import java.util.Date;
 public class ClubEventsAdapter extends RecyclerView.Adapter<ClubEventsAdapter.ViewHolder> {
 
     Context context;
-    int[] imageResArray = new int[]{R.drawable.poster_six};
     String clubName;
     EventDatabase eventDatabase;
     ArrayList<String> listClubs;
@@ -101,8 +100,8 @@ public class ClubEventsAdapter extends RecyclerView.Adapter<ClubEventsAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.eventImageView.setImageBitmap(decodeSampledBitmapFromResource(context.getResources(),
-                imageResArray[position], 300, 200));
+//        holder.eventImageView.setImageBitmap(decodeSampledBitmapFromResource(context.getResources(),
+//                imageResArray[position], 300, 200));
 
         if ( listData != null) {
 

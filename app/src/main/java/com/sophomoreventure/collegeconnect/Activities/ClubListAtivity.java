@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
  */
 public class ClubListAtivity extends DrawerBaseActivity {
     RecyclerView clubListRV;
-    int[] imageResArray = new int[]{R.drawable.poster_five, R.drawable.poster_four, R.drawable.poster_three, R.drawable.poster_two, R.drawable.poster_three};
     String[] clubNameList;
     private DrawerLayout mDrawerLayout;
 
@@ -40,7 +40,7 @@ public class ClubListAtivity extends DrawerBaseActivity {
         clubNameList = getResources().getStringArray(R.array.club_list);
         clubListRV = (RecyclerView) findViewById(R.id.clubListRecyclerView);
         clubListRV.setLayoutManager(new LinearLayoutManager(this));
-        clubListRV.setAdapter(new ClubListAdapter(this, clubNameList, imageResArray));
+        clubListRV.setAdapter(new ClubListAdapter(this, clubNameList));
         clubListRV.setHasFixedSize(true);
         overridePendingTransition(0, android.R.anim.fade_out);
 
@@ -61,7 +61,7 @@ public class ClubListAtivity extends DrawerBaseActivity {
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
             mDrawerLayout.closeDrawer(GravityCompat.END);
         } else {
-            super.onBackPressed();
+            NavUtils.navigateUpFromSameTask(this);
         }
     }
 
@@ -69,13 +69,12 @@ public class ClubListAtivity extends DrawerBaseActivity {
 
         Context context;
         String[] clubList;
-        int[] clubImageList;
         ClubsDataBase database;
        ArrayList<String> titles;
 
-        public ClubListAdapter(Context context, String[] clubList, int[] clubImageList) {
+        public ClubListAdapter(Context context, String[] clubList) {
             this.context = context;
-            this.clubImageList = clubImageList;
+
             this.clubList = clubList;
             database = new ClubsDataBase(context);
             titles = database.getClubTitles();

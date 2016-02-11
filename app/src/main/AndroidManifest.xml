@@ -28,6 +28,7 @@
 
         <activity
             android:name=".SplashActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,30 +40,42 @@
 
         <activity
             android:name=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.DrawerActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CreateEventActivity"
             android:label="Create Event"
             android:parentActivityName=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.SlideShowActivity" />
+        </activity>
         <activity
             android:name=".EventView"
             android:label="Event"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.RegistrationActivity"
-            android:label="Sign Up" />
+            android:label="Sign Up"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".Activities.LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".Activities.MyEventsActivity"
-            android:label="Events" />
+            android:parentActivityName=".Activities.SlideShowActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.SlideShowActivity" />
+        </activity>
 
         <service
             android:name=".Network.ServiceClass"
@@ -73,28 +86,43 @@
         <activity android:name=".Activities.EventsByClubActivity" />
         <activity
             android:name=".OtherEventView"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".ForgotPasswordActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".Activities.ClubListAtivity"
             android:parentActivityName=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.SlideShowActivity" />
+        </activity>
         <activity
             android:name=".Activities.ClubDetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SparshEventListAtivity"
             android:parentActivityName=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.SlideShowActivity" />
+        </activity>
         <activity
             android:name=".SparshEventActivity"
-            android:label="Technical" />
+            android:label="Technical"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SparshEventView"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -107,19 +135,24 @@
         <activity
             android:name=".Activities.EventCalendar"
             android:label="@string/title_activity_event_calendar"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".NoticeBoardActivity"
-            android:label="Notice board" />
 
-        <activity android:name=".Activities.MyIntro"
+        <activity
+            android:name=".Activities.MyIntro"
             android:label="Intro"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".Network.AboutActivity"
             android:parentActivityName=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.SlideShowActivity" />
+        </activity>
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"

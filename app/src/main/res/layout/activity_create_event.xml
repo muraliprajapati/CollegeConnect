@@ -111,8 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:hint="Event name"
-                android:text="aadas" />
+                android:hint="Event name" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -125,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:hint="Event description"
-                android:text="asda" />
+                android:text="" />
         </android.support.design.widget.TextInputLayout>
 
 
@@ -153,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:hint="Event venue "
-                android:text="adas" />
+                android:text="" />
         </android.support.design.widget.TextInputLayout>
 
 
@@ -231,7 +230,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:hint="Name of first organizer"
-                android:text="adsad" />
+                android:text="" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -246,7 +245,7 @@
                 android:hint="Enter Phone number"
                 android:inputType="phone"
                 android:maxLength="10"
-                android:text="5255554789" />
+                android:text="" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -275,7 +274,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:hint="Name of second organizer"
-                android:text="adasd" />
+                android:text="" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -290,7 +289,7 @@
                 android:hint="Enter Phone number"
                 android:inputType="phone"
                 android:maxLength="10"
-                android:text="5255554789" />
+                android:text="" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -359,7 +358,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="48dp"
             android:background="@drawable/button_bg_color_primary"
-            android:text="Register event" />
+            android:text="Post event" />
 
 
     </LinearLayout>

@@ -14,30 +14,21 @@
  * limitations under the License.
  */
 
-package com.sophomoreventure.collegeconnect.Activities;
+package com.sophomoreventure.collegeconnect;
 
-import android.content.Intent;
 import android.content.res.TypedArray;
-import android.os.Handler;
-import android.support.design.widget.NavigationView;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
 
-import com.sophomoreventure.collegeconnect.NoticeBoardActivity;
-import com.sophomoreventure.collegeconnect.R;
-import com.sophomoreventure.collegeconnect.SimpleHeaderRecyclerAdapter;
-import com.sophomoreventure.collegeconnect.SimpleRecyclerAdapter;
-import com.sophomoreventure.collegeconnect.SparshEventListAtivity;
-
 import java.util.ArrayList;
 
-public abstract class BaseActivity extends DrawerActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class BaseActivity extends AppCompatActivity {
     private static final int NUM_OF_ITEMS = 100;
     private static final int NUM_OF_ITEMS_FEW = 3;
 
@@ -124,63 +115,5 @@ public abstract class BaseActivity extends DrawerActivity implements NavigationV
 
     protected void setDummyDataWithHeader(RecyclerView recyclerView, View headerView) {
         recyclerView.setAdapter(new SimpleHeaderRecyclerAdapter(this, getDummyData(), headerView));
-    }
-
-    private void launchActivityDelayed(final Class activity) {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(BaseActivity.this, activity));
-            }
-        }, 260);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-        int id = menuItem.getItemId();
-        menuItem.setChecked(false);
-
-        switch (id) {
-
-            case R.id.nav_sparsh_events:
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(SparshEventListAtivity.class);
-                break;
-            case R.id.nav_events:
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                break;
-            case R.id.nav_clubs:
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(ClubListAtivity.class);
-                menuItem.setChecked(true);
-                break;
-
-            case R.id.nav_notice_board:
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(NoticeBoardActivity.class);
-                menuItem.setChecked(true);
-                break;
-
-            case R.id.nav_myenents:
-                mDrawerLayout.closeDrawers();
-                launchActivityDelayed(MyEventsActivity.class);
-                menuItem.setChecked(true);
-                break;
-            case R.id.nav_myprofile:
-                menuItem.setChecked(true);
-                return false;
-            case R.id.nav_settings:
-                menuItem.setChecked(true);
-                return false;
-            case R.id.nav_rate:
-                menuItem.setChecked(true);
-                return false;
-
-        }
-
-        return true;
     }
 }

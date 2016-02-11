@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
  */
 public class SparshEventListAtivity extends DrawerBaseActivity {
     RecyclerView clubListRV;
-    int[] imageResArray = new int[]{R.drawable.tech_one, R.drawable.man_one, R.drawable.info, R.drawable.workshop, R.drawable.poster_one};
     String[] sparshEventList = {"Technical", "Managerial", "Informal", "Lectures & Exhibitions", "Mega Attraction"};
     private DrawerLayout mDrawerLayout;
 
@@ -47,6 +47,7 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
+
         return BitmapFactory.decodeResource(res, resId, options);
     }
 
@@ -82,8 +83,9 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
         getSupportActionBar().setTitle("Sparsh Events");
         clubListRV = (RecyclerView) findViewById(R.id.clubListRecyclerView);
         clubListRV.setLayoutManager(new LinearLayoutManager(this));
-        clubListRV.setAdapter(new SparshEventListAdapter(this, sparshEventList, imageResArray));
+        clubListRV.setAdapter(new SparshEventListAdapter(this, sparshEventList));
         clubListRV.setHasFixedSize(true);
+        overridePendingTransition(0, 0);
 
     }
 
@@ -102,7 +104,7 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
             mDrawerLayout.closeDrawer(GravityCompat.END);
         } else {
-            super.onBackPressed();
+            NavUtils.navigateUpFromSameTask(this);
         }
     }
 
@@ -110,14 +112,12 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
 
         Context context;
         String[] clubList;
-        int[] clubImageList;
         ClubsDataBase database;
         ArrayList<String> titles;
 
 
-        public SparshEventListAdapter(Context context, String[] clubList, int[] clubImageList) {
+        public SparshEventListAdapter(Context context, String[] clubList) {
             this.context = context;
-            this.clubImageList = clubImageList;
             this.clubList = clubList;
             database = new ClubsDataBase(context);
             titles = database.getClubTitlesSparsh();

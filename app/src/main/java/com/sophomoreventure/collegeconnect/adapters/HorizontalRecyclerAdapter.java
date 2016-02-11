@@ -68,12 +68,6 @@ public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRe
 
         if(listClubs != null){
             if(listClubs.size() != 0){
-                if (position % 2 == 0) {
-                    holder.layout.setBackgroundResource(R.drawable.gradient_blue);
-                } else {
-                    holder.layout.setBackgroundResource(R.drawable.gradient_orange);
-                }
-
                 holder.clubNameTextView.setText(listClubs.get(position));
             }
         }

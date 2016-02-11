@@ -1,6 +1,7 @@
 package com.sophomoreventure.collegeconnect.JsonHandler;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.sophomoreventure.collegeconnect.extras.Constants;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubModel;
@@ -38,6 +39,7 @@ public class ClubParserer {
                 JSONArray jsonArray = response.getJSONArray(KEY_CLUBS);
 
                 if (jsonArray.length() != 0) {
+
                     for (int i = 0; i < jsonArray.length(); i++) {
 
                         JSONObject currentClub = jsonArray.getJSONObject(i);
@@ -61,23 +63,26 @@ public class ClubParserer {
 
                         JSONArray adminsList = currentClub.getJSONArray(KEY_ADMIN);
 
-                        for (int j = 0; i < adminsList.length(); i++) {
+                        for (int j = 0; j < adminsList.length(); j++) {
                             JSONObject current = adminsList.getJSONObject(j);
 
                             if (Utils.contains(current, KEY_EMAIL)) {
-                                adminEmail = adminEmail + "?"+ current.getString(KEY_EMAIL);
+                                adminEmail = adminEmail + "?" +current.getString(KEY_EMAIL);
                             }
                             if (Utils.contains(current, KEY_NAME)) {
-                                adminName = adminName + "?"+ current.getString(KEY_NAME);
+                                adminName = adminName + "?" + current.getString(KEY_NAME);
                             }
                             if (Utils.contains(current, KEY_MOBNOB)) {
-                                adminMobNo = adminMobNo + "?"+ String.valueOf(current.getInt(KEY_MOBNOB));
+                                adminMobNo =  adminMobNo+ "?"+ String.valueOf(current.getInt(KEY_MOBNOB));
                             }
 
                         }
 
-                        dataBase.insertRow(ClubId, clubName, about, adminName, adminMobNo, adminEmail,ClubImage);
-
+                        Log.i("expose","admin email" +clubName +"  "+ adminEmail + " " + adminName +" " + adminMobNo);
+                        dataBase.insertRow(ClubId, clubName, about, adminName, adminMobNo, adminEmail, ClubImage);
+                        adminEmail = "";
+                        adminName = "";
+                        adminMobNo = "";
                     }
 
                 }

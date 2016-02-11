@@ -19,8 +19,7 @@
                 android:id="@+id/event_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/parallax_image_height"
-                android:scaleType="centerCrop"
-                android:src="@drawable/tech_one" />
+                android:scaleType="centerCrop" />
 
             <View
                 android:id="@+id/event_anchor"

@@ -31,6 +31,7 @@ public class ClubsDataBase {
             deleteRow(clubId);
         }
 
+
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ClubDataBaseHelper.ClubID, clubId);
@@ -52,7 +53,7 @@ public class ClubsDataBase {
         Cursor cursor = db.query(ClubDataBaseHelper.Tablename, null, ClubDataBaseHelper.ClubID + " =?", whereArgs,
                 null, null, null, null);
         while(cursor.moveToNext()){
-            nameq = cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubID));
+            nameq = cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubName));
         }
 
         return nameq;

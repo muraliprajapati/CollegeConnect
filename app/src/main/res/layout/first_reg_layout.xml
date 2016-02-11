@@ -22,7 +22,7 @@
             android:hint="Name"
             android:inputType="textPersonName" />
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/user_email_edit_text"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:checked="false"
-                android:text="Non-SVNITian"
+                android:text="Other"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp" />
         </RadioGroup>
@@ -162,7 +162,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
             android:background="@drawable/button_state_bg"
-
             android:text="SIGN UP"
 
             android:textColor="@android:color/black" />

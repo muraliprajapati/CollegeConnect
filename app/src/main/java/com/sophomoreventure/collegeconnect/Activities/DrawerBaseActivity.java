@@ -23,7 +23,6 @@ import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.NavDrawerItemView;
 import com.sophomoreventure.collegeconnect.Network.AboutActivity;
-import com.sophomoreventure.collegeconnect.NoticeBoardActivity;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.ScrimInsetsScrollView;
 import com.sophomoreventure.collegeconnect.SparshEventListAtivity;
@@ -406,9 +405,7 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
             case NAVDRAWER_ITEM_COLLEGE_CLUBS:
                 createBackStack(new Intent(this, ClubListAtivity.class));
                 break;
-            case NAVDRAWER_ITEM_NOTICE_BOARD:
-                createBackStack(new Intent(this, NoticeBoardActivity.class));
-                break;
+
             case NAVDRAWER_ITEM_CREATE_EVENT:
                 createBackStack(new Intent(this, CreateEventActivity.class));
                 break;

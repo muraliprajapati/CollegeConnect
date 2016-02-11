@@ -18,7 +18,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCal
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
-import com.sophomoreventure.collegeconnect.Activities.BaseActivity;
+import com.sophomoreventure.collegeconnect.BaseActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
@@ -136,7 +136,10 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
 
         if(TimeLeft < 0){
             mEventDayLeft.setText("Event Already Happened");
-        }else{
+        }else if (TimeLeft == 0){
+            mEventDayLeft.setText("Event is Today");
+        }
+        else{
             mEventDayLeft.setText(TimeLeft + " Days From Now");
         }
 
