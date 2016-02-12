@@ -2,6 +2,7 @@ package com.sophomoreventure.collegeconnect.Network;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.Event;
@@ -33,9 +34,10 @@ public class TaskLoadEventsData extends AsyncTask<Void, Void, ArrayList<Event>> 
     @Override
     protected ArrayList<Event> doInBackground(Void... params) {
         // Load events here form api
+        Log.i("vikas","event data get request");
         ArrayList<Event> listEvents = EventsUtils.loadEventsData(requestQueue,context);
         ArrayList<ClubModel> listClubData = EventsUtils.loadClubData(requestQueue,context);
-        return listEvents;
+        return null;
     }
 
     @Override

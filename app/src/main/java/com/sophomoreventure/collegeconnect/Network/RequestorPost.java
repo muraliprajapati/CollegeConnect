@@ -17,7 +17,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.sophomoreventure.collegeconnect.Constants;
+import com.sophomoreventure.collegeconnect.extras.Constants;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HttpsTrustManager;
 
@@ -136,11 +136,14 @@ public class RequestorPost {
                         Log.i("vikas", response.toString());
                         jsonObject = response;
                         try {
+
                             parseAndSaveUserInfoToPref(context, email, userPassword, Parserer.parseToken(response), jsonBody);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         listener.onDataLoaded(url);
+
 
                     }
                 },
@@ -186,6 +189,67 @@ public class RequestorPost {
         return jsonObject;
 
     }
+
+    public static void requestEditEvent(
+            final RequestQueue requestQueue, final String url, final String email,
+            final String userPassword, final JSONObject jsonBody, final Context context) {
+        Log.i("vikas", "in requestCreateEvent");
+
+        HttpsTrustManager.allowAllSSL();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, jsonBody,
+                new Response.Listener<JSONObject>() {
+                    DataListener listener = (DataListener) context;
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("vikas", response.toString());
+                        jsonObject = response;
+                        listener.onDataLoaded(url);
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("vikas", error + "");
+
+                        DataListener listener = (DataListener) context;
+                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                            listener.setError(url, "NOCON");
+
+                        } else {
+                            try {
+                                NetworkResponse response = error.networkResponse;
+                                Log.i("vikas", response.statusCode + "");
+                                String string = new String(response.data);
+                                JSONObject jsonObject = new JSONObject(string);
+                                Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
+                                listener.setError(url, Parserer.parseResponse(jsonObject));
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+                    }
+                }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                String creds = String.format("%s:%s", email, userPassword);
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
+                params.put("Authorization", auth);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+        requestQueue.add(request);
+
+    }
+
 
     public static void requestCreateEvent(
             final RequestQueue requestQueue, final String url, final String email,
@@ -267,9 +331,9 @@ public class RequestorPost {
                     public void onErrorResponse(VolleyError error) {
                         Log.i("vikas", error + "");
 
-                        DataListener listener = (DataListener) context;
+//                        DataListener listener = (DataListener) context;
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                            listener.setError(url, "NOCON");
+//                            listener.setError(url, "NOCON");
                         } else if (error instanceof ServerError) {
                             Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show();
                         } else {
@@ -279,7 +343,7 @@ public class RequestorPost {
                                 String string = new String(response.data);
                                 JSONObject jsonObject = new JSONObject(string);
                                 Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
-                                listener.setError(url, Parserer.parseResponse(jsonObject));
+//                                listener.setError(url, Parserer.parseResponse(jsonObject));
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -358,6 +422,61 @@ public class RequestorPost {
 
     }
 
+
+    public static void attendRequest(final RequestQueue requestQueue, String url,final Context context) {
+
+        final String emailId = EventUtility.getUserTokenFromPref(context);
+        final String pass = EventUtility.getUserPasswordHashFromPref(context);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("vikas", error + "");
+
+                        //DataListener listener = (DataListener) context;
+                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                            //  listener.setError("NOCON","");
+
+                        } else {
+                            try {
+                                NetworkResponse response = error.networkResponse;
+                                Log.i("vikas", response.statusCode + "");
+                                String string = new String(response.data);
+                                JSONObject jsonObject = new JSONObject(string);
+                                Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
+                                //    listener.setError(Parserer.parseResponse(jsonObject),"");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+                    }
+                }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                String creds = String.format("%s:%s", emailId,pass);
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
+                params.put("Authorization", auth);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+        requestQueue.add(request);
+    }
+
     private static void parseAndSaveUserInfoToPref(Context context, String userEmail, String userPassword, String token, JSONObject jsonObject) throws JSONException {
         String rollNo, hostelName;
         long mobNo;
@@ -394,9 +513,13 @@ public class RequestorPost {
             editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_HOSTEL_NAME_KEY, hostelName);
         }
 
+
+
+
         editor.apply();
-        Log.i("tag", token);
-        Log.i("tag", EventUtility.getHashString(userPassword, "SHA-1"));
+        Log.i("vikas", token);
+        Log.i("vikas", EventUtility.getHashString(userPassword, "SHA-1"));
+        Log.i("vikas","in registration parseAndSaveUserInfoToPref");
 
     }
 

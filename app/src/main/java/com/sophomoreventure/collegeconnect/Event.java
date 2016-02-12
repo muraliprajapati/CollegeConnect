@@ -31,6 +31,14 @@ public class Event {
     private String organizerEmailTwo;
     private String UrlThumbnail;
 
+    public void setIsAdmin(String isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public void setEventLiked(String eventLiked) {
+        this.eventLiked = eventLiked;
+    }
+
     public String getOrganizerEmailOne() {
         return organizerEmailOne;
     }
@@ -59,7 +67,7 @@ public class Event {
         return isAdmin;
     }
 
-    public void setIsAdmin(String isAdmin) {
+    public void setClubId(String isAdmin) {
         this.isAdmin = isAdmin;
     }
 
@@ -115,7 +123,7 @@ public class Event {
         return eventLiked;
     }
 
-    public void setEventLiked(String eventLiked) {
+    public void setEventCreatedBy(String eventLiked) {
         this.eventLiked = eventLiked;
     }
 

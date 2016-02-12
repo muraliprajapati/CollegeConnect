@@ -11,19 +11,20 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,13 +38,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.sophomoreventure.collegeconnect.Activities.DrawerBaseActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
+import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
+import com.sophomoreventure.collegeconnect.adapters.ColorSpinnerAdapter;
+import com.sophomoreventure.collegeconnect.extras.API;
+import com.sophomoreventure.collegeconnect.extras.CloudinaryConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,20 +99,24 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
     EventHub eventHub;
     Event event;
     String eventId;
-    boolean[] missingFields = new boolean[12];
+    boolean[] missingFields = new boolean[15];
     boolean isImageChosen = false, isThemeSelected = false;
     long eventStartTime, eventEndTime, eventLastRegTime;
     Dialog spotsDialog;
     ViewGroup rootView;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
+    private ImageLoader mImageLoader;
     private AlertDialog dialog;
     private String base64ImageString, picturePath, color;
-    private String clubServerID = null;
+
+    private String eventServerID = null;
     private EventDatabase database;
     private String colorCode;
     private Map imageResult;
     private DrawerLayout mDrawerLayout;
+    private boolean isEditEventTrue;
+    private ClubsDataBase clubsDataBase;
 
     public static boolean areAllFalse(boolean[] array) {
         for (boolean b : array) if (b) return false;
@@ -122,19 +134,18 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         eventHub.addEventToEventList(event);
         cloudinary = new Cloudinary(CloudinaryConfig.getConfig());
         String[] clubNames = getResources().getStringArray(R.array.club_list);
-        clubServerID = getIntent().getStringExtra("clubId");
+        eventServerID = getIntent().getStringExtra("eventId");
+        isEditEventTrue = getIntent().getBooleanExtra("editEvent", false);
         database = new EventDatabase(this);
-        if (clubServerID != null) {
-            setEventDate(database.selectByEventId(clubServerID));
-        }
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar_actionbar));
-        getSupportActionBar().setTitle("Create Event");
+        clubsDataBase = new ClubsDataBase(this);
+
         nameEditText = (TextView) findViewById(R.id.name);
         nameEditText.setVisibility(View.GONE);
         eventImageView = (ImageView) findViewById(R.id.eventImageView);
-//        eventImageView.setImageResource(R.drawable.placeholder);
+        eventImageView.setImageResource(R.drawable.placeholder);
         imagePickerButton = (Button) findViewById(R.id.pickerButton);
+
+
         titleEditText = (EditText) findViewById(R.id.titleEditText);
         titleEditText.clearFocus();
         descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
@@ -246,11 +257,17 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
 
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
+        mImageLoader = volleySingleton.getImageLoader();
         spotsDialog = new SpotsDialog(this, R.style.Create_Event_dialog);
         try {
 
             if (!getClubIdList().isEmpty()) {
-                clubNameTextView.setText(getClubIdList().get(0).toString());
+
+                String clubName = clubsDataBase.getClubByID(getClubIdList().get(0).toString());
+
+                if (clubName != null) {
+                    clubNameTextView.setText(clubName);
+                }
             } else {
                 clubNameTextView.setText("Individual");
             }
@@ -262,6 +279,11 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         }
 
         overridePendingTransition(0, android.R.anim.fade_out);
+
+        if (eventServerID != null) {
+            setEventDate(database.selectByEventId(eventServerID));
+        }
+
     }
 
     @Override
@@ -294,7 +316,51 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         orgTwoEditText.setText(event.getEventOrganizerTwo());
         orgTwoEmailEditText.setText(event.getOrganizerEmailTwo());
         orgTwoPhoneEditText.setText(event.getEventOrganizerTwoPhoneNo());
+        eventStartDateAndTimeTextView.setText(EventUtility.getFriendlyDayString(Long.parseLong(event.getEventStarttime())));
 
+
+        if (event.getEventTime().equals("null")) {
+            String urlThumnail = event.getUrlThumbnail();
+            loadImages(urlThumnail, eventImageView);
+
+
+        } else {
+            String colorName = event.getEventTime();
+            if (colorName.equals("blue")) {
+                eventImageView.setImageResource(R.drawable.blue_gradient);
+            }
+            if (colorName.equals("purple")) {
+                eventImageView.setImageResource(R.drawable.purple_gradient);
+            }
+            if (colorName.equals("bluegray")) {
+                eventImageView.setImageResource(R.drawable.blue_grey_gradient);
+            }
+            if (colorName.equals("teal")) {
+                eventImageView.setImageResource(R.drawable.teal_gradient);
+            }
+
+        }
+
+
+    }
+
+
+    private void loadImages(String urlThumbnail, final ImageView holder) {
+        if (true) {
+            mImageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+
+                    holder.setImageBitmap(response.getBitmap());
+
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -321,6 +387,17 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         }
     }
 
+
+    private void launchActivityDelayed(final Class activity) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(CreateEventActivity.this, activity));
+            }
+        }, 260);
+    }
+
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -338,8 +415,8 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
 
                 if (isValidEvent()) {
 
-                    imageName = titleEditText.getText().toString().toLowerCase()
-                            + "By" + clubNameTextView.getText().toString();
+                    imageName = titleEditText.getText().toString().toLowerCase().trim()
+                            + "By" + clubNameTextView.getText().toString() + String.valueOf(System.currentTimeMillis());
                     imageUrl = cloudinary.url().generate(imageName);
                     Log.i("tag", imageName + " and " + imageUrl);
                     Log.i("tag", "" + EventUtility.getUserEmailFromPref(this));
@@ -380,7 +457,7 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
 
                                         dialog.dismiss();
                                     } else {
-                                        Snackbar.make(rootView, "Password doesn't share same opinion", Snackbar.LENGTH_LONG)
+                                        Snackbar.make(rootView, "Password didn't match", Snackbar.LENGTH_LONG)
                                                 .show();
                                     }
                                 }
@@ -471,12 +548,12 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         }
 
         if (orgTwoEditText.getText().toString().isEmpty()) {
-            missingFields[6] = true;
-            orgTwoEditText.setError("Cannot be empty");
+            missingFields[6] = false;
+//            orgTwoEditText.setError("Cannot be empty");
         }
         if (orgTwoPhoneEditText.getText().toString().isEmpty()) {
-            missingFields[7] = true;
-            orgTwoPhoneEditText.setError("Cannot be empty");
+            missingFields[7] = false;
+//            orgTwoPhoneEditText.setError("Cannot be empty");
         }
         if (!orgTwoEmailEditText.getText().toString().isEmpty() && !isEmailValid(orgTwoEmailEditText.getText().toString())) {
             missingFields[8] = false;
@@ -488,14 +565,30 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
             orgOnePhoneEditText.setError("Phone number is not valid");
         }
 
-        if (!orgTwoPhoneEditText.getText().toString().isEmpty() && orgTwoPhoneEditText.getText().toString().length() < 10) {
-            missingFields[10] = true;
+        if (!orgTwoEditText.getText().toString().isEmpty() && !orgTwoPhoneEditText.getText().toString().isEmpty() && orgTwoPhoneEditText.getText().toString().length() < 10) {
+            missingFields[10] = false;
             orgTwoPhoneEditText.setError("Phone number is not valid");
+        }
+
+        if(!orgTwoEditText.getText().toString().isEmpty() && orgTwoPhoneEditText.getText().toString().isEmpty()){
+            missingFields[13] = false;
+            orgTwoPhoneEditText.setError("Cannot be empty");
+        }
+
+        if(orgTwoEditText.getText().toString().isEmpty() && !orgTwoPhoneEditText.getText().toString().isEmpty()){
+            missingFields[14] = false;
+            orgTwoEditText.setError("Cannot be empty");
         }
 
         if (!isImageChosen && !isThemeSelected) {
             missingFields[11] = true;
             Snackbar.make(findViewById(R.id.createEventScrollView), "Select Image or Theme", Snackbar.LENGTH_LONG)
+                    .show();
+        }
+
+        if (orgOneEditText.getText().toString().equals(orgTwoEditText.getText().toString())) {
+            missingFields[12] = true;
+            Snackbar.make(findViewById(R.id.createEventScrollView), "Both organizers can't be same", Snackbar.LENGTH_LONG)
                     .show();
         }
 
@@ -523,15 +616,26 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         } else if (isThemeSelected) {
             jsonObject.put("color", colorCode);
         }
-
+        if (isEditEventTrue) {
+            jsonObject.put("","");
+        }
 
         JSONArray array = new JSONArray();
         JSONObject object = new JSONObject();
         object.put("contactname", orgOneEditText.getText().toString());
-        object.put("contactnumber", Long.parseLong(orgOnePhoneEditText.getText().toString()));
+        object.put("contactnumber", orgOnePhoneEditText.getText().toString());
         array.put(0, object);
-        object.put("contactname", orgTwoEditText.getText().toString());
-        object.put("contactnumber", Long.parseLong(orgTwoPhoneEditText.getText().toString()));
+        if(orgTwoEditText.getText().toString().isEmpty()){
+            object.put("contactname", "N/A");
+        }else{
+            object.put("contactname", orgTwoEditText.getText().toString());
+        }
+
+        if(orgTwoPhoneEditText.getText().toString().isEmpty()){
+            object.put("contactnumber", "N/A");
+        }else{
+            object.put("contactnumber", orgTwoPhoneEditText.getText().toString());
+        }
         array.put(1, object);
         jsonObject.put("contacts", array);
 
@@ -573,9 +677,10 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
             spotsDialog.dismiss();
         }
         View view = LayoutInflater.from(this).inflate(R.layout.done_message, null, false);
-        new android.support.v7.app.AlertDialog.Builder(this)
+        new android.support.v7.app.AlertDialog.Builder(new ContextThemeWrapper(this,R.style.MyDialogTheme))
                 .setTitle("Success")
                 .setView(view)
+
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(CreateEventActivity.this, SlideShowActivity.class);
@@ -666,17 +771,28 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
                 if (result.containsKey("url")) {
                     Log.i("vikas", result.get("url").toString());
                     try {
-                        RequestorPost.requestCreateEvent(requestQueue, API.EVENT_API,
-                                EventUtility.getUserEmailFromPref(CreateEventActivity.this),
-                                EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this), createJson(), CreateEventActivity.this);
+
+                        if (isEditEventTrue) {
+                            RequestorPost.requestEditEvent(requestQueue, API.EVENT_API,
+                                    EventUtility.getUserEmailFromPref(CreateEventActivity.this),
+                                    EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this),
+                                    createJson(), CreateEventActivity.this);
+
+                        } else {
+                            RequestorPost.requestCreateEvent(requestQueue, API.EVENT_API,
+                                    EventUtility.getUserEmailFromPref(CreateEventActivity.this),
+                                    EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this),
+                                    createJson(), CreateEventActivity.this);
+                        }
+
                     } catch (JSONException e) {
                         Log.i("tag", "" + e);
                     }
-                    Toast.makeText(CreateEventActivity.this, "Photo uploded", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(CreateEventActivity.this, "Photo uploded", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 spotsDialog.dismiss();
-                Snackbar.make(rootView, "Internet is not working", Snackbar.LENGTH_LONG)
+                Snackbar.make(rootView, "No connection", Snackbar.LENGTH_LONG)
                         .show();
             }
 

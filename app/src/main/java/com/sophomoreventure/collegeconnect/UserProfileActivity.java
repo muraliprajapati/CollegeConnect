@@ -37,31 +37,13 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_user_profile, menu);
+//        getMenuInflater().inflate(R.menu.menu_user_profile, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.user_info_edit) {
-            if (!isVisible && !isSaveClicked) {
-                changeNameButton.setVisibility(View.VISIBLE);
-                changeEmailButton.setVisibility(View.VISIBLE);
-                changePasswordButton.setVisibility(View.VISIBLE);
-                saveButton.setVisibility(View.VISIBLE);
-                isVisible = true;
-            } else {
-//                changeNameButton.setVisibility(View.GONE);
-//                changeEmailButton.setVisibility(View.GONE);
-//                changePasswordButton.setVisibility(View.GONE);
-//                saveButton.setVisibility(View.GONE);
-                Toast.makeText(UserProfileActivity.this, "You have not saved info", Toast.LENGTH_SHORT).show();
-                isVisible = false;
 
-            }
-
-
-        }
         return true;
     }
 

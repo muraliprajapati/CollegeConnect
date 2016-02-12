@@ -11,11 +11,12 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
-import com.sophomoreventure.collegeconnect.Constants;
+import com.sophomoreventure.collegeconnect.extras.Constants;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HttpsTrustManager;
@@ -110,7 +111,7 @@ public class RequestorGet {
 
     }
 
-    public static void requestEventData(
+    public static  void requestEventData(
             final RequestQueue requestQueue, String url, final Context context) {
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
@@ -120,7 +121,7 @@ public class RequestorGet {
                     public void onResponse(JSONObject response) {
 
                         Log.i("vikas", response.toString());
-                        ArrayList<Event> listEvents = ParserEventResponse.parseEventsJSON(response, context);
+                        ArrayList<Event> listEvents = ParserEventResponse.parseEventsJSON(response,context);
 
                     }
                 },
@@ -138,63 +139,7 @@ public class RequestorGet {
     }
 
 
-    public static void attendRequest(final RequestQueue requestQueue, String url, final Context context) {
 
-        SharedPreferences prefs = context.getSharedPreferences(
-                Constants.SharedPrefConstants.USER_SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
-        final String userId = prefs.getString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_NAME_KEY, "null");
-        final String userPassId = prefs.getString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_PASSWORD_KEY, "null");
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
-                new Response.Listener<JSONObject>() {
-                    DataListener listener = (DataListener) context;
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("vikas", error + "");
-
-                        DataListener listener = (DataListener) context;
-                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                            listener.setError("NOCON", "");
-
-                        } else {
-                            try {
-                                NetworkResponse response = error.networkResponse;
-                                Log.i("vikas", response.statusCode + "");
-                                String string = new String(response.data);
-                                JSONObject jsonObject = new JSONObject(string);
-                                Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
-                                listener.setError(Parserer.parseResponse(jsonObject), "");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-
-                    }
-                }) {
-
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s", userId, userPassId);
-                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
-                params.put("Authorization", auth);
-                params.put("Content-Type", "application/x-www-form-urlencoded");
-                return params;
-            }
-        };
-
-        requestQueue.add(request);
-
-    }
 
     public static void requestLogin(
             final RequestQueue requestQueue, final String url, final String userEmail,
@@ -227,11 +172,8 @@ public class RequestorGet {
                         DataListener listener = (DataListener) context;
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
                             listener.setError(url, "NOCON");
-//                            NetworkResponse response = error.networkResponse;
-//                            String string = new String(response.data);
-//                            Log.i("vikas",string);
 
-                        } else {
+                        }else {
                             try {
                                 NetworkResponse response = error.networkResponse;
                                 Log.i("vikas", response.statusCode + "");
@@ -282,6 +224,7 @@ public class RequestorGet {
                             parseAndSaveUserInfoToPref(context, response);
                             parseAndSaveClubAdmin(context, response);
                             parseAndSaveEvents(context, response);
+                            parseAndSaveEventFollowed(context,response);
                             listener.onDataLoaded(url);
                         } catch (JSONException e) {
                             Log.i("vikas", "" + e);
@@ -308,9 +251,6 @@ public class RequestorGet {
                                 String string = new String(response.data);
                                 JSONObject jsonObject = new JSONObject(string);
                                 Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
-                                if (response.statusCode == 500) {
-                                    listener.setError(url, "");
-                                }
                                 listener.setError(url, Parserer.parseResponse(jsonObject));
 
                             } catch (JSONException e) {
@@ -361,6 +301,20 @@ public class RequestorGet {
 //            stringBuilder.append(clubIDString);
 //        }
         FileOutputStream fileout = context.openFileOutput("clubs.txt", Context.MODE_PRIVATE);
+        OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+        outputWriter.write(clubAdminArray.toString());
+        outputWriter.close();
+    }
+
+    private static void parseAndSaveEventFollowed(Context context, JSONObject response) throws JSONException, IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        JSONArray clubAdminArray = response.getJSONArray("events_attending");
+//        for (int i = 0; i < clubAdminArray.length(); i++) {
+//            int clubID = clubAdminArray.getInt(i);
+//            String clubIDString = String.valueOf(clubID) + "\n";
+//            stringBuilder.append(clubIDString);
+//        }
+        FileOutputStream fileout = context.openFileOutput("attending.txt", Context.MODE_PRIVATE);
         OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
         outputWriter.write(clubAdminArray.toString());
         outputWriter.close();
@@ -425,7 +379,6 @@ public class RequestorGet {
 
                     @Override
                     public void onResponse(JSONObject response) {
-
 
                         Log.i("vikas", response.toString());
                         ClubParserer.parseClubJSON(response, context);

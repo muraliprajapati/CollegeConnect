@@ -33,7 +33,7 @@
                 android:id="@+id/event_vanue_line_one"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="At Production Seminar Hall"
+                android:text="No Location Available"
                 android:textSize="16sp" />
 
             <TextView
@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/event_vanue_line_one"
-                android:text="Behind Applied Mech Dept"
+                android:text="No Location Available"
                 android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>

@@ -20,8 +20,7 @@
                 android:id="@+id/club_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/parallax_image_height"
-                android:scaleType="centerCrop"
-                android:src="@drawable/d" />
+                android:scaleType="centerCrop"/>
 
             <View
                 android:id="@+id/anchor"

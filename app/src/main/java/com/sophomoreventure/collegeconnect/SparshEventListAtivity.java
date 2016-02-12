@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,12 +21,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sophomoreventure.collegeconnect.Activities.DrawerBaseActivity;
+import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
+
+import java.util.ArrayList;
+
 /**
  * Created by Murali on 23/01/2016.
  */
 public class SparshEventListAtivity extends DrawerBaseActivity {
     RecyclerView clubListRV;
-    int[] imageResArray = new int[]{R.drawable.tech_one, R.drawable.man_one, R.drawable.info, R.drawable.workshop, R.drawable.poster_one};
     String[] sparshEventList = {"Technical", "Managerial", "Informal", "Lectures & Exhibitions", "Mega Attraction"};
     private DrawerLayout mDrawerLayout;
 
@@ -43,6 +47,7 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
+
         return BitmapFactory.decodeResource(res, resId, options);
     }
 
@@ -78,8 +83,9 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
         getSupportActionBar().setTitle("Sparsh Events");
         clubListRV = (RecyclerView) findViewById(R.id.clubListRecyclerView);
         clubListRV.setLayoutManager(new LinearLayoutManager(this));
-        clubListRV.setAdapter(new SparshEventListAdapter(this, sparshEventList, imageResArray));
+        clubListRV.setAdapter(new SparshEventListAdapter(this, sparshEventList));
         clubListRV.setHasFixedSize(true);
+        overridePendingTransition(0, 0);
 
     }
 
@@ -98,7 +104,7 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
             mDrawerLayout.closeDrawer(GravityCompat.END);
         } else {
-            super.onBackPressed();
+            NavUtils.navigateUpFromSameTask(this);
         }
     }
 
@@ -106,13 +112,15 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
 
         Context context;
         String[] clubList;
-        int[] clubImageList;
+        ClubsDataBase database;
+        ArrayList<String> titles;
 
 
-        public SparshEventListAdapter(Context context, String[] clubList, int[] clubImageList) {
+        public SparshEventListAdapter(Context context, String[] clubList) {
             this.context = context;
-            this.clubImageList = clubImageList;
             this.clubList = clubList;
+            database = new ClubsDataBase(context);
+            titles = database.getClubTitlesSparsh();
         }
 
         @Override
@@ -129,12 +137,26 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.clubNameTextView.setText(clubList[position]);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                holder.layout.setBackground(new BitmapDrawable(decodeSampledBitmapFromResource(getResources(), clubImageList[position], 300, 150)));
-            } else {
-                holder.layout.setBackgroundResource(clubImageList[position]);
+
+            //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+              //  holder.layout.setBackground(new BitmapDrawable(decodeSampledBitmapFromResource(getResources(), clubImageList[position], 300, 150)));
+          //  } else {
+           //     holder.layout.setBackgroundResource(clubImageList[position]);
+           // }
+
+            if(titles != null){
+                if(titles.size() != 0){
+
+                    holder.clubNameTextView.setText(titles.get(position));
+
+                }else {
+                    holder.clubNameTextView.setText("No Data Available");
+                }
+            }else {
+                holder.clubNameTextView.setText("No Data Available");
             }
+
+
 //            holder.clubImageView.setImageResource(clubImageList[position]);
         }
 
@@ -142,7 +164,13 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
         @Override
         public int getItemCount() {
 
-            return clubImageList.length;
+            if(titles != null){
+                if(titles.size() != 0){
+                    return titles.size();
+                }else {return 1;}
+            }else {
+                return 1;
+            }
         }
 
 
@@ -163,9 +191,20 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SparshEventActivity.class);
+                intent.putExtra("clubName",titles.get(getPosition()));
+                intent.putExtra("position",getPosition());
                 context.startActivity(intent);
             }
         }
     }
 
+    private void launchActivityDelayed(final Class activity) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(SparshEventListAtivity.this, activity));
+            }
+        }, 260);
+    }
 }

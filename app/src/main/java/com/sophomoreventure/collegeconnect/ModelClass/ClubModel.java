@@ -11,6 +11,15 @@ public class ClubModel {
     private String clubHead;
     private String clubHeadEmail;
     private String clubHeadMob;
+    private String ImageUrl;
+
+    public String getImageUrl() {
+        return ImageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        ImageUrl = imageUrl;
+    }
 
     public String getClubHeadEmail() {
         return clubHeadEmail;

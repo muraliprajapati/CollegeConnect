@@ -1,5 +1,7 @@
 package com.sophomoreventure.collegeconnect.Activities;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
@@ -18,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -28,7 +31,7 @@ import android.widget.Spinner;
 
 import com.android.volley.RequestQueue;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.sophomoreventure.collegeconnect.API;
+import com.sophomoreventure.collegeconnect.extras.API;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
 import com.sophomoreventure.collegeconnect.Network.RequestorGet;
@@ -39,6 +42,7 @@ import com.sophomoreventure.collegeconnect.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,7 +59,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     boolean[] missingFields = new boolean[12];
     String rollNoPattern = "[UuPpIi][0-9][0-9][A-Za-z][A-Za-z][0123][0-9]|[UuPpIi][0-9][0-9][A-Za-z][A-Za-z][0123][0-9][0-9]";
     Pattern p = Pattern.compile(rollNoPattern);
-    private EditText userEmail, password, rePassword, fullName, rollNo, mobileNo;
+    private EditText password, rePassword, fullName, rollNo, mobileNo;
+    AutoCompleteTextView userEmail;
     private RadioGroup hostelLocalRadioGroup, collegeRadioGroup;
     private RadioButton hostelLocalRadioButton, collegeRadioButton, svnitianRadioButton, nonSvnitianRadioButton, hosteliteRadioButton, localiteRadioButton;
     private Button registerButton;
@@ -81,7 +86,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.first_reg_layout);
 
-        userEmail = (EditText) findViewById(R.id.user_email_edit_text);
+        userEmail = (AutoCompleteTextView) findViewById(R.id.user_email_edit_text);
+        userEmail.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getAccountEmailAddress(this)));
         password = (EditText) findViewById(R.id.password_edit_text);
         rePassword = (EditText) findViewById(R.id.retype_password_edit_text);
         fullName = (EditText) findViewById(R.id.name_edit_text);
@@ -106,7 +112,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         svnitianLayout = (LinearLayout) findViewById(R.id.svnitianLayout);
 
         context = this;
-        dialog = new SpotsDialog(this);
+        dialog = new SpotsDialog(this,R.style.Registration_dialog);
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
 
@@ -190,7 +196,11 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
 
 
-
+    private void showArray(boolean[] array) {
+        for (boolean anArray : array) {
+            Log.i("tag", "" + anArray);
+        }
+    }
 
 
     @Override
@@ -206,8 +216,10 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                         RequestorPost.requestRegistration(requestQueue, API.USER_REG_API,
                                 userEmailData, userPasswordData,
                                 getJsonBody(fullName.getText().toString(), rollNo.getText().toString().toLowerCase(),
-                                        mobileNo.getText().toString(), hostelName, isSVNITIan, isHostelite),
+                                        mobileNo.getText().toString(), hostelName, isSVNITIan,
+                                        isHostelite,"pi"+password.getText().toString().replace("e","v").replace("a","m")+"pa"),
                                 this);
+                        showArray(missingFields);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -223,33 +235,37 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private JSONObject getJsonBody(String name, String rollNo, String mobNo, String hostelName, boolean isSVNITian, boolean isHostelite) throws JSONException {
+    private JSONObject getJsonBody(String name, String rollNo, String mobNo, String hostelName, boolean isSVNITian, boolean isHostelite, String metadata) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         if (isSVNITian) {
             if (isHostelite) {
                 if (isEmpty(mobNo)) {
-                    jsonObject.put("name", name).put("rollno", rollNo).put("svnit", String.valueOf(isSVNITian)).put("hostelname", hostelName);
+                    jsonObject.put("name", name).put("rollno", rollNo).put("svnit", String.valueOf(isSVNITian)).
+                            put("hostelname", hostelName).put("metadata1",metadata);
                     Log.i("vikas", jsonObject.toString());
                 } else {
-                    jsonObject.put("name", name).put("rollno", rollNo).put("mobno", Long.parseLong(mobNo)).put("svnit", String.valueOf(isSVNITian)).put("hostelname", hostelName);
+                    jsonObject.put("name", name).put("rollno", rollNo).put("mobno", Long.parseLong(mobNo))
+                            .put("svnit", String.valueOf(isSVNITian)).put("hostelname", hostelName).put("metadata1",metadata);
                     Log.i("vikas", jsonObject.toString());
                 }
             } else {
                 if (isEmpty(mobNo)) {
-                    jsonObject.put("name", name).put("rollno", rollNo).put("svnit", String.valueOf(isSVNITian));
+                    jsonObject.put("name", name).put("rollno", rollNo).put("svnit", String.valueOf(isSVNITian)).put("metadata1",metadata);
                     Log.i("vikas", jsonObject.toString());
                 } else {
-                    jsonObject.put("name", name).put("rollno", rollNo).put("mobno", Long.parseLong(mobNo)).put("svnit", String.valueOf(isSVNITian));
+                    jsonObject.put("name", name).put("rollno", rollNo).put("mobno", Long.parseLong(mobNo))
+                            .put("svnit", String.valueOf(isSVNITian)).put("metadata1", metadata);
                     Log.i("vikas", jsonObject.toString());
                 }
             }
 
         } else {
             if (isEmpty(mobNo)) {
-                jsonObject.put("name", name).put("svnit", String.valueOf(isSVNITian));
+                jsonObject.put("name", name).put("svnit", String.valueOf(isSVNITian)).put("metadata1",metadata);
                 Log.i("vikas", jsonObject.toString());
             } else {
-                jsonObject.put("name", name).put("mobno", Long.parseLong(mobNo)).put("svnit", String.valueOf(isSVNITian));
+                jsonObject.put("name", name).put("mobno", Long.parseLong(mobNo))
+                        .put("svnit", String.valueOf(isSVNITian)).put("metadata1", metadata);
                 Log.i("vikas", jsonObject.toString());
             }
 
@@ -449,6 +465,20 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+
+    private ArrayList<String> getAccountEmailAddress(Context context) {
+        ArrayList<String> emailAddressList = new ArrayList<>();
+        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+        Account[] accounts = AccountManager.get(context).getAccounts();
+        for (Account account : accounts) {
+            if (emailPattern.matcher(account.name).matches()) {
+                String possibleEmail = account.name;
+                emailAddressList.add(possibleEmail);
+            }
+        }
+        return emailAddressList;
     }
 
 }

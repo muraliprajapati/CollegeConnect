@@ -6,7 +6,6 @@
     android:layout_margin="8dp"
     android:background="@drawable/login_bg_22">
 
-
     <TextView
         android:id="@+id/clubNameTextView"
         android:layout_width="match_parent"
