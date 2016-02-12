@@ -98,7 +98,7 @@ public class EventDatabase {
         contentValues.put(EventDataBaseHelper.LastRegistrationTime, lastRegistrationTime);
 
         db.insert(EventDataBaseHelper.Tablename, null, contentValues);
-
+        Log.i("vikas","Events data inserted");
 
     }
 

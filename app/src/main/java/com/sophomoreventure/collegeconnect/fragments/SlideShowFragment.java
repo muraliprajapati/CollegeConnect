@@ -97,8 +97,13 @@ public class SlideShowFragment extends Fragment {
 
         if(listData != null){
             if(listData.size() != 0){
-                if(Position < listData.size()){
-                    loadImages(listData.get(Position).getUrlThumbnail(),slideShowImage);
+                if(listData.size() == 1){
+                    loadImages(listData.get(0).getUrlThumbnail(),slideShowImage);
+                }else{
+                    if(Position < listData.size()){
+                        loadImages(listData.get(Position).getUrlThumbnail(),slideShowImage);
+                    }
+
                 }
 
             }

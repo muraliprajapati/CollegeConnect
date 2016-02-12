@@ -18,6 +18,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCal
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
+import com.sophomoreventure.collegeconnect.Activities.FullImageView;
 import com.sophomoreventure.collegeconnect.BaseActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
@@ -81,9 +82,7 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
             event = getData(position);
         }
 
-
-        mVolleySingleton = new VolleySingleton(this);
-        mImageLoader = mVolleySingleton.getImageLoader();
+        mImageLoader = volleySingleton.getImageLoader();
 
 
         mEventImage = (ImageView) findViewById(R.id.event_image);
@@ -106,7 +105,16 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
         mParallaxImageHeight = getResources().getDimensionPixelSize(R.dimen.parallax_image_height);
 
 
-
+        mEventImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), FullImageView.class);
+                if(event != null) {
+                    i.putExtra("Image", event.getUrlThumbnail());
+                }
+               // v.getContext().startActivity(i);
+            }
+        });
         setEventData(event);
 
 

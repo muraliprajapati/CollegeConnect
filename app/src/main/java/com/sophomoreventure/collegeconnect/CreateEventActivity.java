@@ -269,6 +269,13 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
                     clubNameTextView.setText(clubName);
                 }
             } else {
+                Snackbar.make(rootView, "Since you are not admin your event will be verified and posted", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        }).show();
                 clubNameTextView.setText("Individual");
             }
 
@@ -523,11 +530,13 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         if (titleEditText.getText().toString().isEmpty()) {
             missingFields[0] = true;
             titleEditText.setError("Cannot be empty");
+            titleEditText.requestFocus();
         }
 
         if (descriptionEditText.getText().toString().isEmpty()) {
             missingFields[1] = true;
             descriptionEditText.setError("Cannot be empty");
+            descriptionEditText.requestFocus();
         }
         if (eventStartDateAndTimeTextView.getText().toString().equalsIgnoreCase("Event Start Date and Time")) {
             missingFields[2] = true;
@@ -537,10 +546,12 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         if (venueEditText.getText().toString().isEmpty()) {
             missingFields[3] = true;
             venueEditText.setError("Cannot be empty");
+            venueEditText.requestFocus();
         }
         if (orgOneEditText.getText().toString().isEmpty()) {
             missingFields[4] = true;
             orgOneEditText.setError("Cannot be empty");
+            orgOneEditText.requestFocus();
         }
         if (orgOnePhoneEditText.getText().toString().isEmpty()) {
             missingFields[5] = true;
@@ -586,7 +597,7 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
                     .show();
         }
 
-        if (orgOneEditText.getText().toString().equals(orgTwoEditText.getText().toString())) {
+        if (orgOneEditText.getText().toString().equals(orgTwoEditText.getText().toString()) && !orgTwoEditText.getText().toString().isEmpty() && !orgOneEditText.getText().toString().isEmpty() ) {
             missingFields[12] = true;
             Snackbar.make(findViewById(R.id.createEventScrollView), "Both organizers can't be same", Snackbar.LENGTH_LONG)
                     .show();
@@ -625,18 +636,20 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         object.put("contactname", orgOneEditText.getText().toString());
         object.put("contactnumber", orgOnePhoneEditText.getText().toString());
         array.put(0, object);
+        JSONObject newObject = new JSONObject();
         if(orgTwoEditText.getText().toString().isEmpty()){
-            object.put("contactname", "N/A");
+            newObject.put("contactname", "N/A");
         }else{
-            object.put("contactname", orgTwoEditText.getText().toString());
+            newObject.put("contactname", orgTwoEditText.getText().toString());
         }
 
         if(orgTwoPhoneEditText.getText().toString().isEmpty()){
-            object.put("contactnumber", "N/A");
+            newObject.put("contactnumber", "N/A");
         }else{
-            object.put("contactnumber", orgTwoPhoneEditText.getText().toString());
+            newObject.put("contactnumber", orgTwoPhoneEditText.getText().toString());
         }
-        array.put(1, object);
+        array.put(1, newObject);
+
         jsonObject.put("contacts", array);
 
         Log.i("tag", jsonObject.toString());

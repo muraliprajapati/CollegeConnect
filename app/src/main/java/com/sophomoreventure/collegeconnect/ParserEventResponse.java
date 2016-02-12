@@ -75,7 +75,7 @@ public class ParserEventResponse {
 
                     JSONObject current = contacts.getJSONObject(j);
                     if (Utils.contains(current, KEY_CONTACT_MOBNO)) {
-                        mobNumbers[j] = String.valueOf(current.getInt(KEY_CONTACT_MOBNO));
+                        mobNumbers[j] = String.valueOf(current.getString(KEY_CONTACT_MOBNO));
                     }
 
                     if (Utils.contains(current, KEY_CONTACT_NAME)) {
@@ -131,20 +131,20 @@ public class ParserEventResponse {
                     eventColor = currentEvent.getString(KEY_COLOR);
                 }
 
-                //event.setEventStarttime(String.valueOf(startDateTime));
-               // event.setEventEndTime(String.valueOf(eventEndTime));
-               // event.setLastRegistrationTime(String.valueOf(lastRegistrationTime));
-               // event.setEventAttend(String.valueOf(occupiedSeats));
-               // event.setEventTitle(eventName);
-               // event.setEventDescription(about);
-               // event.setEventVenue(venue);
-               // event.setEventClub(clubName);
-               // event.setEventvarified(String.valueOf(verified));
-               // event.setEventOrganizerOne(names[0]);
-               // event.setEventOrganizerTwo(names[1]);
-              //  event.setEventOrganizerOnePhoneNo(String.valueOf(mobNumbers[0]));
-              //  event.setEventOrganizerTwoPhoneNo(String.valueOf(mobNumbers[1]));
-              //  listEvents.add(event);
+                event.setEventStarttime(String.valueOf(startDateTime));
+                event.setEventEndTime(String.valueOf(eventEndTime));
+                event.setLastRegistrationTime(String.valueOf(lastRegistrationTime));
+                event.setEventAttend(String.valueOf(occupiedSeats));
+                event.setEventTitle(eventName);
+                event.setEventDescription(about);
+                event.setEventVenue(venue);
+                event.setEventClub(clubName);
+                event.setEventvarified(String.valueOf(verified));
+                event.setEventOrganizerOne(names[0]);
+                event.setEventOrganizerTwo(names[1]);
+                event.setEventOrganizerOnePhoneNo(String.valueOf(mobNumbers[0]));
+                event.setEventOrganizerTwoPhoneNo(String.valueOf(mobNumbers[1]));
+                listEvents.add(event);
                 eventDatabase.insertRow(eventName, eventColor, startDateTime, eventEndTime, occupiedSeats, clubName, about, names[0], names[1]
                         , venue, String.valueOf(mobNumbers[0]), String.valueOf(mobNumbers[1]), "false", verified, clubID, eventId,
                         String.valueOf(lastRegistrationTime), createdby,ImageURL);
@@ -157,6 +157,7 @@ public class ParserEventResponse {
 
         } catch (JSONException e) {
             e.printStackTrace();
+            Log.i("vikas","Json event catch Caluse"+e);
         }
         return listEvents;
     }

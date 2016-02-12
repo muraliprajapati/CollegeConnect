@@ -33,6 +33,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventUtility;
+import com.sophomoreventure.collegeconnect.Network.EventsUtils;
 import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.OtherEventView;
@@ -65,7 +66,7 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     ViewPager slideShowPager;
     Toolbar toolbar;
     int currentPage = 0;
-        //a layout grouping the toolbar and the tabs together
+    //a layout grouping the toolbar and the tabs together
     //private ViewGroup mContainerToolbar;
 
     private JobScheduler mJobScheduler;
@@ -90,7 +91,11 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
+        volleySingleton = new VolleySingleton(this);
+        requestQueue = volleySingleton.getRequestQueue();
+        EventsUtils.loadEventsData(requestQueue, this);
         database = new EventDatabase(this);
+
         listDataSlideShow = database.viewSlideShowData();
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         ((AppBarLayout) findViewById(R.id.app_bar)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -186,8 +191,6 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         aRV.setAdapter(adapter);
 
         overridePendingTransition(0, 0);
-        volleySingleton = new VolleySingleton(this);
-        requestQueue = volleySingleton.getRequestQueue();
     }
 
 
@@ -264,7 +267,6 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 
     }
 
-
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -291,7 +293,7 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     public void onRefresh() {
         Toast.makeText(SlideShowActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
 
-        RequestorGet.requestEventData(requestQueue, API.EVENT_API,this);
+        RequestorGet.requestEventData(requestQueue, API.EVENT_API, this);
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -353,11 +355,18 @@ public class SlideShowActivity extends DrawerBaseActivity implements
             // Your Code here
 
             Intent intent = new Intent(SlideShowActivity.this, OtherEventView.class);
-            intent.putExtra("clubName", listDataSlideShow.get(currentPage).getEventClub());
-            intent.putExtra("eventId", listDataSlideShow.get(currentPage).getEventServerId());
-            intent.putExtra("position", currentPage);
-            SlideShowActivity.this.startActivity(intent);
-            Toast.makeText(SlideShowActivity.this, "" + currentPage, Toast.LENGTH_SHORT).show();
+            if (listDataSlideShow.size() != 0) {
+                if(listDataSlideShow.size() > 4){
+                    intent.putExtra("clubName", listDataSlideShow.get(currentPage).getEventClub());
+                    intent.putExtra("eventId", listDataSlideShow.get(currentPage).getEventServerId());
+                    intent.putExtra("position", currentPage);
+                    SlideShowActivity.this.startActivity(intent);
+                }
+
+            } else {
+                Toast.makeText(SlideShowActivity.this, "No Event To Display", Toast.LENGTH_SHORT).show();
+            }
+
             return true;
 
         }

@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.InputStream;
@@ -49,15 +48,6 @@ public class UserInfoTask extends AsyncTask<Void, Void, Void> {
             //String responseMsg = connection.getResponseMessage();
             Log.i("tag", "RESPONSE CODE: " + responseCode);
 
-            if (responseCode == 200) {
-                InputStream inputStr = connection.getInputStream();
-                String encoding = connection.getContentEncoding() == null ? "UTF-8"
-                        : connection.getContentEncoding();
-                String jsonResponse = IOUtils.toString(inputStr, encoding);
-                Log.i("tag", jsonResponse);
-
-
-            }
 
         } catch (Exception e) {
             Log.d("tag", e.getLocalizedMessage());

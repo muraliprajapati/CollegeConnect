@@ -16,6 +16,8 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,6 +33,7 @@ import android.widget.Spinner;
 
 import com.android.volley.RequestQueue;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.sophomoreventure.collegeconnect.CreateEventActivity;
 import com.sophomoreventure.collegeconnect.extras.API;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
@@ -290,17 +293,25 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         switch (apiUrl) {
             case API.USER_REG_API:
                 dialog.show();
-                RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
-                        EventUtility.getUserTokenFromPref(this), "None", this);
-                break;
-            case API.USER_PROFILE_API:
                 dialog.dismiss();
-                Intent intent = new Intent(context, SlideShowActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                context.startActivity(intent);
+                View view = LayoutInflater.from(this).inflate(R.layout.reg_done_message, null, false);
+                new android.support.v7.app.AlertDialog.Builder(new ContextThemeWrapper(this,R.style.MyDialogTheme))
+                        .setTitle("Success")
+                        .setView(view)
+
+                        .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(RegistrationActivity.this, SlideShowActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                startActivity(intent);
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
                 break;
+
         }
 
     }

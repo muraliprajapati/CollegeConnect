@@ -44,7 +44,7 @@ public class MyEventsActivity extends DrawerBaseActivity {
         if(clubName == null){
             clubName = "null";
         }
-
+overridePendingTransition(0,0);
         myEventsRV.setAdapter(new MyEventsAdapter(this, clubName,0));
 
     }
