@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -278,7 +279,7 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
             mDrawerLayout.closeDrawer(GravityCompat.END);
         } else {
-            super.onBackPressed();
+            NavUtils.navigateUpFromSameTask(this);
         }
     }
 
@@ -371,7 +372,6 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
                                                         EventUtility.getUserEmailFromPref(CreateEventActivity.this),
                                                         EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this), createJson(), CreateEventActivity.this);
                                             }
-
 
 
                                         } catch (Exception e) {

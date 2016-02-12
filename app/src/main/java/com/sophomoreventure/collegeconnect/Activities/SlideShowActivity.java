@@ -26,13 +26,18 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.sophomoreventure.collegeconnect.API;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
 import com.sophomoreventure.collegeconnect.DrawerBaseActivity;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HorizontalRecyclerAdapter;
 import com.sophomoreventure.collegeconnect.MyEventsAdapter;
+import com.sophomoreventure.collegeconnect.Network.DataListener;
+import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
+import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.fragments.FragmentDrawer;
 import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
@@ -49,7 +54,7 @@ import me.tatarka.support.job.JobScheduler;
  */
 
 public class SlideShowActivity extends DrawerBaseActivity implements
-        ViewPager.OnPageChangeListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener {
+        ViewPager.OnPageChangeListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener, DataListener {
 
     private static final long POLL_FREQUENCY = 5000;//28800000;
     private static final int JOB_ID = 100;
@@ -67,6 +72,8 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     private RecyclerView aRV;
     private GoogleApiClient client;
     private DrawerLayout mDrawerLayout;
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
 
 
     @Override
@@ -166,6 +173,8 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         aRV.setAdapter(new MyEventsAdapter(SlideShowActivity.this, "", 0));
 
 //        overridePendingTransition(0, 0);
+        volleySingleton = new VolleySingleton(this);
+        requestQueue = volleySingleton.getRequestQueue();
     }
 
 
@@ -268,13 +277,9 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     @Override
     public void onRefresh() {
         Toast.makeText(SlideShowActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 2000);
+        RequestorGet.requestUserInfo(requestQueue, API.USER_PROFILE_API,
+                EventUtility.getUserTokenFromPref(this), "None", this);
+
 
     }
 
@@ -297,6 +302,27 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onDataLoaded(String apiUrl) {
+        switch (apiUrl) {
+            case API.USER_PROFILE_API:
+                swipeRefreshLayout.setRefreshing(false);
+                break;
+        }
+    }
+
+    @Override
+    public void setError(String apiUrl, String errorCode) {
+        switch (apiUrl) {
+            case API.USER_PROFILE_API:
+                if (errorCode.equalsIgnoreCase("NOCON")) {
+                    Toast.makeText(this, "Failed to refresh", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                    break;
+                }
+        }
     }
 
     class SlideShowAdapter extends FragmentStatePagerAdapter {

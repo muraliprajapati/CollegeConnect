@@ -38,15 +38,18 @@
 
         <activity
             android:name=".Activities.SlideShowActivity"
+            android:allowTaskReparenting="true"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.DrawerActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".CreateEventActivity"
             android:label="Create Event"
             android:parentActivityName=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sophomoreventure.collegeconnect.Activities.SlideShowActivity" />
+        </activity>
         <activity
             android:name=".EventView"
             android:label="Event"
@@ -62,7 +65,11 @@
         <activity
             android:name=".MyEventsActivity"
             android:parentActivityName=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.SlideShowActivity" />
+        </activity>
 
         <service
             android:name=".Network.ServiceClass"
@@ -82,14 +89,22 @@
         <activity
             android:name=".ClubListAtivity"
             android:parentActivityName=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.SlideShowActivity" />
+        </activity>
         <activity
             android:name=".ClubDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SparshEventListAtivity"
             android:parentActivityName=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.SlideShowActivity" />
+        </activity>
         <activity
             android:name=".SparshEventActivity"
             android:label="Technical" />
@@ -115,7 +130,11 @@
         <activity
             android:name=".Network.AboutActivity"
             android:parentActivityName=".Activities.SlideShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.SlideShowActivity" />
+        </activity>
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"

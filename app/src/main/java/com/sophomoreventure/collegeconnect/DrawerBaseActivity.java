@@ -395,7 +395,7 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
                 break;
             case NAVDRAWER_ITEM_COLLEGE_EVENTS:
                 startActivity(new Intent(this, SlideShowActivity.class));
-                finish();
+
                 break;
             case NAVDRAWER_ITEM_COLLEGE_CLUBS:
                 createBackStack(new Intent(this, ClubListAtivity.class));
@@ -426,12 +426,11 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             TaskStackBuilder builder = TaskStackBuilder.create(this);
             builder.addNextIntentWithParentStack(intent);
-//            builder.addNextIntent(intent);
+            builder.addParentStack(SlideShowActivity.class);
             builder.startActivities();
 
         } else {
             startActivity(intent);
-            finish();
 
         }
 //        startActivity(intent);

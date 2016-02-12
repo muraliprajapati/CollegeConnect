@@ -174,6 +174,15 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
                     EventUtility.removeUserLoginFromPref(this);
                     finish();
                 }
+                if (errorCode.equals("NOCON")) {
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    Toast.makeText(this, "No connection", Toast.LENGTH_LONG).show();
+                    startActivity(intent);
+                    EventUtility.removeUserLoginFromPref(this);
+                    finish();
+                }
         }
 
 }
