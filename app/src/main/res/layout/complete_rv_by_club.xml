@@ -7,6 +7,7 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:layout_marginTop="16dp"
+    android:elevation="3dp"
     android:background="@drawable/custom_background"
     android:orientation="vertical">
 

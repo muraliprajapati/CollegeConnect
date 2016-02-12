@@ -133,16 +133,14 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".Activities.EventCalendar"
-            android:label="@string/title_activity_event_calendar"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
             android:name=".Activities.MyIntro"
             android:label="Intro"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".Activities.FullImageView"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".Network.AboutActivity"

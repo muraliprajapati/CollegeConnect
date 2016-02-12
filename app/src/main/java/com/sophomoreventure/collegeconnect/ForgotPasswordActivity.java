@@ -1,13 +1,19 @@
 package com.sophomoreventure.collegeconnect;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Patterns;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -21,13 +27,16 @@ import com.sophomoreventure.collegeconnect.extras.API;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+
 import dmax.dialog.SpotsDialog;
 
 /**
  * Created by Murali on 22/01/2016.
  */
 public class ForgotPasswordActivity extends AppCompatActivity implements View.OnClickListener, DataListener {
-    EditText emailEditText;
+    AutoCompleteTextView emailEditText;
     Dialog spotsDialog;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
@@ -37,7 +46,8 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
         Button resetPasswordButton = (Button) findViewById(R.id.resetPasswordButton);
-        emailEditText = (EditText) findViewById(R.id.forgotEmailEditText);
+        emailEditText = (AutoCompleteTextView) findViewById(R.id.forgotEmailEditText);
+        emailEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getAccountEmailAddress(this)));
         resetPasswordButton.setOnClickListener(this);
         volleySingleton = new VolleySingleton(this);
         requestQueue = volleySingleton.getRequestQueue();
@@ -108,5 +118,19 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
 
     private JSONObject getJsonBody(String emailAddress) throws JSONException {
         return new JSONObject().put("email", emailAddress);
+    }
+
+
+    private ArrayList<String> getAccountEmailAddress(Context context) {
+        ArrayList<String> emailAddressList = new ArrayList<>();
+        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+        Account[] accounts = AccountManager.get(context).getAccounts();
+        for (Account account : accounts) {
+            if (emailPattern.matcher(account.name).matches()) {
+                String possibleEmail = account.name;
+                emailAddressList.add(possibleEmail);
+            }
+        }
+        return emailAddressList;
     }
 }

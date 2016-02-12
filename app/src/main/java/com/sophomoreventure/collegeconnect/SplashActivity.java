@@ -18,11 +18,15 @@ import com.sophomoreventure.collegeconnect.Activities.LoginActivity;
 import com.sophomoreventure.collegeconnect.Activities.MyIntro;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.GCM.RegistrationService;
+import com.sophomoreventure.collegeconnect.ModelClass.ClubModel;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
+import com.sophomoreventure.collegeconnect.Network.EventsUtils;
 import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.extras.API;
+
+import java.util.ArrayList;
 
 import me.tatarka.support.job.JobInfo;
 import me.tatarka.support.job.JobScheduler;
@@ -52,8 +56,9 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
         progressBar = (ProgressBar) findViewById(R.id.loadingProgress);
         progressBar.setIndeterminate(true);
        // setupJob();
-        setupJob();
-
+        //setupJob();
+         EventsUtils.loadEventsData(requestQueue, this);
+         EventsUtils.loadClubData(requestQueue,this);
         SharedPreferences getPrefs = PreferenceManager
                 .getDefaultSharedPreferences(getBaseContext());
         boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
@@ -104,7 +109,7 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
 
                     }
                 }
-            }, 1500);
+            }, 1000);
 
         }
 
@@ -236,7 +241,7 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
 
         JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, new ComponentName(this, ServiceClass.class));
         builder.setPeriodic(POLL_FREQUENCY)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                 .setPersisted(true);
         mJobScheduler.schedule(builder.build());
     }

@@ -191,9 +191,12 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SparshEventActivity.class);
-                intent.putExtra("clubName",titles.get(getPosition()));
-                intent.putExtra("position",getPosition());
-                context.startActivity(intent);
+                if(titles.size() !=  0){
+                    intent.putExtra("clubName",titles.get(getPosition()));
+                    intent.putExtra("position", getPosition());
+                    context.startActivity(intent);
+                }
+
             }
         }
     }
