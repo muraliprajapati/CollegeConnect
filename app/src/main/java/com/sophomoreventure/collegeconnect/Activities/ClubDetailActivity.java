@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +31,9 @@ import java.util.ArrayList;
  */
 public class ClubDetailActivity extends BaseActivity implements ObservableScrollViewCallbacks {
     TextView titleTextView,mClubDescription,mOrganizerName,mOrganizerMob,mOrganizerMobTwo,mOrganizerNameTwo,mClubName;
+    ClubsDataBase database;
+    ArrayList<String> titles;
+    ImageView imageView;
     private View mImageView;
     private View mToolbarView;
     private ObservableScrollView mScrollView;
@@ -39,10 +41,6 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
     private VolleySingleton mVolleySingleton;
     private ImageLoader mImageLoader;
     private int position;
-    ClubsDataBase database;
-    ArrayList<String> titles;
-    ImageView imageView;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,8 +51,9 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("");
 
-        mVolleySingleton = new VolleySingleton(this);
+        mVolleySingleton = VolleySingleton.getInstance(this);
         mImageLoader = mVolleySingleton.getImageLoader();
 
         position = getIntent().getIntExtra("position", 0);
@@ -95,7 +94,7 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
     public void setData(int position,Context context){
         ClubModel club = database.viewAllData(titles.get(position));
         titleTextView.setText(club.getClubName());
-        getSupportActionBar().setTitle(club.getClubName());
+//        getSupportActionBar().setTitle(club.getClubName());
         mClubName.setText(club.getClubName());
         mClubDescription.setText(club.getClubDescription());
 

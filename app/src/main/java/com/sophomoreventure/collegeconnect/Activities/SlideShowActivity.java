@@ -25,7 +25,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -33,15 +32,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.sophomoreventure.collegeconnect.CustomLayoutManager;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventUtility;
+import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.Network.EventsUtils;
 import com.sophomoreventure.collegeconnect.Network.RequestorGet;
+import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.OtherEventView;
-import com.sophomoreventure.collegeconnect.adapters.HorizontalRecyclerAdapter;
-import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
-import com.sophomoreventure.collegeconnect.adapters.MyEventsAdapter;
-import com.sophomoreventure.collegeconnect.Network.ServiceClass;
 import com.sophomoreventure.collegeconnect.R;
+import com.sophomoreventure.collegeconnect.adapters.HorizontalRecyclerAdapter;
+import com.sophomoreventure.collegeconnect.adapters.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.extras.API;
 import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
 
@@ -68,7 +67,8 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     int currentPage = 0;
     //a layout grouping the toolbar and the tabs together
     //private ViewGroup mContainerToolbar;
-
+    EventDatabase database;
+    ArrayList<Event> listDataSlideShow;
     private JobScheduler mJobScheduler;
     private NavigationView mNavView;
     private LinearLayout mainScreen;
@@ -77,8 +77,6 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     private RecyclerView aRV;
     private GoogleApiClient client;
     private DrawerLayout mDrawerLayout;
-    EventDatabase database;
-    ArrayList<Event> listDataSlideShow;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
 
@@ -91,7 +89,7 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
-        volleySingleton = new VolleySingleton(this);
+        volleySingleton = VolleySingleton.getInstance(this);
         requestQueue = volleySingleton.getRequestQueue();
         EventsUtils.loadEventsData(requestQueue, this);
         database = new EventDatabase(this);
@@ -140,6 +138,7 @@ public class SlideShowActivity extends DrawerBaseActivity implements
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 tapGestureDetector.onTouchEvent(event);
+
                 return true;
             }
         });
@@ -172,8 +171,8 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 
 
         MyEventsAdapter adapter = new MyEventsAdapter(SlideShowActivity.this, "SlideShowView", 0);
-        RelativeLayout.LayoutParams params = new
-                RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        LinearLayout.LayoutParams params = new
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
         params.height = EventUtility.dpToPx(256, getResources()) * adapter.getItemCount();

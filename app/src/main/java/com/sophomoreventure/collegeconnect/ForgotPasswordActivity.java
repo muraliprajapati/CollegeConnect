@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.android.volley.RequestQueue;
 import com.sophomoreventure.collegeconnect.Activities.LoginActivity;
@@ -49,7 +48,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         emailEditText = (AutoCompleteTextView) findViewById(R.id.forgotEmailEditText);
         emailEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getAccountEmailAddress(this)));
         resetPasswordButton.setOnClickListener(this);
-        volleySingleton = new VolleySingleton(this);
+        volleySingleton = VolleySingleton.getInstance(this);
         requestQueue = volleySingleton.getRequestQueue();
         spotsDialog = new SpotsDialog(this);
     }

@@ -47,12 +47,12 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
     private final int mPosition;
     Context context;
     String clubName;
-    private ImageLoader mImageLoader;
     EventDatabase eventDatabase;
     ArrayList<String> listClubs;
-    private VolleySingleton mVolleySingleton;
     ClubsDataBase database;
     ArrayList<Event> listData;
+    private ImageLoader mImageLoader;
+    private VolleySingleton mVolleySingleton;
     private WeakReference<ImageView> imageViewReference;
     private ArrayList<String> specialEventList;
 
@@ -64,7 +64,7 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
         mPosition = position;
         database = new ClubsDataBase(context);
         eventDatabase = new EventDatabase(context);
-        mVolleySingleton = new VolleySingleton(context);
+        mVolleySingleton = VolleySingleton.getInstance(context);
         mImageLoader = mVolleySingleton.getImageLoader();
         listClubs = database.getClubTitles();
 
@@ -383,7 +383,7 @@ public class MyEventsAdapter extends RecyclerView.Adapter<MyEventsAdapter.ViewHo
         }
 
         private void sendAttendRequest(String eventID ,boolean attend) {
-            VolleySingleton volleySingleton =  new VolleySingleton(context);
+            VolleySingleton volleySingleton = VolleySingleton.getInstance(context);
             RequestQueue requestQueue = volleySingleton.getRequestQueue();
             if(attend){
                 RequestorPost.attendRequest(requestQueue, API.FOLLOW_EVENT_API + eventID + "/follow", context);

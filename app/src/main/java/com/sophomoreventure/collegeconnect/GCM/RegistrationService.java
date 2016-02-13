@@ -14,11 +14,11 @@ import android.util.Log;
 import com.android.volley.RequestQueue;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
-import com.sophomoreventure.collegeconnect.extras.API;
-import com.sophomoreventure.collegeconnect.extras.Constants;
 import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.R;
+import com.sophomoreventure.collegeconnect.extras.API;
+import com.sophomoreventure.collegeconnect.extras.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +45,7 @@ public class RegistrationService extends IntentService {
         try {
             // Just in case that onHandleIntent has been triggered several times in short
             // succession.
-            volleySingleton = new VolleySingleton(this);
+            volleySingleton = VolleySingleton.getInstance(this);
             requestQueue = volleySingleton.getRequestQueue();
             synchronized (TAG) {
                 InstanceID instanceID = InstanceID.getInstance(this);

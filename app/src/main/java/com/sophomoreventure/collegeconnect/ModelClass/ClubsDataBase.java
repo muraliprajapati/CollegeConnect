@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.sophomoreventure.collegeconnect.JsonHandler.ClubParserer;
-
 import java.util.ArrayList;
 
 /**
@@ -16,12 +14,20 @@ import java.util.ArrayList;
  */
 public class ClubsDataBase {
 
+    static ClubsDataBase clubsDataBase;
     ClubDataBaseHelper helper;
     private Context context;
 
     public ClubsDataBase(Context context) {
         helper = new ClubDataBaseHelper(context);
         this.context = context;
+    }
+
+    public static ClubsDataBase newInstance(Context context) {
+        if (clubsDataBase == null) {
+            clubsDataBase = new ClubsDataBase(context);
+        }
+        return clubsDataBase;
     }
 
     public void insertRow(String clubId, String clubName,String clubDescription,String clubHeadName ,String mobno, String email
@@ -136,12 +142,12 @@ public class ClubsDataBase {
 
 
     public boolean isInDatabase(String clubId){
-        String[] columns = {helper.ClubID};
+        String[] columns = {ClubDataBaseHelper.ClubID};
         SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = db.query(helper.Tablename, columns, null, null, null, null, null);
+        Cursor cursor = db.query(ClubDataBaseHelper.Tablename, columns, null, null, null, null, null);
         while (cursor.moveToNext()) {
 
-            String id = cursor.getString(cursor.getColumnIndex(helper.ClubID));
+            String id = cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubID));
 
             if( id.equalsIgnoreCase(clubId)){
                 return true;
@@ -154,7 +160,7 @@ public class ClubsDataBase {
     public int deleteRow(String clubID) {
         SQLiteDatabase db = helper.getWritableDatabase();
         String[] whereArgs = {clubID};
-        int count = db.delete(helper.Tablename, helper.ClubID + " =?", whereArgs);
+        int count = db.delete(ClubDataBaseHelper.Tablename, ClubDataBaseHelper.ClubID + " =?", whereArgs);
         return count;
     }
 

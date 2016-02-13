@@ -33,14 +33,12 @@ import android.widget.Spinner;
 
 import com.android.volley.RequestQueue;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.sophomoreventure.collegeconnect.CreateEventActivity;
-import com.sophomoreventure.collegeconnect.extras.API;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
-import com.sophomoreventure.collegeconnect.Network.RequestorGet;
 import com.sophomoreventure.collegeconnect.Network.RequestorPost;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.R;
+import com.sophomoreventure.collegeconnect.extras.API;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,8 +60,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     boolean[] missingFields = new boolean[12];
     String rollNoPattern = "[UuPpIi][0-9][0-9][A-Za-z][A-Za-z][0123][0-9]|[UuPpIi][0-9][0-9][A-Za-z][A-Za-z][0123][0-9][0-9]";
     Pattern p = Pattern.compile(rollNoPattern);
-    private EditText password, rePassword, fullName, rollNo, mobileNo;
     AutoCompleteTextView userEmail;
+    private EditText password, rePassword, fullName, rollNo, mobileNo;
     private RadioGroup hostelLocalRadioGroup, collegeRadioGroup;
     private RadioButton hostelLocalRadioButton, collegeRadioButton, svnitianRadioButton, nonSvnitianRadioButton, hosteliteRadioButton, localiteRadioButton;
     private Button registerButton;
@@ -116,7 +114,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
         context = this;
         dialog = new SpotsDialog(this,R.style.Registration_dialog);
-        volleySingleton = new VolleySingleton(this);
+        volleySingleton = VolleySingleton.getInstance(this);
         requestQueue = volleySingleton.getRequestQueue();
 
         password.setOnTouchListener(new View.OnTouchListener() {

@@ -10,9 +10,29 @@ import com.sophomoreventure.collegeconnect.extras.Constants;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 
-import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.*;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_AVAILABLE_SEATS;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_COLOR;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_CONTACTS;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_CONTACT_MOBNO;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_CONTACT_NAME;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_CREATEDBY;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_EDT;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_EVENTS;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_EVENT_ABOUT;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_EVENT_CLUB_ID;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_EVENT_CLUB_NAME;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_EVENT_ID;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_EVENT_NAME;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_IMAGE_URL;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_LRT;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_OCCUPIED_SEATS;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_STD;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_TOTAL_SEATS;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_VARIFIED;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointEvents.KEY_VENUE;
 
 /**
  * Created by Vikas Kumar on 16-01-2016.
@@ -41,7 +61,8 @@ public class ParserEventResponse {
         String eventId = Constants.NA;
         String eventColor = Constants.NA;
 
-        EventDatabase eventDatabase = new EventDatabase(context);
+//        EventDatabase eventDatabase = new EventDatabase(context);
+        EventDatabase eventDatabase = EventDatabase.newInstance(context);
         if(response == null || response.length() == 0){
             return null;
         }

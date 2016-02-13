@@ -65,6 +65,16 @@ public class ClubListAtivity extends DrawerBaseActivity {
         }
     }
 
+    private void launchActivityDelayed(final Class activity) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(ClubListAtivity.this, activity));
+            }
+        }, 260);
+    }
+
     class ClubListAdapter extends RecyclerView.Adapter<ClubListAdapter.ViewHolder> {
 
         Context context;
@@ -77,7 +87,7 @@ public class ClubListAtivity extends DrawerBaseActivity {
 
             this.clubList = clubList;
             database = new ClubsDataBase(context);
-            titles = database.getClubTitles();
+            titles = database.getClubTitlesNormal();
 
         }
 
@@ -141,16 +151,6 @@ public class ClubListAtivity extends DrawerBaseActivity {
                 context.startActivity(intent);
             }
         }
-    }
-
-    private void launchActivityDelayed(final Class activity) {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(ClubListAtivity.this, activity));
-            }
-        }, 260);
     }
 
 }

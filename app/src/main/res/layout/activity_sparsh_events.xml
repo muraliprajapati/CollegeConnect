@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res/android"
+        app:id="@+id/myEventRecyclerView"
+        app:layout_width="match_parent"
+        app:layout_height="wrap_content"
+        app:background="@color/grey_300"
+        app:scrollbars="vertical">
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

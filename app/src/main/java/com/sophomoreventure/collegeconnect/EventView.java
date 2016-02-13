@@ -14,7 +14,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
-import com.sophomoreventure.collegeconnect.ModelClass.EventModel;
 import com.sophomoreventure.collegeconnect.Network.SqlDataListener;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 
@@ -53,7 +52,7 @@ public class EventView extends AppCompatActivity implements SqlDataListener {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
-        mVolleySingleton = new VolleySingleton(this);
+        mVolleySingleton = VolleySingleton.getInstance(this);
         //mImageLoader = mVolleySingleton.getImageLoader();
 
         mEventImage = (ImageView) findViewById(R.id.event_image);
@@ -83,7 +82,7 @@ public class EventView extends AppCompatActivity implements SqlDataListener {
 
         eventData = getData(position);
 
-        volleySingleton = new VolleySingleton(this);
+        volleySingleton = VolleySingleton.getInstance(this);
         //requestQueue = volleySingleton.getRequestQueue();
 
         task = new HttpAsyncTask();

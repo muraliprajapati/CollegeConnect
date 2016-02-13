@@ -5,15 +5,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
-import com.sophomoreventure.collegeconnect.adapters.ClubEventsAdapter;
-import com.sophomoreventure.collegeconnect.adapters.MyEventsAdapter;
 import com.sophomoreventure.collegeconnect.R;
+import com.sophomoreventure.collegeconnect.adapters.MyEventsAdapter;
 
 /**
  * Created by Murali on 05/01/2016.
@@ -44,7 +42,7 @@ public class MyEventsActivity extends DrawerBaseActivity {
         if(clubName == null){
             clubName = "null";
         }
-overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
         myEventsRV.setAdapter(new MyEventsAdapter(this, clubName,0));
 
     }

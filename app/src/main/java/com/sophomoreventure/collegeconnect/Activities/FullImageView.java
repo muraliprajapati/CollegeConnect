@@ -30,7 +30,7 @@ public class FullImageView extends AppCompatActivity {
         ImageView imageView = (ImageView) findViewById(R.id.fullImageView);
 
         UrlImage = getIntent().getStringExtra("Image");
-        mVolleySingleton = new VolleySingleton(this);
+        mVolleySingleton = VolleySingleton.getInstance(this);
         requestQueue = mVolleySingleton.getRequestQueue();
         mImageLoader = mVolleySingleton.getImageLoader();
         if(false){

@@ -18,16 +18,25 @@ import java.util.ArrayList;
  */
 public class EventDatabase {
 
+    static EventDatabase eventDatabase;
     EventDataBaseHelper helper;
-    private Context context;
     SqlLoaderEvent eventListLoader;
     SqlLoaderEventSelector eventSelector;
+    private Context context;
 
 
 
     public EventDatabase(Context context) {
         helper = new EventDataBaseHelper(context);
         this.context = context;
+    }
+
+    public static EventDatabase newInstance(Context context) {
+        if (eventDatabase == null) {
+            eventDatabase = new EventDatabase(context);
+        }
+        return eventDatabase;
+
     }
 
     public void insertData(ArrayList<Event> listData, boolean clearPrevious) {
@@ -279,7 +288,7 @@ public class EventDatabase {
 
     public ArrayList<Event> viewSlideShowData() {
         ArrayList<Event> eventList = new ArrayList<>();
-        String[] columns = {helper.ImageURL,helper.EventColor,helper.EventCreatedBy};
+        String[] columns = {EventDataBaseHelper.ImageURL, EventDataBaseHelper.EventColor, EventDataBaseHelper.EventCreatedBy};
         SQLiteDatabase db = helper.getWritableDatabase();
         Cursor cursor = db.query(EventDataBaseHelper.Tablename,null , null, null, null, null,
                 EventDataBaseHelper.EventServerID +" ASC",null);
@@ -318,12 +327,12 @@ public class EventDatabase {
 
 
     public boolean isInDatabase(String serverId){
-        String[] columns = {helper.EventServerID};
+        String[] columns = {EventDataBaseHelper.EventServerID};
         SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = db.query(helper.Tablename, columns, null, null, null, null, null);
+        Cursor cursor = db.query(EventDataBaseHelper.Tablename, columns, null, null, null, null, null);
         while (cursor.moveToNext()) {
 
-            String id = cursor.getString(cursor.getColumnIndex(helper.EventServerID));
+            String id = cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventServerID));
 
             if( id.equalsIgnoreCase(serverId)){
                 return true;
@@ -405,9 +414,9 @@ public class EventDatabase {
 
     public class SqlLoaderEvent extends AsyncTask<Void, Void, ArrayList<Event>> {
 
+        SqlDataListener listener;
         private Context context;
         private String clubName;
-        SqlDataListener listener;
 
         public SqlLoaderEvent(Context context,String clubName){
             this.context = context;
@@ -438,9 +447,9 @@ public class EventDatabase {
 
     public class SqlLoaderEventSelector extends AsyncTask<Void, Void,Event> {
 
+        SqlDataListener listener;
         private Context context;
         private String clubId;
-        SqlDataListener listener;
 
         public SqlLoaderEventSelector(Context context,String clubId){
             this.context = context;

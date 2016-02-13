@@ -26,7 +26,7 @@ public class TaskLoadEventsData extends AsyncTask<Void, Void, ArrayList<Event>> 
 
     public TaskLoadEventsData(Context context) throws NoSuchAlgorithmException, KeyManagementException {
         this.myListener = (EventsLoadedListener) context;
-        volleySingleton = new VolleySingleton(context);
+        volleySingleton = VolleySingleton.getInstance(context);
         requestQueue = volleySingleton.getRequestQueue();
         this.context = context;
     }

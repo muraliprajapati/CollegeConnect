@@ -19,7 +19,6 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.sophomoreventure.collegeconnect.Activities.FullImageView;
-import com.sophomoreventure.collegeconnect.BaseActivity;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
@@ -33,9 +32,6 @@ import java.util.GregorianCalendar;
  */
 public class OtherEventView extends BaseActivity implements ObservableScrollViewCallbacks {
 
-    private View mToolbarView;
-    private ObservableScrollView mScrollView;
-    private int mParallaxImageHeight;
     Event event = null;
     Context context;
     EventDatabase eventDatabase;
@@ -46,9 +42,12 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
             mEventAddressLineThree,mEventOrganizerName,mEventorganizerMob,mEventOrganizerNameTwo,mEventorganizerMobTwo,
             mEventTitle;
     Toolbar toolbar;
+    int position;
+    private View mToolbarView;
+    private ObservableScrollView mScrollView;
+    private int mParallaxImageHeight;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-    int position;
     private TextView mEventDescription;
     private VolleySingleton mVolleySingleton;
     private ImageLoader mImageLoader;
@@ -70,7 +69,7 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
         String id = getIntent().getStringExtra("eventId");
         clubName = getIntent().getStringExtra("clubName");
         position = getIntent().getIntExtra("position", 0);
-        volleySingleton = new VolleySingleton(this);
+        volleySingleton = VolleySingleton.getInstance(this);
         requestQueue = volleySingleton.getRequestQueue();
 
         context = this;

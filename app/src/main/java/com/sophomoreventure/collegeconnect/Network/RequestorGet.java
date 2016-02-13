@@ -11,17 +11,16 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
-import com.sophomoreventure.collegeconnect.extras.Constants;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HttpsTrustManager;
 import com.sophomoreventure.collegeconnect.JsonHandler.ClubParserer;
 import com.sophomoreventure.collegeconnect.ParserEventResponse;
+import com.sophomoreventure.collegeconnect.extras.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -331,7 +330,7 @@ public class RequestorGet {
         editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_EMAIL_KEY, userEmail);
         editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_PASSWORD_KEY, userPassword);
         editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_USER_TOKEN_KEY, token);
-        editor.apply();
+        editor.commit();
 
         Log.i("vikas", token);
         Log.i("vikas", EventUtility.getHashString(userPassword, "SHA-1"));
@@ -367,7 +366,7 @@ public class RequestorGet {
             rollNo = response.getString("rollno");
             editor.putString(Constants.SharedPrefConstants.USER_SHARED_PREF_ROLL_NO_KEY, rollNo);
         }
-        editor.apply();
+        editor.commit();
         Log.i("vikas", "parseAndSaveUserInfoToPref");
 //        Log.i("vikas", EventUtility.getHashString(userPassword, "SHA-1"));
 

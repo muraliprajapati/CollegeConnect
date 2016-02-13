@@ -24,7 +24,7 @@ public class VolleySingleton {
     private ImageLoader mImageLoader;
     private RequestQueue mRequestQueue;
 
-    public VolleySingleton(Context context) {
+    private VolleySingleton(Context context) {
 
         SSLContext sslcontext = null;
         try {
@@ -34,9 +34,7 @@ public class VolleySingleton {
         }
 
         try {
-            sslcontext.init(null,
-                    null,
-                    null);
+            sslcontext.init(null, null, null);
         } catch (KeyManagementException e) {
             e.printStackTrace();
         }
@@ -57,6 +55,13 @@ public class VolleySingleton {
                 cache.put(url, bitmap);
             }
         });
+    }
+
+    public static VolleySingleton getInstance(Context context) {
+        if (sInstance == null) {
+            sInstance = new VolleySingleton(context);
+        }
+        return sInstance;
     }
 
     public RequestQueue getRequestQueue() {

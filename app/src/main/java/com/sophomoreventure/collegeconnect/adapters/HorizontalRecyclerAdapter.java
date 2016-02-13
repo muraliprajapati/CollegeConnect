@@ -33,7 +33,7 @@ public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRe
         this.context = context;
         database = new ClubsDataBase(context);
         eventDatabase = new EventDatabase(context);
-        listClubs = database.getClubTitles();
+        listClubs = database.getClubTitlesNormal();
     }
 
     @Override

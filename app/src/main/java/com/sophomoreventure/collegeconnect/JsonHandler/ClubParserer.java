@@ -3,9 +3,9 @@ package com.sophomoreventure.collegeconnect.JsonHandler;
 import android.content.Context;
 import android.util.Log;
 
-import com.sophomoreventure.collegeconnect.extras.Constants;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubModel;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
+import com.sophomoreventure.collegeconnect.extras.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,7 +13,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointClub.*;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointClub.KEY_ABOUT;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointClub.KEY_ADMIN;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointClub.KEY_CLUBS;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointClub.KEY_CLUB_ID;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointClub.KEY_CLUB_NAME;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointClub.KEY_EMAIL;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointClub.KEY_MOBNOB;
+import static com.sophomoreventure.collegeconnect.extras.Keys.EndpointClub.KEY_NAME;
 
 /**
  * Created by Vikas Kumar on 01-02-2016.
@@ -22,7 +29,8 @@ public class ClubParserer {
 
     public static ArrayList<ClubModel> parseClubJSON(JSONObject response, Context context) {
         ArrayList<ClubModel> clubList = new ArrayList<>();
-        ClubsDataBase dataBase = new ClubsDataBase(context);
+//        ClubsDataBase dataBase = new ClubsDataBase(context);
+        ClubsDataBase dataBase = ClubsDataBase.newInstance(context);
 
         String adminName = "";
         String adminMobNo = "";

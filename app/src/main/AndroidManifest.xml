@@ -118,7 +118,6 @@
         </activity>
         <activity
             android:name=".SparshEventActivity"
-            android:label="Technical"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SparshEventView"

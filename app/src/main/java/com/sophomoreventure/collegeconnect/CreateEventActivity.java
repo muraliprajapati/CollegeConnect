@@ -35,7 +35,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -255,7 +254,7 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
             }
         });
 
-        volleySingleton = new VolleySingleton(this);
+        volleySingleton = VolleySingleton.getInstance(this);
         requestQueue = volleySingleton.getRequestQueue();
         mImageLoader = volleySingleton.getImageLoader();
         spotsDialog = new SpotsDialog(this, R.style.Create_Event_dialog);

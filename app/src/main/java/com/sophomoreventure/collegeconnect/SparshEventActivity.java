@@ -18,12 +18,13 @@ public class SparshEventActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_events);
+        setContentView(R.layout.activity_sparsh_events);
         RecyclerView SparshEventsRV = (RecyclerView) findViewById(R.id.myEventRecyclerView);
         SparshEventsRV.setLayoutManager(new LinearLayoutManager(this));
         String clubName = getIntent().getStringExtra("clubName");
         int position = getIntent().getIntExtra("position",0);
         SparshEventsRV.setAdapter(new MyEventsAdapter(this,clubName,position));
+        getSupportActionBar().setTitle(clubName);
 
     }
 

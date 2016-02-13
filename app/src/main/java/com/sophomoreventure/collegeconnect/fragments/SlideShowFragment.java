@@ -14,7 +14,6 @@ import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.cloudinary.Url;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
@@ -42,7 +41,7 @@ public class SlideShowFragment extends Fragment {
         fragment.setArguments(bundle);
         database = new EventDatabase(context);
         listData = database.viewSlideShowData();
-        mVolleySingleton = new VolleySingleton(context);
+        mVolleySingleton = VolleySingleton.getInstance(context);
         mImageLoader = mVolleySingleton.getImageLoader();
         Position = position;
         return fragment;
