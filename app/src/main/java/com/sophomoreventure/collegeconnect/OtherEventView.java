@@ -19,7 +19,6 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.sophomoreventure.collegeconnect.Activities.FullImageView;
-import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 
@@ -230,9 +229,10 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent i = new Intent(OtherEventView.this, SlideShowActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                onBackPressed();
+//                Intent i = new Intent(OtherEventView.this, SlideShowActivity.class);
+//                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(i);
         }
         return true;
     }
@@ -244,4 +244,9 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
         context.startActivity(i);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

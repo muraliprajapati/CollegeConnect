@@ -181,10 +181,17 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent i = new Intent(ClubDetailActivity.this, ClubListAtivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                onBackPressed();
+//                Intent i = new Intent(ClubDetailActivity.this, ClubListAtivity.class);
+//                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(i);
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

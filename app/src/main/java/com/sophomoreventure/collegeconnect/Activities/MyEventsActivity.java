@@ -26,6 +26,7 @@ public class MyEventsActivity extends DrawerBaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_events);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_actionbar));
         clubName = getIntent().getStringExtra("clubName");
@@ -72,4 +73,6 @@ public class MyEventsActivity extends DrawerBaseActivity {
             NavUtils.navigateUpFromSameTask(this);
         }
     }
+
+
 }

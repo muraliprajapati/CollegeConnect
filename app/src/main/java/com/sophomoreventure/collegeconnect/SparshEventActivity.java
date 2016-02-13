@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 
 import com.sophomoreventure.collegeconnect.adapters.MyEventsAdapter;
 
@@ -25,6 +27,7 @@ public class SparshEventActivity extends AppCompatActivity {
         int position = getIntent().getIntExtra("position",0);
         SparshEventsRV.setAdapter(new MyEventsAdapter(this,clubName,position));
         getSupportActionBar().setTitle(clubName);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -36,5 +39,13 @@ public class SparshEventActivity extends AppCompatActivity {
                 startActivity(new Intent(SparshEventActivity.this, activity));
             }
         }, 260);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+        }
+        return true;
     }
 }

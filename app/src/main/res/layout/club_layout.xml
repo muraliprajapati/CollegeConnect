@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="128dp"
     android:layout_margin="8dp"
-    android:background="@drawable/blue_gradient">
+    android:background="@drawable/club_overlay_bbg">
 
     <TextView
         android:id="@+id/clubNameTextView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#A0000000"
+
         android:gravity="center"
         android:text="IETE"
         android:textColor="#FFF"

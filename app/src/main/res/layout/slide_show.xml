@@ -23,5 +23,15 @@
         app:ci_margin="6dp"
         app:ci_width="6dp" />
 
+    <ImageButton
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/ic_check_circle_blue_300_48dp"
+        android:visibility="gone" />
+
 
 </RelativeLayout>

@@ -16,7 +16,6 @@ import com.android.volley.RequestQueue;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.sophomoreventure.collegeconnect.Activities.LoginActivity;
-import com.sophomoreventure.collegeconnect.Activities.MyIntro;
 import com.sophomoreventure.collegeconnect.Activities.SlideShowActivity;
 import com.sophomoreventure.collegeconnect.GCM.RegistrationService;
 import com.sophomoreventure.collegeconnect.Network.DataListener;
@@ -51,6 +50,7 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
         volleySingleton = VolleySingleton.getInstance(this);
         requestQueue = volleySingleton.getRequestQueue();
         setContentView(R.layout.activity_splash);
+        overridePendingTransition(0, 0);
         progressBar = (ProgressBar) findViewById(R.id.loadingProgress);
         progressBar.setIndeterminate(true);
        // setupJob();
@@ -62,7 +62,9 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
         boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
         if (isFirstStart) {
 
-            Intent i = new Intent(SplashActivity.this, MyIntro.class);
+            Intent i = new Intent(SplashActivity.this, NewAppIntro.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
             SharedPreferences.Editor e = getPrefs.edit();
             e.putBoolean("firstStart", false);

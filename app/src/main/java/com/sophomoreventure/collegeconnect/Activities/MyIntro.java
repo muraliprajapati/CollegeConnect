@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntro2;
-import com.github.paolorotolo.appintro.AppIntroFragment;
-import com.sophomoreventure.collegeconnect.R;
 import com.sophomoreventure.collegeconnect.SplashActivity;
 
 /**
@@ -20,14 +17,14 @@ public class MyIntro extends AppIntro2 {
     public void init(Bundle savedInstanceState) {
         int color = Color.parseColor("#2196F3");
 
-        addSlide(AppIntroFragment.newInstance("College Connect", "Get Started",
-                R.drawable.image_intro_one,color));
-                addSlide(AppIntroFragment.newInstance("College Connect", "Upcoming Events",
-                        R.drawable.image_intro_two, color));
-        addSlide(AppIntroFragment.newInstance("College Connect", "Create Event",
-                R.drawable.image_intro_three, color));
-        addSlide(AppIntroFragment.newInstance("College Connect", "Know Your Clubs",
-                R.drawable.image_intro_four, color));
+//        addSlide(AppIntroFragment.newInstance("College Connect", "Get Started",
+//                R.drawable.image_intro_one,color));
+//                addSlide(AppIntroFragment.newInstance("College Connect", "Upcoming Events",
+//                        R.drawable.image_intro_two, color));
+//        addSlide(AppIntroFragment.newInstance("College Connect", "Create Event",
+//                R.drawable.image_intro_three, color));
+//        addSlide(AppIntroFragment.newInstance("College Connect", "Know Your Clubs",
+//                R.drawable.image_intro_four, color));
 
         //setBarColor(Color.parseColor("#3F51B5"));
         //setSeparatorColor(Color.parseColor("#2196F3"));
