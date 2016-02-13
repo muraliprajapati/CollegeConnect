@@ -8,8 +8,8 @@ android {
         applicationId "com.sophomoreventure.collegeconnect"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 4
-        versionName "0.7.2.1"
+        versionCode 5
+        versionName "0.7.3.2"
     }
     buildTypes {
         release {

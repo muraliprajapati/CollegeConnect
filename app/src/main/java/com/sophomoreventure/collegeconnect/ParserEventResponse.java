@@ -87,7 +87,7 @@ public class ParserEventResponse {
                 }
 
                 if (Utils.contains(currentEvent, KEY_AVAILABLE_SEATS)) {
-                    availabeSeats = currentEvent.getString(KEY_AVAILABLE_SEATS);
+                    //availabeSeats = currentEvent.getString(KEY_AVAILABLE_SEATS);
                 }
 
                 JSONArray contacts = currentEvent.getJSONArray(KEY_CONTACTS);
@@ -96,7 +96,7 @@ public class ParserEventResponse {
 
                     JSONObject current = contacts.getJSONObject(j);
                     if (Utils.contains(current, KEY_CONTACT_MOBNO)) {
-                        mobNumbers[j] = String.valueOf(current.getString(KEY_CONTACT_MOBNO));
+                        mobNumbers[j] =current.getString(KEY_CONTACT_MOBNO);
                     }
 
                     if (Utils.contains(current, KEY_CONTACT_NAME)) {
@@ -172,9 +172,7 @@ public class ParserEventResponse {
                 Log.i("vikas", "Event parsing done  "+ eventName);
             }
 
-
             //eventDatabase.insertData(listEvents,false);
-
 
         } catch (JSONException e) {
             e.printStackTrace();
