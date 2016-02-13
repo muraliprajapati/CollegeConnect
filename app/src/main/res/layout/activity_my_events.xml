@@ -19,6 +19,7 @@
             app:id="@+id/myEventRecyclerView"
             app:layout_width="match_parent"
             app:layout_height="wrap_content"
+            app:layout_margin="8dp"
             app:background="@color/grey_300"
             app:scrollbars="vertical">
 

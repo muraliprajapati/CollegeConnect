@@ -23,6 +23,7 @@ import com.sophomoreventure.collegeconnect.ModelClass.ClubModel;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
 import com.sophomoreventure.collegeconnect.Network.VolleySingleton;
 import com.sophomoreventure.collegeconnect.R;
+import com.sophomoreventure.collegeconnect.SparshEventActivity;
 
 import java.util.ArrayList;
 
@@ -82,7 +83,7 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(ClubDetailActivity.this, MyEventsActivity.class);
+                Intent i = new Intent(ClubDetailActivity.this, SparshEventActivity.class);
                 i.putExtra("clubName",mClubName.getText().toString());
                 i.putExtra("position",position);
                 startActivity(i);

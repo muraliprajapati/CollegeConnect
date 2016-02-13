@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="128dp"
     android:layout_margin="8dp"
-    android:background="@drawable/login_bg_22">
+    android:background="@drawable/blue_gradient">
 
     <TextView
         android:id="@+id/clubNameTextView"

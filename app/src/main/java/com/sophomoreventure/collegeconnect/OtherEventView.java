@@ -97,7 +97,7 @@ public class OtherEventView extends BaseActivity implements ObservableScrollView
         mEventorganizerMobTwo = (TextView) findViewById(R.id.event_organizer_phone_two);
         middleText = (TextView) findViewById(R.id.name_middle);
         mEventTitle = (TextView) findViewById(R.id.event_title);
-        eventDatabase = new EventDatabase(this);
+        eventDatabase = EventDatabase.newInstance(this);
         mEventTitle.setTextColor(ScrollUtils.getColorWithAlpha(0, getResources().getColor(R.color.colorWhite)));
         mScrollView = (ObservableScrollView) findViewById(R.id.event_scroll);
         mScrollView.setScrollViewCallbacks(this);
