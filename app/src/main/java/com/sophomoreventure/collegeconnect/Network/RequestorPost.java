@@ -224,7 +224,11 @@ public class RequestorPost {
                                 String string = new String(response.data);
                                 JSONObject jsonObject = new JSONObject(string);
                                 Log.i("vikas", response.statusCode + ":" + jsonObject.toString());
-                                listener.setError(url, Parserer.parseResponse(jsonObject));
+                                if (response.statusCode == 404) {
+                                    listener.setError(url, "404");
+
+                                }
+
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
