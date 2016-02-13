@@ -438,6 +438,7 @@ public abstract class DrawerBaseActivity extends AppCompatActivity {
 
         } else {
             startActivity(intent);
+            finish();
 
         }
 //        startActivity(intent);

@@ -18,6 +18,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,8 +46,6 @@ import com.sophomoreventure.collegeconnect.extras.API;
 import com.sophomoreventure.collegeconnect.fragments.SlideShowFragment;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import me.relex.circleindicator.CircleIndicator;
 import me.tatarka.support.job.JobInfo;
@@ -69,6 +68,8 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     //private ViewGroup mContainerToolbar;
     EventDatabase database;
     ArrayList<Event> listDataSlideShow;
+    Handler handler;
+    Runnable pageChangeRunnable;
     private JobScheduler mJobScheduler;
     private NavigationView mNavView;
     private LinearLayout mainScreen;
@@ -79,7 +80,6 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     private DrawerLayout mDrawerLayout;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +148,7 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         indicator.setViewPager(slideShowPager);
         slideShowPager.addOnPageChangeListener(this);
 
-
+/*
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -163,6 +163,23 @@ public class SlideShowActivity extends DrawerBaseActivity implements
                 });
             }
         }, 1500, 1500);
+
+        */
+        handler = new Handler();
+
+        pageChangeRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (currentPage == slideShowPager.getAdapter().getCount()) {
+                    currentPage = 0;
+                }
+                slideShowPager.setCurrentItem(currentPage++, true);
+                handler.postDelayed(this, 1500);
+            }
+        };
+
+
+        handler.postDelayed(pageChangeRunnable, 1500);
 
         horizonatalRV = (RecyclerView) findViewById(R.id.byClubRecyclerView);
         horizonatalRV.setNestedScrollingEnabled(false);
@@ -275,7 +292,8 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-//        mNavView.setCheckedItem(R.id.nav_events);
+        Log.i("tag", "in OnResume");
+        handler.postDelayed(pageChangeRunnable, 1500);
     }
 
     private void launchActivityDelayed(final Class activity) {
@@ -320,6 +338,25 @@ public class SlideShowActivity extends DrawerBaseActivity implements
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         return false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("tag", "in OnPause");
+        handler.removeCallbacks(pageChangeRunnable);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i("tag", "in OnRestart");
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Log.i("tag", "in OnPostReume");
     }
 
     class SlideShowAdapter extends FragmentStatePagerAdapter {
