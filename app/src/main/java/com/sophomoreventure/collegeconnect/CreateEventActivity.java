@@ -35,7 +35,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -452,7 +451,7 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
                     } else if (isEditEventTrue && !isImageUrlChanged) {
                         Log.i("tag", "in" + isEditEventTrue + "and" + isImageUrlChanged);
                         imageUrl = getImageUrl();
-                        Toast.makeText(this, "url:" + getImageUrl(), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(this, "url:" + getImageUrl(), Toast.LENGTH_LONG).show();
                     } else {
                         Log.i("tag", "in" + isEditEventTrue + "and" + isImageUrlChanged);
                         imageName = titleEditText.getText().toString().toLowerCase().trim()
@@ -489,17 +488,17 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
                                                 if (isImageChosen) {
                                                     new PhotoUploadTask().execute(picturePath, imageName);
                                                 } else {
+                                                    spotsDialog.show();
                                                     RequestorPost.requestEditEvent(requestQueue, API.EVENT_API,
                                                             EventUtility.getUserEmailFromPref(CreateEventActivity.this),
                                                             EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this), createJson(), CreateEventActivity.this);
                                                 }
                                             } else {
-                                                spotsDialog.show();
-                                                if (isImageChosen) {
 
+                                                if (isImageChosen) {
                                                     new PhotoUploadTask().execute(picturePath, imageName);
                                                 } else {
-
+                                                    spotsDialog.show();
                                                     RequestorPost.requestCreateEvent(requestQueue, API.EVENT_API,
                                                             EventUtility.getUserEmailFromPref(CreateEventActivity.this),
                                                             EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this), createJson(), CreateEventActivity.this);
@@ -769,6 +768,11 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
                     Snackbar.make(rootView, "Internet is not working", Snackbar.LENGTH_LONG)
                             .show();
                 }
+
+                if (errorCode.equalsIgnoreCase("404")) {
+                    Snackbar.make(rootView, "Event not found", Snackbar.LENGTH_LONG)
+                            .show();
+                }
                 break;
         }
 
@@ -816,7 +820,7 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            spotsDialog.show();
+            spotsDialog.show();
         }
 
         @Override

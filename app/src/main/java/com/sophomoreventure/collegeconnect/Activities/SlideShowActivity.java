@@ -244,7 +244,7 @@ public class SlideShowActivity extends DrawerBaseActivity implements
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        swipeRefreshLayout.setEnabled(false);
+
         // Toast.makeText(getApplicationContext(),position + " page scrolled",Toast.LENGTH_SHORT).show();
     }
 
