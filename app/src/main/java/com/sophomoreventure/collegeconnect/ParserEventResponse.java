@@ -63,6 +63,7 @@ public class ParserEventResponse {
 
 //        EventDatabase eventDatabase = new EventDatabase(context);
         EventDatabase eventDatabase = EventDatabase.newInstance(context);
+        eventDatabase.deleteDatabase();
         if(response == null || response.length() == 0){
             return null;
         }

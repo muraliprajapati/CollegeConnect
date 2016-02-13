@@ -31,6 +31,7 @@ public class ClubParserer {
         ArrayList<ClubModel> clubList = new ArrayList<>();
 //        ClubsDataBase dataBase = new ClubsDataBase(context);
         ClubsDataBase dataBase = ClubsDataBase.newInstance(context);
+        dataBase.deleteDatabase();
 
         String adminName = "";
         String adminMobNo = "";
@@ -81,7 +82,7 @@ public class ClubParserer {
                                 adminName = adminName + "?" + current.getString(KEY_NAME);
                             }
                             if (Utils.contains(current, KEY_MOBNOB)) {
-                                adminMobNo =  adminMobNo+ "?"+ String.valueOf(current.getInt(KEY_MOBNOB));
+                                adminMobNo =  adminMobNo+ "?"+ String.valueOf(current.getString(KEY_MOBNOB));
                             }
 
                         }
@@ -97,6 +98,7 @@ public class ClubParserer {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                Log.i("vikas","Json edception Clubs" + e);
             }
 
 

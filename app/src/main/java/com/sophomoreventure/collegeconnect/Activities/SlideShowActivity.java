@@ -92,8 +92,8 @@ public class SlideShowActivity extends DrawerBaseActivity implements
         volleySingleton = VolleySingleton.getInstance(this);
         requestQueue = volleySingleton.getRequestQueue();
         EventsUtils.loadEventsData(requestQueue, this);
-        database = new EventDatabase(this);
 
+        database = new EventDatabase(this);
         listDataSlideShow = database.viewSlideShowData();
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         ((AppBarLayout) findViewById(R.id.app_bar)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {

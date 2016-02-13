@@ -79,10 +79,13 @@ public class EventDatabase {
                           String eventvarified, String clubId, String serverID, String lastRegistrationTime,String eventCreatedBy
             ,String url) {
 
-        if(isInDatabase(serverID)){
-            deleteRow(serverID);
-        }
+       // if(isInDatabase(serverID)){
+       //     deleteRow(serverID);
+       // }
 
+        if (false) {
+            deleteDatabase();
+        }
 
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -350,8 +353,11 @@ public class EventDatabase {
     }
 
     public void deleteDatabase() {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.delete(EventDataBaseHelper.Tablename,null,null);
         //mDatabase.delete(UserDataBaseHelper.Tablename,null,null);
-        context.deleteDatabase(EventDataBaseHelper.DataBaseName);
+        //context.deleteDatabase(EventDataBaseHelper.DataBaseName);
+        Log.i("vikas","Data Base Deleted Events");
 
     }
 

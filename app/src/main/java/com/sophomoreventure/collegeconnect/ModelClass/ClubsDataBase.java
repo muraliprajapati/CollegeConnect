@@ -33,10 +33,9 @@ public class ClubsDataBase {
     public void insertRow(String clubId, String clubName,String clubDescription,String clubHeadName ,String mobno, String email
             ,String imageUrl) {
 
-        if(isInDatabase(clubId)){
-            deleteRow(clubId);
-        }
-
+       // if(isInDatabase(clubId)){
+       //     deleteRow(clubId);
+       // }
 
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -162,6 +161,15 @@ public class ClubsDataBase {
         String[] whereArgs = {clubID};
         int count = db.delete(ClubDataBaseHelper.Tablename, ClubDataBaseHelper.ClubID + " =?", whereArgs);
         return count;
+    }
+
+    public void deleteDatabase() {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.delete(ClubDataBaseHelper.Tablename, null, null);
+        //mDatabase.delete(UserDataBaseHelper.Tablename,null,null);
+        //context.deleteDatabase(EventDataBaseHelper.DataBaseName);
+        Log.i("vikas","Data Base Deleted Clubs");
+
     }
 
 

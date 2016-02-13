@@ -55,6 +55,7 @@ public class SplashActivity extends AppCompatActivity implements DataListener {
         progressBar.setIndeterminate(true);
        // setupJob();
         //setupJob();
+
          EventsUtils.loadEventsData(requestQueue, this);
          EventsUtils.loadClubData(requestQueue,this);
         SharedPreferences getPrefs = PreferenceManager
