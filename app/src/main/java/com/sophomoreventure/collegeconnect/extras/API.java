@@ -15,5 +15,6 @@ public class API {
     public static final String USER_FORGOT_PASSWORD_API = "https://sheltered-fjord-8731.herokuapp.com/api/password";
     public static final String FOLLOW_EVENT_API = "https://sheltered-fjord-8731.herokuapp.com/api/event/";
     public static final String GCM_TOKEN_API = "https://sheltered-fjord-8731.herokuapp.com/api/gcm";
+    public static final String EDIT_EVENT_API = "https://sheltered-fjord-8731.herokuapp.com/api/events";
 
 }

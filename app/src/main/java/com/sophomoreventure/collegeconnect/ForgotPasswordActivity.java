@@ -50,7 +50,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         resetPasswordButton.setOnClickListener(this);
         volleySingleton = VolleySingleton.getInstance(this);
         requestQueue = volleySingleton.getRequestQueue();
-        spotsDialog = new SpotsDialog(this);
+        spotsDialog = new SpotsDialog(this, R.style.ForgotPassword_dialog);
     }
 
     @Override

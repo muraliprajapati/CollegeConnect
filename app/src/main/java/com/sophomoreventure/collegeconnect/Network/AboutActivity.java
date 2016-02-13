@@ -13,8 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sophomoreventure.collegeconnect.BuildConfig;
 import com.sophomoreventure.collegeconnect.Activities.DrawerBaseActivity;
+import com.sophomoreventure.collegeconnect.BuildConfig;
 import com.sophomoreventure.collegeconnect.R;
 
 /**
@@ -55,8 +55,8 @@ public class AboutActivity extends DrawerBaseActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-            mDrawerLayout.closeDrawer(GravityCompat.END);
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             NavUtils.navigateUpFromSameTask(this);
         }

@@ -19,6 +19,7 @@ import com.sophomoreventure.collegeconnect.adapters.MyEventsAdapter;
 public class MyEventsActivity extends DrawerBaseActivity {
     RecyclerView myEventsRV;
     EventDatabase eventDatabase;
+    String clubName;
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -27,7 +28,7 @@ public class MyEventsActivity extends DrawerBaseActivity {
         setContentView(R.layout.activity_my_events);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_actionbar));
-        String clubName = getIntent().getStringExtra("clubName");
+        clubName = getIntent().getStringExtra("clubName");
         if(clubName.contains("eventLiked")){
             getSupportActionBar().setTitle("Your Followed Events");
         }
@@ -49,7 +50,13 @@ public class MyEventsActivity extends DrawerBaseActivity {
 
     @Override
     protected int getSelfNavDrawerItem() {
-        return NAVDRAWER_ITEM_MY_EVENTS;
+        if (clubName.contains("eventLiked")) {
+            return NAVDRAWER_ITEM_FOLLOWED_EVENTS;
+        }
+        if (clubName.contains("eventCreated")) {
+            return NAVDRAWER_ITEM_MY_EVENTS;
+        }
+        return NAVDRAWER_ITEM_INVALID;
     }
 
     @Override
@@ -59,8 +66,8 @@ public class MyEventsActivity extends DrawerBaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-            mDrawerLayout.closeDrawer(GravityCompat.END);
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             NavUtils.navigateUpFromSameTask(this);
         }

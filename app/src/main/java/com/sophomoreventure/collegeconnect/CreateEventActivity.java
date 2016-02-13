@@ -35,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -99,7 +100,7 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
     Event event;
     String eventId;
     boolean[] missingFields = new boolean[15];
-    boolean isImageChosen = false, isThemeSelected = false;
+    boolean isImageChosen = false, isThemeSelected = false, isImageUrlChanged = false;
     long eventStartTime, eventEndTime, eventLastRegTime;
     Dialog spotsDialog;
     ViewGroup rootView;
@@ -304,45 +305,62 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-            mDrawerLayout.closeDrawer(GravityCompat.END);
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             NavUtils.navigateUpFromSameTask(this);
         }
     }
 
     private void setEventDate(Event event) {
+        getSupportActionBar().setTitle("Edit Event");
         titleEditText.setText(event.getEventTitle());
         descriptionEditText.setText(event.getEventDescription());
         venueEditText.setText(event.getEventVenue());
         clubNameTextView.setText(event.getEventClub());
         orgOneEditText.setText(event.getEventOrganizerOne());
-        orgOneEmailEditText.setText(event.getOrganizerEmailOne());
+//        orgOneEmailEditText.setText(event.getOrganizerEmailOne());
         orgOnePhoneEditText.setText(event.getEventOrganizerOnePhoneNo());
         orgTwoEditText.setText(event.getEventOrganizerTwo());
-        orgTwoEmailEditText.setText(event.getOrganizerEmailTwo());
+//        orgTwoEmailEditText.setText(event.getOrganizerEmailTwo());
         orgTwoPhoneEditText.setText(event.getEventOrganizerTwoPhoneNo());
         eventStartDateAndTimeTextView.setText(EventUtility.getFriendlyDayString(Long.parseLong(event.getEventStarttime())));
+        eventStartTime = Long.parseLong(event.getEventStarttime());
 
 
         if (event.getEventTime().equals("null")) {
             String urlThumnail = event.getUrlThumbnail();
             loadImages(urlThumnail, eventImageView);
+            setImageUrl(urlThumnail);
+
+            isImageChosen = true;
 
 
         } else {
             String colorName = event.getEventTime();
             if (colorName.equals("blue")) {
+                isThemeSelected = true;
                 eventImageView.setImageResource(R.drawable.blue_gradient);
+                themePicker.setSelection(1);
+                colorCode = "blue";
             }
             if (colorName.equals("purple")) {
+                isThemeSelected = true;
                 eventImageView.setImageResource(R.drawable.purple_gradient);
+                themePicker.setSelection(2);
+                colorCode = "purple";
             }
             if (colorName.equals("bluegray")) {
+                isThemeSelected = true;
                 eventImageView.setImageResource(R.drawable.blue_grey_gradient);
+                themePicker.setSelection(3);
+                colorCode = "bluegray";
             }
             if (colorName.equals("teal")) {
+                isThemeSelected = true;
                 eventImageView.setImageResource(R.drawable.teal_gradient);
+                themePicker.setSelection(4);
+                colorCode = "teal";
             }
 
         }
@@ -388,6 +406,10 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
             eventImageView.setImageURI(selectedImage);
             nameEditText.setVisibility(View.GONE);
             themePicker.setSelection(0);
+            if (isEditEventTrue) {
+                isImageUrlChanged = true;
+            }
+
 
 
         }
@@ -421,9 +443,23 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
 
                 if (isValidEvent()) {
 
-                    imageName = titleEditText.getText().toString().toLowerCase().trim()
-                            + "By" + clubNameTextView.getText().toString() + String.valueOf(System.currentTimeMillis());
-                    imageUrl = cloudinary.url().generate(imageName);
+                    if (isEditEventTrue && isImageUrlChanged) {
+                        Log.i("tag", "in" + isEditEventTrue + "and" + isImageUrlChanged);
+                        imageName = titleEditText.getText().toString().toLowerCase().trim()
+                                + "By" + clubNameTextView.getText().toString() + String.valueOf(System.currentTimeMillis());
+                        imageUrl = cloudinary.url().generate(imageName);
+
+                    } else if (isEditEventTrue && !isImageUrlChanged) {
+                        Log.i("tag", "in" + isEditEventTrue + "and" + isImageUrlChanged);
+                        imageUrl = getImageUrl();
+                        Toast.makeText(this, "url:" + getImageUrl(), Toast.LENGTH_LONG).show();
+                    } else {
+                        Log.i("tag", "in" + isEditEventTrue + "and" + isImageUrlChanged);
+                        imageName = titleEditText.getText().toString().toLowerCase().trim()
+                                + "By" + clubNameTextView.getText().toString() + String.valueOf(System.currentTimeMillis());
+                        imageUrl = cloudinary.url().generate(imageName);
+                    }
+
                     Log.i("tag", imageName + " and " + imageUrl);
                     Log.i("tag", "" + EventUtility.getUserEmailFromPref(this));
                     Log.i("tag", "" + EventUtility.getUserPasswordHashFromPref(this));
@@ -445,24 +481,38 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
                                     Log.i("tag", confPassEditText.getText().toString());
                                     if (EventUtility.getHashString(confPassEditText.getText().toString(), "SHA-1")
                                             .equalsIgnoreCase(EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this))) {
+                                        dialog.dismiss();
 
                                         try {
-                                            spotsDialog.show();
-                                            if (isImageChosen) {
-                                                new PhotoUploadTask().execute(picturePath, imageName);
+                                            if (isEditEventTrue) {
+//                                                spotsDialog.show();
+                                                if (isImageChosen) {
+                                                    new PhotoUploadTask().execute(picturePath, imageName);
+                                                } else {
+                                                    RequestorPost.requestEditEvent(requestQueue, API.EVENT_API,
+                                                            EventUtility.getUserEmailFromPref(CreateEventActivity.this),
+                                                            EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this), createJson(), CreateEventActivity.this);
+                                                }
                                             } else {
-                                                RequestorPost.requestCreateEvent(requestQueue, API.EVENT_API,
-                                                        EventUtility.getUserEmailFromPref(CreateEventActivity.this),
-                                                        EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this), createJson(), CreateEventActivity.this);
+                                                spotsDialog.show();
+                                                if (isImageChosen) {
+
+                                                    new PhotoUploadTask().execute(picturePath, imageName);
+                                                } else {
+
+                                                    RequestorPost.requestCreateEvent(requestQueue, API.EVENT_API,
+                                                            EventUtility.getUserEmailFromPref(CreateEventActivity.this),
+                                                            EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this), createJson(), CreateEventActivity.this);
+                                                }
+
                                             }
-
-
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
 
-                                        dialog.dismiss();
+
                                     } else {
+                                        dialog.dismiss();
                                         Snackbar.make(rootView, "Password didn't match", Snackbar.LENGTH_LONG)
                                                 .show();
                                     }
@@ -613,6 +663,9 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
 
     private JSONObject createJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
+        if (isEditEventTrue) {
+            jsonObject.put("eventid", Integer.parseInt(eventServerID));
+        }
         jsonObject.put("name", titleEditText.getText().toString());
         jsonObject.put("about", descriptionEditText.getText().toString());
         jsonObject.put("sdt", eventStartTime / 1000);
@@ -626,9 +679,7 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         } else if (isThemeSelected) {
             jsonObject.put("color", colorCode);
         }
-        if (isEditEventTrue) {
-            jsonObject.put("","");
-        }
+
 
         JSONArray array = new JSONArray();
         JSONObject object = new JSONObject();
@@ -711,18 +762,17 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         if (spotsDialog.isShowing()) {
             spotsDialog.dismiss();
         }
-        Snackbar.make(rootView, "Internet is not working", Snackbar.LENGTH_LONG)
-                .show();
-//        if (errorCode.equals("NOCON")) {
-//            new android.support.v7.app.AlertDialog.Builder(this)
-//                    .setMessage("It seems your internet is not working working")
-//                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.dismiss();
-//                        }
-//                    })
-//                    .show();
-//        }
+
+        switch (apiUrl) {
+            case API.EVENT_API:
+                if (errorCode.equalsIgnoreCase("NOCON")) {
+                    Snackbar.make(rootView, "Internet is not working", Snackbar.LENGTH_LONG)
+                            .show();
+                }
+                break;
+        }
+
+
     }
 
     public String getJsonString(Context context) throws FileNotFoundException {
@@ -753,23 +803,43 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         return list;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     private class PhotoUploadTask extends AsyncTask<String, Void, Map> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            // Showing progress dialog
+//            spotsDialog.show();
         }
 
         @Override
         protected Map doInBackground(String... filePath) {
             Map result = null;
             try {
-                result = cloudinary.uploader().upload(filePath[0], ObjectUtils.asMap("public_id", filePath[1]));
+                if (isEditEventTrue && isImageUrlChanged) {
+                    result = cloudinary.uploader().upload(filePath[0], ObjectUtils.asMap("public_id", filePath[1]));
+                } else if (isEditEventTrue && !isImageUrlChanged) {
+                    RequestorPost.requestEditEvent(requestQueue, API.EVENT_API,
+                            EventUtility.getUserEmailFromPref(CreateEventActivity.this),
+                            EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this),
+                            createJson(), CreateEventActivity.this);
+                } else {
+                    result = cloudinary.uploader().upload(filePath[0], ObjectUtils.asMap("public_id", filePath[1]));
+                }
+
 
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.i("vikas", e + "");
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
             return result;
@@ -784,7 +854,7 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
                     Log.i("vikas", result.get("url").toString());
                     try {
 
-                        if (isEditEventTrue) {
+                        if (isEditEventTrue && isImageUrlChanged) {
                             RequestorPost.requestEditEvent(requestQueue, API.EVENT_API,
                                     EventUtility.getUserEmailFromPref(CreateEventActivity.this),
                                     EventUtility.getUserPasswordHashFromPref(CreateEventActivity.this),
@@ -818,6 +888,4 @@ public class CreateEventActivity extends DrawerBaseActivity implements View.OnCl
         }
 
     }
-
-
 }

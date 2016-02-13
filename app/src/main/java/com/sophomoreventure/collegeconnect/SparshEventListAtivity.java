@@ -101,11 +101,22 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-            mDrawerLayout.closeDrawer(GravityCompat.END);
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             NavUtils.navigateUpFromSameTask(this);
+
         }
+    }
+
+    private void launchActivityDelayed(final Class activity) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(SparshEventListAtivity.this, activity));
+            }
+        }, 260);
     }
 
     class SparshEventListAdapter extends RecyclerView.Adapter<SparshEventListAdapter.ViewHolder> {
@@ -199,15 +210,5 @@ public class SparshEventListAtivity extends DrawerBaseActivity {
 
             }
         }
-    }
-
-    private void launchActivityDelayed(final Class activity) {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(SparshEventListAtivity.this, activity));
-            }
-        }, 260);
     }
 }

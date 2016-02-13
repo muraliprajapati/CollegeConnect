@@ -17,9 +17,9 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.sophomoreventure.collegeconnect.extras.Constants;
 import com.sophomoreventure.collegeconnect.EventUtility;
 import com.sophomoreventure.collegeconnect.HttpsTrustManager;
+import com.sophomoreventure.collegeconnect.extras.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -193,7 +193,7 @@ public class RequestorPost {
     public static void requestEditEvent(
             final RequestQueue requestQueue, final String url, final String email,
             final String userPassword, final JSONObject jsonBody, final Context context) {
-        Log.i("vikas", "in requestCreateEvent");
+        Log.i("vikas", "in requestEditEvent");
 
         HttpsTrustManager.allowAllSSL();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, jsonBody,
