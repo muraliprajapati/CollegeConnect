@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sophomoreventure.collegeconnect.Activities.EventsByClubActivity;
 import com.sophomoreventure.collegeconnect.Event;
 import com.sophomoreventure.collegeconnect.ModelClass.ClubsDataBase;
 import com.sophomoreventure.collegeconnect.ModelClass.EventDatabase;
 import com.sophomoreventure.collegeconnect.R;
+import com.sophomoreventure.collegeconnect.SparshEventActivity;
 
 import java.util.ArrayList;
 
@@ -103,7 +103,7 @@ public class HorizontalRecyclerAdapter extends RecyclerView.Adapter<HorizontalRe
         }
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(v.getContext(), EventsByClubActivity.class);
+            Intent i = new Intent(v.getContext(), SparshEventActivity.class);
             i.putExtra("position", getPosition());
             if(clubNameTextView != null){
                 i.putExtra("clubName",clubNameTextView.getText().toString());
