@@ -102,7 +102,7 @@ public class EventDatabase {
         contentValues.put(EventDataBaseHelper.EventVanue, eventVanue);
         contentValues.put(EventDataBaseHelper.OrganizerMobFirst, organiizermobfirst);
         contentValues.put(EventDataBaseHelper.OrganizerMobSecond, organiizermobsecond);
-        contentValues.put(EventDataBaseHelper.EventLiked, eventLiked);
+        //contentValues.put(EventDataBaseHelper.EventLiked, eventLiked);
         contentValues.put(EventDataBaseHelper.EventVarified, eventvarified);
         contentValues.put(EventDataBaseHelper.ClubId, clubId);
         contentValues.put(EventDataBaseHelper.EventServerID, serverID);

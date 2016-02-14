@@ -83,6 +83,27 @@ public class ClubsDataBase {
         return club;
     }
 
+    public ArrayList<ClubModel> viewAllDataNormal(){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ArrayList<ClubModel> list = new ArrayList<>();
+        Cursor cursor = db.query(ClubDataBaseHelper.Tablename, null, null, null, null, null, null);
+        while(cursor.moveToNext()){
+            ClubModel club = new ClubModel();
+            int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubID)));
+            if( id < 151) {
+                club.setClubName(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubName)));
+                club.setClubDescription(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubDescription)));
+                club.setClubHead(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubHeadName)));
+                club.setClubHeadEmail(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubHeadEmail)));
+                club.setClubHeadMob(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubHeadMob)));
+                club.setImageUrl(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubImageUrl)));
+                club.setClubID(cursor.getString(cursor.getColumnIndex(ClubDataBaseHelper.ClubID)));
+                list.add(club);
+            }
+        }
+        return list;
+    }
+
 
     public ArrayList<String> getClubTitles() {
 

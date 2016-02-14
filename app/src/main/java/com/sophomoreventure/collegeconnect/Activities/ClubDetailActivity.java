@@ -93,14 +93,14 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
 
 
     public void setData(int position,Context context){
-        ClubModel club = database.viewAllData(titles.get(position));
-        titleTextView.setText(club.getClubName());
+        ArrayList<ClubModel> list =  database.viewAllDataNormal();
+        titleTextView.setText(list.get(position).getClubName());
 //        getSupportActionBar().setTitle(club.getClubName());
-        mClubName.setText(club.getClubName());
-        mClubDescription.setText(club.getClubDescription());
+        mClubName.setText(list.get(position).getClubName());
+        mClubDescription.setText(list.get(position).getClubDescription());
 
-        String clubHeadName = club.getClubHead();
-        String clubHeadMob = club.getClubHeadMob();
+        String clubHeadName = list.get(position).getClubHead();
+        String clubHeadMob = list.get(position).getClubHeadMob();
 
         //Log.i("expose", club.getClubName().toString() + clubHeadName + " " + " " + clubHeadMob + clubHeadName.lastIndexOf("?"));
 
@@ -133,7 +133,7 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
 
 
 
-        loadImages(club.getImageUrl(),imageView);
+        loadImages(list.get(position).getImageUrl(),imageView);
     }
 
 
