@@ -291,10 +291,10 @@ public class EventDatabase {
 
     public ArrayList<Event> viewSlideShowData() {
         ArrayList<Event> eventList = new ArrayList<>();
-        String[] columns = {EventDataBaseHelper.ImageURL, EventDataBaseHelper.EventColor, EventDataBaseHelper.EventCreatedBy};
+        String[] columns = {EventDataBaseHelper.ImageURL, EventDataBaseHelper.EventColor, EventDataBaseHelper.EventServerID};
         SQLiteDatabase db = helper.getWritableDatabase();
         Cursor cursor = db.query(EventDataBaseHelper.Tablename,null , null, null, null, null,
-                EventDataBaseHelper.EventServerID +" ASC",null);
+                EventDataBaseHelper.EventServerID +" DESC",null);
         while(cursor.moveToNext()){
             Event event = new Event();
             String color = cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.EventColor));
@@ -321,8 +321,6 @@ public class EventDatabase {
                 event.setLastRegistrationTime(cursor.getString(cursor.getColumnIndex(EventDataBaseHelper.LastRegistrationTime)));
                 eventList.add(event);
             }
-
-
         }
         return eventList;
     }

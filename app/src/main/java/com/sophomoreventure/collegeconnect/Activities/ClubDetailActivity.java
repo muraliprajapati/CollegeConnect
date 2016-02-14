@@ -59,7 +59,7 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
 
         position = getIntent().getIntExtra("position", 0);
         database = new ClubsDataBase(this);
-        titles = database.getClubTitles();
+        //titles = database.getClubTitles();
 
         mImageView = findViewById(R.id.club_image);
         mToolbarView = findViewById(R.id.toolbar);
@@ -95,7 +95,8 @@ public class ClubDetailActivity extends BaseActivity implements ObservableScroll
     public void setData(int position,Context context){
         ArrayList<ClubModel> list =  database.viewAllDataNormal();
         titleTextView.setText(list.get(position).getClubName());
-//        getSupportActionBar().setTitle(club.getClubName());
+       getSupportActionBar().setTitle(list.get(position).getClubName());
+
         mClubName.setText(list.get(position).getClubName());
         mClubDescription.setText(list.get(position).getClubDescription());
 

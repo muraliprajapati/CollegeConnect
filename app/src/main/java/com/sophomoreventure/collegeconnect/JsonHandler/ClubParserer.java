@@ -33,15 +33,6 @@ public class ClubParserer {
         ClubsDataBase dataBase = ClubsDataBase.newInstance(context);
         dataBase.deleteDatabase();
 
-        String adminName = "";
-        String adminMobNo = "";
-        String adminEmail = "";
-        String about = Constants.NA;
-        String clubName = Constants.NA;
-        String email = Constants.NA;
-        String ClubId = Constants.NA;
-        String ClubImage = Constants.NA;
-
         if (response != null && response.length() > 0) {
             try {
 
@@ -50,6 +41,15 @@ public class ClubParserer {
                 if (jsonArray.length() != 0) {
 
                     for (int i = 0; i < jsonArray.length(); i++) {
+
+                        String adminName = "";
+                        String adminMobNo = "";
+                        String adminEmail = "";
+                        String about = Constants.NA;
+                        String clubName = Constants.NA;
+                        String email = Constants.NA;
+                        String ClubId = Constants.NA;
+                        String ClubImage = Constants.NA;
 
                         JSONObject currentClub = jsonArray.getJSONObject(i);
 

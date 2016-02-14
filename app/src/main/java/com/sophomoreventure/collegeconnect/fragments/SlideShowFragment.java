@@ -102,9 +102,7 @@ public class SlideShowFragment extends Fragment {
                     if(Position < listData.size()){
                         loadImages(listData.get(Position).getUrlThumbnail(),slideShowImage);
                     }
-
                 }
-
             }
         }
         //Bitmap bitmap = decodeSampledBitmapFromResource(getResources(),
